@@ -1,0 +1,110 @@
+{
+
+  "users" : {
+    "US0001": {
+      "email": "juanpa.vielma@gmail.com",
+      "id": "US0001",
+      "online": true,
+      "room": [ "home" ],
+      "username": "JPVielma"
+    },
+    "US0002": {
+      "email": "demo@myapptemplates.com",
+      "id": "US0002",
+      "online": true,
+      "room": [ "home" ],
+      "username": "Jeremy"
+    },
+    "US0003": {
+      "email": "demo1@myapptemplates.com",
+      "id": "US0003",
+      "online": true,
+      "room": [ "home" ],
+      "username": "Paul"
+    },
+    "US0004": {
+      "email": "alexpiel@hotmail.fr",
+      "id": "US0004",
+      "online": true,
+      "room": [ "home" ],
+      "username": "Alex"
+    },
+    "US0005": {
+      "email": "papadaki@gmail.com",
+      "id": "US0005",
+      "online": true,
+      "room": [ "home" ],
+      "username": "Papadaki"
+    }
+  },
+  "contacts" : {
+    "C00001": {
+      "idUser": "US0001",
+      "idContact": "US0002"
+    }
+  },
+  "universes": {
+    "U00001": {
+      "id": "U00001",
+      "Name": "Universe One"
+    }
+  },
+  "userUniverse": {
+    "1234567": {
+      "idUser": "2pzVlfNGy8efxFKbxMnvxKGhNT53",
+      "idUniverse": "U00001"
+    }
+  },
+  "mois": {
+    "MO0001": {
+      "id": "MO0001",
+      "universe": "U00001",
+      "name": "Moi One"
+    }
+  },
+  "userMoi": {
+    "1": {
+      "idMoi": "MO0001",
+      "idUser": "U0001",
+      "archived":false
+    }
+  },
+  "bubbles": {
+    "B00001": {
+      "idBubble": "B0001",
+      "sender": "US0001",
+      "idParent": null,
+      "text": "Hey Dude",
+      "type": 0,
+      "mediaUrl": "",
+      "important": false,
+      "date": {
+        "date": 3,
+        "day": 5,
+        "hours": 17,
+        "minutes": 31,
+        "month": 5,
+        "seconds": 45,
+        "time": 1464989505080,
+        "timezoneOffset": 240,
+        "year": 116
+      },
+      "sent": false,
+      "location": {
+        "latitude": 48.864716,
+        "longitude": 2.349014
+      }
+    }
+  },
+  "userBubble": {
+    "1": {
+      "idBubble": "B0001",
+      "idUser": "US0001",
+      "silenced": "false",
+      "viewed": "true"
+    }
+  }
+
+
+
+}
