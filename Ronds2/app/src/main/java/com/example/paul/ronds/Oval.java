@@ -1,44 +1,72 @@
 package com.example.paul.ronds;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.LinearGradient;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.view.MotionEvent;
-import android.view.View;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 
-import static android.graphics.Color.parseColor;
-import static android.graphics.Paint.Style.STROKE;
-import static android.view.MotionEvent.ACTION_UP;
+/**
+ * Class Oval
+ * Creates a filled circle shape from parameters :
+ *      - rad (radius of the circle)
+ *      - centerX, centerY (center coordinates of the circle)
+ * Contains methods :
+ *      - Oval -> Constructor
+ *      - getMyDrawable -> getter of the filled circle shape
+ *      - setColor -> set color of the circle (can be a shader)
+ *      - setPosition -> set position of the center of the shape
+ */
+public class Oval
+{
+    private ShapeDrawable myDrawable; //Variable to hold the actual shape
+    private int radius; //Radius of our circle
 
-public class Oval {
-    private ShapeDrawable mDrawable;
-    private int mray;
-
-    public Oval(int ray, int centerx, int centery) {
-
-        int[] colors = {0xffffffff,0xbb9cda5e };
+    /**
+     * Main contructor
+     *
+     * @param rad radius we want for the circle
+     * @param centerX x coordinate assigned to the circle's center
+     * @param centerY y coordinate assigned to the circle's center
+     */
+    public Oval(int rad, int centerX, int centerY)
+    {
+        int[] colors = {0xffffffff, 0xbb9cda5e};
         float[] stops = {0.9f, 1f};
-        mray=ray;
-        mDrawable = new ShapeDrawable(new OvalShape());
-        mDrawable.setBounds(centerx-ray, centery-ray, centerx+ray, centery+ray);
-        mDrawable.getPaint().setShader(new RadialGradient((float)centerx-2*ray/3, (float)centery-5*ray/3,ray, colors, stops,Shader.TileMode.MIRROR ));
+
+        radius = rad;
+
+        myDrawable = new ShapeDrawable(new OvalShape());
+        myDrawable.setBounds(centerX-rad, centerY-rad, centerX+rad, centerY+rad);
     }
 
-    public void setcolor(int color){
-        this.mDrawable.getPaint().setColor(color);
+    /**
+     * Getter of the circle shape
+     *
+     * @return the circle shape
+     */
+    public ShapeDrawable getMyDrawable()
+    {
+        return myDrawable;
     }
 
-    public ShapeDrawable getmDrawable(){
-        return mDrawable;
+    /**
+     * Setter of the color of the shape
+     *
+     * @param color color to be assigned to the circle
+     */
+    public void setColor(int color)
+    {
+        this.myDrawable.getPaint().setColor(color);
     }
 
-    public void setpos(float x, float y){
-        mDrawable.setBounds((int)x-mray, (int)y-mray, (int)x+mray, (int)y+mray);
+    /**
+     * Setter of the position of the circle's center
+     *
+     * @param x x coordinate assigned to the circle's center
+     * @param y y coordinate assigned to the circle's center
+     */
+    public void setPosition(float x, float y){
+        myDrawable.setBounds((int)x-radius, (int)y-radius, (int)x+radius, (int)y+radius);
     }
-
 }
 
