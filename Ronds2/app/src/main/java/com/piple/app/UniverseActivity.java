@@ -7,7 +7,8 @@ import android.os.Bundle;
  * Class UniverseActivity
  *      extends Activity
  */
-public class UniverseActivity extends Activity {
+public class UniverseActivity extends Activity
+{
     /**
      * Method onCreate
      * Implements the behavior of the activity when it is created.
