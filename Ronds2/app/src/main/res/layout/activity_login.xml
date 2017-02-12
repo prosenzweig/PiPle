@@ -12,13 +12,6 @@
     android:baselineAligned="false">
 
     <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
 
     <ScrollView
         android:id="@+id/login_form"
@@ -36,15 +29,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1" />
-
             </android.support.design.widget.TextInputLayout>
+
+            <ProgressBar
+                android:id="@+id/login_progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
+
+            <AutoCompleteTextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -72,6 +73,20 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="163dp"
+                android:layout_height="99dp"
+                android:layout_marginTop="60dp"
+                android:layout_centerInParent="true"
+                android:visibility="visible"
+                android:layout_gravity="center"/>
+
+
         </LinearLayout>
+
+
+
     </ScrollView>
 </LinearLayout>
