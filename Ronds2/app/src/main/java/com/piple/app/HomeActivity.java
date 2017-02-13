@@ -7,7 +7,8 @@ import android.os.Bundle;
  * Class HomeActivity
  *      extends Activity
  */
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity
+{
     /**
      * Method onCreate
      * Implements the behavior of the activity when it is created.

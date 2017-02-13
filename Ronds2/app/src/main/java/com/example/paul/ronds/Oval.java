@@ -2,8 +2,6 @@ package com.example.paul.ronds;
 
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.RadialGradient;
-import android.graphics.Shader;
 
 /**
  * Class Oval

@@ -7,7 +7,8 @@ import android.os.Bundle;
  * Class SettingsActivity
  *      extends Activity
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends Activity
+{
     /**
      * Method onCreate
      * Implements the behavior of the activity when it is created.
