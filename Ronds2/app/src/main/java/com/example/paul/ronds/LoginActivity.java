@@ -17,8 +17,6 @@ package com.example.paul.ronds;
         import com.google.android.gms.common.ConnectionResult;
         import com.google.android.gms.common.SignInButton;
         import com.google.android.gms.common.api.GoogleApiClient;
-        import com.google.android.gms.common.api.ResultCallback;
-        import com.google.android.gms.common.api.Status;
         import com.google.android.gms.tasks.OnCompleteListener;
         import com.google.android.gms.tasks.Task;
         import com.google.firebase.auth.AuthCredential;
@@ -192,7 +190,7 @@ public class LoginActivity extends Activity implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.sign_in_button) {
+        if (i == com.example.paul.ronds.R.id.sign_in_button) {
             signIn();
         }
     }
