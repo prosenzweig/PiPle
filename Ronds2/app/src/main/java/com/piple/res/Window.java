@@ -1,4 +1,4 @@
-package com.piple.app;
+package com.piple.res;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,12 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.widget.TextView;
+
+import com.piple.res.Oval;
+import com.piple.res.PanZoomView;
 
 import java.lang.Math;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static java.util.Arrays.copyOfRange;
 

@@ -1,4 +1,4 @@
-package com.piple.resources;
+package com.piple.res;
 
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;

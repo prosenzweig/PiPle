@@ -1,4 +1,4 @@
-package com.piple.app;
+package com.piple.res;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,10 +12,12 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import com.piple.app.R;
+
 public class PanZoomView extends View {
 
     static protected final boolean ScaleAtFocusPoint = false;
-    static protected final int DefaultDrawableId = R.drawable.zoom_view_sample;
+    static protected final int DefaultDrawableId = R.drawable.logo;
 
     Oval C1, C2, C3, C4, C5;
 

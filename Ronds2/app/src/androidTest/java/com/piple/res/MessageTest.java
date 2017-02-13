@@ -1,6 +1,4 @@
-package com.piple.resources;
-
-import static org.junit.Assert.*;
+package com.piple.res;
 
 /**
  * Class MessageTest
