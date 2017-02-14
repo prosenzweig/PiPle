@@ -64,7 +64,7 @@ public class Window extends PanZoomView {
         mpoint.y=(int)(father.y + Math.cos(angle)*(margin+fatherRay+mRay));
         return mpoint;
     }
-    public void drawtext(Canvas canvas, String text, Point pt, int ray){
+    public void drawtext(Canvas canvas, String text, Oval oval){
         int i;
         Paint paint = new Paint();
         int size=50;
@@ -106,21 +106,20 @@ public class Window extends PanZoomView {
         }
 
         do{
-            size=size-5;
+            size=size--;
             paint.setTextSize(size);
             depasse=false;
             for(i=0;i<nblignes;i++){
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>Math.cos(Math.asin((nblignes/2-i)*size/ray))*2*ray){
+                if(bounds.width()>oval.ray*1.8){
                     depasse=true;
                 }
-                System.out.println(Math.cos(Math.asin((nblignes/2-i)*size/ray))*2);
             }
         }while(depasse);
 
         for(i=0;i<nblignes;i++){
             paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), pt.x - (bounds.width())/2,pt.y-(nblignes/2-i)*size , paint);
+            canvas.drawText(textlist.get(i), oval.pt.x - (bounds.width())/2,oval.pt.y-(nblignes/2-i)*size , paint);
         }
     }
 
