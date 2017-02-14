@@ -1,4 +1,4 @@
-package com.piple.app;
+package com.piple.res;
 
 import android.graphics.Point;
 import android.graphics.RadialGradient;

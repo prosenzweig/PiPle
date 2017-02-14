@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.piple.res.Window;
 
 import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
@@ -33,12 +34,8 @@ import static android.view.MotionEvent.ACTION_UP;
  *
  * Creates the main activity.
  */
-public class MainActivity extends Activity implements View.OnTouchListener , GoogleApiClient.OnConnectionFailedListener
+public class MainActivity extends Activity implements  GoogleApiClient.OnConnectionFailedListener
 {
-    private Window myWin;
-    private float x_drag_start, y_drag_start;
-    private float x_win_start, y_win_start;
-    private boolean first = true;
 
     //jerem for auth
     private static final String TAG = "MainActivity";
@@ -67,8 +64,6 @@ public class MainActivity extends Activity implements View.OnTouchListener , Goo
     {
         super.onCreate(savedInstanceState);
 
-        myWin = new Window(this);
-        setContentView(myWin);
         //jerem auth
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
@@ -92,49 +87,7 @@ public class MainActivity extends Activity implements View.OnTouchListener , Goo
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
-        ViewGroup.LayoutParams myParams = myWin.getLayoutParams();
-        myParams.width =8000;
-        myParams.height =18000;
-        myWin.setLayoutParams(myParams);
-
-        myWin.setOnTouchListener(this);
-    }
-
-    /**
-     * Method onTouch
-     * Implements the behavior of the activity on an user touch event.
-     *
-     * @param v ?
-     * @param e touch event
-     * @return true
-     */
-    @Override
-    public boolean onTouch(View v, MotionEvent e){
-
-        int action = e.getAction();
-        switch (action){
-
-            case ACTION_DOWN :
-                if(first==true){
-                    x_drag_start=e.getX();
-                    y_drag_start=e.getY();
-                    x_win_start = myWin.getX();
-                    y_win_start = myWin.getY();
-                }
-                else{
-                    ((ViewGroup) myWin.getParent()).removeView(myWin);
-                    myWin.setX(x_win_start+e.getX()-x_drag_start);
-                    myWin.setY(y_win_start+e.getY()-y_drag_start);
-                    setContentView(myWin);
-                }
-
-                break;
-            case ACTION_UP :
-                first=false;
-                break;
-        }
-
-        return true;
+        setContentView(R.layout.moy);
     }
     @Override
     public void onStart() {

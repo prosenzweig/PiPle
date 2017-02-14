@@ -1,6 +1,5 @@
 package com.piple.app;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,12 +25,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
- * Demonstrate Firebase Authentication using a Google ID Token.
+ * Class LoginActivity
+ *      extends Activity
  */
-public class LoginActivity extends Activity implements
-        GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
-
+public class LoginActivity
+        extends
+            Activity
+        implements
+            GoogleApiClient.OnConnectionFailedListener,
+            View.OnClickListener
+{
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
     private SignInButton mSignInButton;
@@ -48,8 +51,14 @@ public class LoginActivity extends Activity implements
     private TextView mStatusTextView;
     private TextView mDetailTextView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    /**
+     * Method onCreate
+     * Implements the behavior of the activity when it is created.
+     *
+     * @param savedInstanceState saved state from the program
+     */
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
@@ -72,7 +81,7 @@ public class LoginActivity extends Activity implements
         // [END config_signin]
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-           //     .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                //     .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
@@ -97,6 +106,7 @@ public class LoginActivity extends Activity implements
         };
         // [END auth_state_listener]
     }
+
     private void handleFirebaseAuthResult(AuthResult authResult) {
         if (authResult != null) {
             // Welcome the user
@@ -104,9 +114,10 @@ public class LoginActivity extends Activity implements
             Toast.makeText(this, "Welcome " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
             // Go back to the main activity
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, UniverseActivity.class));
         }
     }
+
     // [START on_start_add_listener]
     @Override
     public void onStart() {
@@ -164,7 +175,7 @@ public class LoginActivity extends Activity implements
                                     Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, UniverseActivity.class));
                             finish();
                         }
                     }
@@ -195,4 +206,3 @@ public class LoginActivity extends Activity implements
         }
     }
 }
-

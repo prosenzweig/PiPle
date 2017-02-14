@@ -1,4 +1,4 @@
-package com.piple.app;
+package com.piple.res;
 
 import android.content.Context;
 import android.graphics.Canvas;

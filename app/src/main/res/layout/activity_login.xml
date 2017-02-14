@@ -83,10 +83,6 @@
                 android:visibility="visible"
                 android:layout_gravity="center"/>
 
-
         </LinearLayout>
-
-
-
     </ScrollView>
 </LinearLayout>
