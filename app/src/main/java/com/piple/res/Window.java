@@ -47,10 +47,10 @@ public class Window extends PanZoomView {
         Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff);
         Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);
         Papa.getmDrawable().draw(canvas);
-        drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa, 150);
+        drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", Papa);
         enfant1.getmDrawable().draw(canvas);
         enfant2.getmDrawable().draw(canvas);
-        drawtext(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
+        drawtext(canvas, "texte cours",enfant2);
         enfant3.getmDrawable().draw(canvas);
 
 
@@ -64,7 +64,7 @@ public class Window extends PanZoomView {
         mpoint.y=(int)(father.y + Math.cos(angle)*(margin+fatherRay+mRay));
         return mpoint;
     }
-    public void drawtext(Canvas canvas, String text, Point pt, int ray){
+    public void drawtext(Canvas canvas, String text, Oval oval){
         int i;
         Paint paint = new Paint();
         int size=50;
@@ -106,21 +106,20 @@ public class Window extends PanZoomView {
         }
 
         do{
-            size=size-5;
+            size=size--;
             paint.setTextSize(size);
             depasse=false;
             for(i=0;i<nblignes;i++){
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>Math.cos(Math.asin((nblignes/2-i)*size/ray))*2*ray){
+                if(bounds.width()>oval.ray*1.8){
                     depasse=true;
                 }
-                System.out.println(Math.cos(Math.asin((nblignes/2-i)*size/ray))*2);
             }
         }while(depasse);
 
         for(i=0;i<nblignes;i++){
             paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), pt.x - (bounds.width())/2,pt.y-(nblignes/2-i)*size , paint);
+            canvas.drawText(textlist.get(i), oval.pt.x - (bounds.width())/2,oval.pt.y-(nblignes/2-i)*size , paint);
         }
     }
 

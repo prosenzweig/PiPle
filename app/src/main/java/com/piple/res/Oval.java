@@ -8,13 +8,15 @@ import android.graphics.drawable.shapes.OvalShape;
 
 public class Oval {
     private ShapeDrawable mDrawable;
-    private int mray;
+    protected int ray;
+    protected Point pt;
 
     public Oval(int ray, Point mpoint, int color) {
 
         int[] colors = {0xffffffff,color};
         float[] stops = {0.8f, 1f};
-        mray=ray;
+        this.ray=ray;
+        pt = mpoint;
         mDrawable = new ShapeDrawable(new OvalShape());
         mDrawable.setBounds(mpoint.x-ray, mpoint.y-ray, mpoint.x+ray, mpoint.y+ray);
         mDrawable.getPaint().setColor(color);
@@ -30,7 +32,7 @@ public class Oval {
     }
 
     public void setpos(float x, float y){
-        mDrawable.setBounds((int)x-mray, (int)y-mray, (int)x+mray, (int)y+mray);
+        mDrawable.setBounds((int)x-ray, (int)y-ray, (int)x+ray, (int)y+ray);
     }
 
 }
