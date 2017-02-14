@@ -42,16 +42,16 @@ public class Window extends PanZoomView {
     public void drawOnCanvas (Canvas canvas) {
 
         Point ptPapa = new Point(200,200);
-        Oval Papa = new Oval(150, ptPapa, 0xffff0000);
-        Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00);
+       // Oval Papa = new Oval(150, ptPapa, 0xffff0000);
+        /*Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00);
         Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff);
-        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);
-        Papa.getmDrawable().draw(canvas);
+        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);*/
+        //Papa.getmDrawable().draw(canvas);
         drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa, 150);
-        enfant1.getmDrawable().draw(canvas);
+        /*enfant1.getmDrawable().draw(canvas);
         enfant2.getmDrawable().draw(canvas);
         drawtext(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
-        enfant3.getmDrawable().draw(canvas);
+        enfant3.getmDrawable().draw(canvas);*/
 
 
     }

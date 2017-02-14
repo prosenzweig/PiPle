@@ -9,6 +9,7 @@ import android.os.Bundle;
  */
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,8 +69,7 @@ import com.piple.res.Window;
  *
  * Creates the main activity.
  */
-public class HomeActivity extends AppCompatActivity implements View.OnTouchListener , GoogleApiClient.OnConnectionFailedListener
-{
+public class HomeActivity extends AppCompatActivity implements View.OnTouchListener , GoogleApiClient.OnConnectionFailedListener {
 
 
     //jerem for auth
@@ -89,25 +89,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
     private EditText mMessageEditText;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private static final String MESSAGE_URL = "http://piple.firebase.google.com/message/";
+
+
     /**
      * Method onCreate
      * Implements the behavior of the activity when it is created.
      *
      * @param savedInstanceState saved state from the program
      */
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         //jerem auth
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //mFirebaseDatabaseReference = FirebaseAuth.getInstance().getReference;
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
+        //mFirebaseDatabaseReference = FirebaseAuth.getInstance().getReference();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
@@ -115,10 +115,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
             finish();
             return;
         } else {
-           /* mUsername = mFirebaseUser.getDisplayName();
-            if (mFirebaseUser.getPhotoUrl() != null) {
+            mUsername = mFirebaseUser.getDisplayName();
+            Toast.makeText(HomeActivity.this, "coool" + mUsername,
+                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+           /* if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }*/
+
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -127,7 +131,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
                 .build();
 
     }
-
 
 
     @Override
@@ -151,8 +154,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
+    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+        public void onLongPress(MotionEvent e) {
+            Log.e("", "Longpress detected");
+        }
+    });
+
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return false;
     }
 }
+
