@@ -11,8 +11,6 @@ import android.util.AttributeSet;
 import java.lang.Math;
 import java.util.ArrayList;
 
-import static java.util.Arrays.copyOfRange;
-
 /**
  * Created by Paul on 01/12/2016.
  */
@@ -49,7 +47,7 @@ public class Window extends PanZoomView {
         Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff);
         Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);
         Papa.getmDrawable().draw(canvas);
-        drawtext(canvas, "salut paul c'est ton cousin qui t'ecrit e dublin.Je passe de tres tres bonne vacances ici.Le soleil brile la mer est radieuse et ton cul pue !", ptPapa, 150);
+        drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa, 150);
         enfant1.getmDrawable().draw(canvas);
         enfant2.getmDrawable().draw(canvas);
         drawtext(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
@@ -74,8 +72,13 @@ public class Window extends PanZoomView {
         paint.setColor(Color.BLACK);
         paint.setTextSize(size);
         Rect bounds = new Rect();
-        Rect boundsmax = new Rect();
+        boolean depasse;
 
+
+        if(text.length()>144){
+            text = text.substring(0,144);
+            text=text+"...";
+        }
 
         int nblignes=text.length()/20;
         if(nblignes==0){
@@ -90,76 +93,35 @@ public class Window extends PanZoomView {
         }
         int lenligne = text.length()/nblignes;
         int strcount=0;
-        String accu, accu1;
+        String accu;
         for(i=0;i<nblignes;i++){
             accu="";
             if(strcount<strs.length) {
                 do {
                     accu = accu + " " + strs[strcount];
                     strcount++;
-                    //accu1=accu + " " + strs[strcount];
-                } while ((accu.length() < lenligne)/*&&(accu1.length()<lenligne)*/ && (strcount < strs.length));
+                } while ((accu.length() < lenligne) && (strcount < strs.length));
             }
             textlist.add(accu);
         }
+
         do{
             size=size-5;
             paint.setTextSize(size);
-            boundsmax=new Rect();
+            depasse=false;
             for(i=0;i<nblignes;i++){
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if((boundsmax.right-boundsmax.left)<(bounds.right-bounds.left)){
-                    boundsmax=bounds;
-                    System.out.println("couououou");
+                if(bounds.width()>Math.cos(Math.asin((nblignes/2-i)*size/ray))*2*ray){
+                    depasse=true;
                 }
+                System.out.println(Math.cos(Math.asin((nblignes/2-i)*size/ray))*2);
             }
-        }while((boundsmax.right-boundsmax.left)>ray);
+        }while(depasse);
 
         for(i=0;i<nblignes;i++){
             paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), pt.x - (bounds.right -bounds.left)/2,pt.y-(nblignes/2-i)*size , paint);
+            canvas.drawText(textlist.get(i), pt.x - (bounds.width())/2,pt.y-(nblignes/2-i)*size , paint);
         }
-
-        /*
-        if(text.length()<15){
-            paint.getTextBounds(text, 0, text.length(), bounds);
-            while(bounds.right-bounds.left<1.6*ray){
-                size++;
-                paint.setTextSize(size);
-                paint.getTextBounds(text, 0, text.length(), bounds);
-            }
-            canvas.drawText(text, pt.x - (bounds.right -bounds.left)/2,pt.y+10/2 , paint);
-        }
-        else if(text.length()<25){
-            String[] strs = text.split(" ");
-            int[] len ;
-            for(i=0;i<strs.length;i++){
-                len[i]=strs[i].length();
-            }
-            String accu= strs[0];
-            for(i=1; i<strs.length/2;i++){
-                accu = accu.concat(" ");
-                accu = accu.concat(strs[i]);
-            }
-            textlist.add(accu);
-            accu = strs[strs.length/2];
-            for(i=strs.length/2+1; i<strs.length;i++){
-                accu = accu.concat(" ");
-                accu = accu.concat(strs[i]);
-            }
-            textlist.add(accu);
-            paint.getTextBounds(accu, 0, textlist.get(0).length(), bounds);
-            while(bounds.right-bounds.left<1.6*ray){
-                size++;
-                paint.setTextSize(size);
-                paint.getTextBounds(textlist.get(0), 0, textlist.get(0).length(), bounds);
-            }
-            canvas.drawText(textlist.get(0), pt.x - (bounds.right -bounds.left)/2,pt.y-10 , paint);
-
-            canvas.drawText(textlist.get(1), pt.x - (bounds.right -bounds.left)/2,pt.y+10 , paint);
-        }*/
-
-
     }
 
     /**
