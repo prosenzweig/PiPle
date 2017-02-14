@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
     defaultConfig {
-        applicationId "com.example.paul.ronds"
+        applicationId "com.piple.app"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
@@ -39,14 +39,9 @@ dependencies {
     // Firebase UI
     compile 'com.firebaseui:firebase-ui-database:0.4.0'
 
-
-
     compile 'com.google.android.gms:play-services-auth:10.0.0'
     compile 'com.android.support:design:24.2.1'
     testCompile 'junit:junit:4.12'
 }
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
