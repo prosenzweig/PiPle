@@ -13,38 +13,29 @@ import java.util.Date;
 public class Oval {
 
     private ShapeDrawable mDrawable;
-    private int mray;
-    private Point mpt;
-
-
-
-    private String mmessage;
-    private ArrayList Ovallist = new ArrayList();
+    private int ray;
+    private Point pt;
+    Message msg;
 
 
 
 
-    private int type, iduser, idmessage;
-    private boolean important, viewed, silent;
-    private Date createdate;
 
+    public Oval(int ray, Point pt, int color, Message msg ) {
 
-
-    public Oval(ShapeDrawable mDrawable, String mmessage, int iduser, int type, int idmessage, boolean important, boolean viewed, boolean silent, Date createdate) {
-        this.mDrawable = mDrawable;
-        this.mmessage = mmessage;
-        this.iduser = iduser;
-        this.type = type;
-        this.idmessage = idmessage;
-        this.important = important;
-        this.viewed = viewed;
-        this.silent = silent;
-        this.createdate = createdate;
-
-
-
+        this.pt=pt;
+        this.ray=ray;
+        this.msg=msg;
+        int[] colors = {0xffffffff, color};
+        float[] stops = {0.8f, 1f};
         mDrawable = new ShapeDrawable(new OvalShape());
+        mDrawable.setBounds(pt.x-ray, pt.y-ray, pt.x+ray, pt.y+ray);
+        mDrawable.getPaint().setColor(color);
+        mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
+    }
 
+    public void setMsg(Message msg){
+        this.msg=msg;
     }
 
     public void setcolor(int color){
@@ -56,108 +47,26 @@ public class Oval {
     }
 
     public void setpos(float x, float y){
-        mDrawable.setBounds((int)x-mray, (int)y-mray, (int)x+mray, (int)y+mray);
-    }
-    public void setOval(int mray, Point mpoint, int color){
-        this.mpt=mpoint;
-        this.mray=mray;
-        int[] colors = {0xffffffff, color};
-        float[] stops = {0.8f, 1f};
-        mDrawable.setBounds(mpoint.x-mray, mpoint.y-mray, mpoint.x+mray, mpoint.y+mray);
-        mDrawable.getPaint().setColor(color);
-        mDrawable.getPaint().setShader(new RadialGradient(mray,mray,mray, colors, stops, Shader.TileMode.MIRROR ));
-
-
+        mDrawable.setBounds((int)x-ray, (int)y-ray, (int)x+ray, (int)y+ray);
     }
 
-    public void setmDrawable(ShapeDrawable mDrawable) {
+    public void setDrawable(ShapeDrawable mDrawable) {
         this.mDrawable = mDrawable;
     }
 
-    public int getMray() {
-        return mray;
+    public int getray() {
+        return ray;
     }
 
-    public void setMray(int mray) {
-        this.mray = mray;
+    public void setray(int mray) {
+        this.ray = mray;
     }
-    public Point getMpt() {
-        return mpt;
-    }
-
-    public void setMpt(Point mpt) {
-        this.mpt = mpt;
+    public Point getpt() {
+        return pt;
     }
 
-    public String getMmessage() {
-        return mmessage;
+    public void setpt(Point mpt) {
+        this.pt = mpt;
     }
 
-    public void setMmessage(String mmessage) {
-        this.mmessage = mmessage;
-    }
-
-    public ArrayList getOvallist() {
-        return Ovallist;
-    }
-
-    public void setOvallist(ArrayList ovallist) {
-        Ovallist = ovallist;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(int iduser) {
-        this.iduser = iduser;
-    }
-
-    public int getIdmessage() {
-        return idmessage;
-    }
-
-    public void setIdmessage(int idmessage) {
-        this.idmessage = idmessage;
-    }
-
-    public boolean isImportant() {
-        return important;
-    }
-
-    public void setImportant(boolean important) {
-        this.important = important;
-    }
-
-    public boolean isViewed() {
-        return viewed;
-    }
-
-    public void setViewed(boolean viewed) {
-        this.viewed = viewed;
-    }
-
-    public boolean isSilent() {
-        return silent;
-    }
-
-    public void setSilent(boolean silent) {
-        this.silent = silent;
-    }
-
-    public Date getCreatedate() {
-        return createdate;
-    }
-
-    public void setCreatedate(Date createdate) {
-        this.createdate = createdate;
-    }
 }
