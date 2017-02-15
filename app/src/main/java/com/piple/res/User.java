@@ -10,16 +10,25 @@ import java.util.ArrayList;
  * Created by jeremie on 15/02/2017.
  */
 
-public class User implements Parcelable{
+public class User {
 
 
     private String id;
     private String pseudo;
     private ArrayList ContactList;
     private Image profilpicture;
-    private ArrayList Universelist;
+    private ArrayList universelist;
+
+    public ArrayList getUniverselist() {
+        return universelist;
+    }
+
+    public void setUniverselist(Universe universe) {
+        universelist.add(universe);
+    }
 
     public User(String id, String pseudo) {
+        universelist = new ArrayList();
         this.id = id;
         this.pseudo = pseudo;
     }
@@ -56,13 +65,4 @@ public class User implements Parcelable{
         this.profilpicture = profilpicture;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-    }
 }

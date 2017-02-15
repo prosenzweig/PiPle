@@ -126,7 +126,7 @@ public class UniverseActivity extends AppCompatActivity implements  GoogleApiCli
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }*/
         }
-
+            //TODO : ajouter les events sur références nécessaires pour getter l'univers et l'user.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)

@@ -44,9 +44,9 @@ public class Window extends PanZoomView {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("http://piple.firebase.google.com/");
+       // DatabaseReference ref = database.getReference("http://piple.firebase.google.com/");
 
-        ref.child("Messages").child("test").setValue(new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date()) );
+       // ref.child("Messages").child("test").setValue(new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date()) );
 
         Point ptPapa = new Point(100,100);
         Oval Papa = new Oval(150, ptPapa, 0xffff0000, null);

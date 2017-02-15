@@ -1,6 +1,7 @@
 package com.piple.app;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 /**
@@ -9,6 +10,8 @@ import android.os.Bundle;
  */
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,11 +59,15 @@ import com.google.firebase.appindexing.builders.PersonBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.piple.res.Contact;
 import com.piple.res.Universe;
+import com.piple.res.User;
 import com.piple.res.Window;
 
 /**
@@ -86,10 +93,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private EditText mMessageEditText;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private static final String MESSAGE_URL = "http://piple.firebase.google.com/message/";
+    private DatabaseReference myRefUniverse;
+    private DatabaseReference myRefUser;
+    private FirebaseDatabase database;
+    private User yourself;
+
+    private String m_Universename = "";
 
 
     /**
@@ -104,9 +113,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.home);
         findViewById(R.id.button2).setOnClickListener(this);
         findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
+        database = FirebaseDatabase.getInstance();
+        myRefUniverse = database.getReference("Universe");
+        myRefUser = database.getReference("User");
 
 
-        //jerem auth
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
@@ -129,11 +140,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }*/
 
         }
+        yourself = new User(mFirebaseUser.getUid(),mFirebaseUser.getEmail());
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
 
     }
 
@@ -159,25 +167,54 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
-    public boolean createuniverse() {
-        //Universe
-
-        return true;
-    }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.buttonnewuniverse) {
-            if (!createuniverse()) {
-                Toast.makeText(this, "apparently you are not god ( cannot create universe).", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Universe name :");
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            builder.setView(input);
+
+
+            // Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    m_Universename = input.getText().toString();
+                    Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, m_Universename);
+                    yourself.setUniverselist(myuniverse);
+                    myuniverse.setCurrentUniverse(true);
+                    Toast.makeText(HomeActivity.this, "damn.",
+                            Toast.LENGTH_SHORT).show();
+                    myRefUser.setValue(yourself);
+                    myRefUniverse.setValue(myuniverse);
+                    Toast.makeText(HomeActivity.this, "damn.",
+                            Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+                    finish();
+
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+
+
 
             }
-        }if (i == R.id.button2) {
+        if (i == R.id.button2) {
             startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+           // myRef.setvalue();
         }
     }
 }
