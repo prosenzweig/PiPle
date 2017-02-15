@@ -60,6 +60,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.piple.res.Universe;
 import com.piple.res.Window;
 
 /**
@@ -100,9 +101,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-       // findViewById(R.id.button2).setOnClickListener(this);
-        //findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
+        setContentView(R.layout.home);
+        findViewById(R.id.button2).setOnClickListener(this);
+        findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
 
 
         //jerem auth
@@ -120,10 +121,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             return;
         } else {
-            mUsername = mFirebaseUser.getDisplayName();
+            mUsername = mFirebaseUser.getEmail();
             Toast.makeText(HomeActivity.this, "coool" + mUsername,
                     Toast.LENGTH_SHORT).show();
-          //  startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
            /* if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }*/
@@ -160,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public boolean createuniverse() {
-
+        //Universe
 
         return true;
     }
@@ -176,6 +176,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
 
             }
+        }if (i == R.id.button2) {
+            startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
         }
     }
 }

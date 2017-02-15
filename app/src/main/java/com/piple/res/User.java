@@ -1,6 +1,8 @@
 package com.piple.res;
 
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
@@ -8,7 +10,8 @@ import java.util.ArrayList;
  * Created by jeremie on 15/02/2017.
  */
 
-public class User {
+public class User implements Parcelable{
+
 
     private String id;
     private String pseudo;
@@ -53,4 +56,13 @@ public class User {
         this.profilpicture = profilpicture;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }
