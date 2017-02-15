@@ -12,116 +12,184 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 /**
- * Created by Paul on 01/12/2016.
+ * Class Window
+ *      extends PanZoomView
+ *
+ * Window in which a universe will be contained.
  */
 
-public class Window extends PanZoomView {
+public class Window
+        extends
+            PanZoomView
+{
 
-    private static int margin =15;
-    public Window(Context context) {
+
+
+    /// RESOURCES ///
+
+    private static int MARGIN =15;
+
+
+
+    /// CONSTRUCTORS ///
+
+    public Window(Context context)
+    {
         super(context);
-
     }
 
-    public Window (Context context, AttributeSet attrs) {
+    public Window (Context context, AttributeSet attrs)
+    {
         super (context, attrs);
     }
 
-    public Window (Context context, AttributeSet attrs, int defStyle) {
+    public Window (Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
     }
 
 
-    public void onDraw(Canvas canvas) {
+
+    /// METHODS ///
+
+    /**
+     * Method onDraw
+     *      overrides method from View
+     *
+     * Draws the window on the screen.
+     *
+     * @param canvas screen of the phone
+     */
+    @Override
+    public void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
         canvas.save();
         canvas.restore();
     }
 
 
-    public void drawOnCanvas (Canvas canvas) {
-
-        Point ptPapa = new Point(100,100);
-       // Oval Papa = new Oval(150, ptPapa, 0xffff0000);
-        /*Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00);
+    /**
+     * Method drawOnCanvas
+     *
+     * Draws elements on the window.
+     *
+     * @param canvas screen of the phone
+     */
+    public void drawOnCanvas(Canvas canvas)
+    {
+        /*Point ptPapa = new Point(100,100);
+        Oval Papa = new Oval(150, ptPapa, 0xffff0000);
+        Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00);
         Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff);
-        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);*/
-        //Papa.getmDrawable().draw(canvas);
-        //drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa);
-        /*enfant1.getmDrawable().draw(canvas);
+        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);
+        Papa.getmDrawable().draw(canvas);
+        drawText(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa);
+        enfant1.getmDrawable().draw(canvas);
         enfant2.getmDrawable().draw(canvas);
-        drawtext(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
+        drawText(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
         enfant3.getmDrawable().draw(canvas);*/
-
-
     }
 
 
 
-    public Point beChildof(Point father,int fatherRay, int mRay, double angle ){
+    /**
+     * Method beChildOf
+     *
+     * TODO: What does it do ?
+     *
+     * @param father father of the child
+     * @param fatherRay radius of the father
+     * @param mRay radius of the child
+     * @param angle angle from the father at which it will be displayed
+     * @return center of the child's coordinates
+     */
+    public Point beChildof(Point father, int fatherRay, int mRay, double angle)
+    {
         Point mpoint = new Point();
-        mpoint.x=(int)(father.x + Math.sin(angle)*(margin+fatherRay+mRay));
-        mpoint.y=(int)(father.y + Math.cos(angle)*(margin+fatherRay+mRay));
+        mpoint.x=(int)(father.x + Math.sin(angle)*(MARGIN +fatherRay+mRay));
+        mpoint.y=(int)(father.y + Math.cos(angle)*(MARGIN +fatherRay+mRay));
         return mpoint;
     }
-    public void drawtext(Canvas canvas, String text, Oval oval){
-        int i;
+
+
+
+    /**
+     * Method drawText
+     *
+     * Displays a bubble's message inside the bubble, adapting to the shape of the bubble.
+     *
+     * @param canvas screen of the phone
+     * @param text message to be displayed
+     * @param oval bubble that will contain the message
+     */
+    public void drawText(Canvas canvas, String text, Oval oval)
+    {
         Paint paint = new Paint();
-        int size=50;
-        ArrayList<String> textlist = new ArrayList();
+        int size = 50;
+        int lenLigne = 20;
+        int nbLines;
+        ArrayList<String> textList = new ArrayList<>();
+        Rect bounds = new Rect();
+        boolean overflows;
+
         paint.setColor(Color.BLACK);
         paint.setTextSize(size);
-        Rect bounds = new Rect();
-        boolean depasse;
 
-
-        if(text.length()>144){
-            text = text.substring(0,144);
-            text=text+"...";
+        if (text.length() > 144) {
+            text = text.substring(0, 144);
+            text += "...";
         }
 
-        int nblignes=text.length()/20;
-        if(nblignes==0){
-            nblignes=1;
-        }
+        nbLines = text.length() / lenLigne;
+
+        if (nbLines == 0)
+            nbLines = 1;
+
         String[] strs = text.split(" ");
         int[] len = new int[strs.length];
 
-
-        for(i=0;i<strs.length;i++){
-            len[i]=strs[i].length();
+        for (int i=0 ; i<strs.length ; i++) {
+            len[i] = strs[i].length();
         }
-        int lenligne = text.length()/nblignes;
-        int strcount=0;
+
+        int strcount = 0;
         String accu;
-        for(i=0;i<nblignes;i++){
+
+        for (int i=0 ; i<nbLines ; i++) {
             accu="";
-            if(strcount<strs.length) {
+
+            if (strcount < strs.length) {
                 do {
                     accu = accu + " " + strs[strcount];
                     strcount++;
-                } while ((accu.length() < lenligne) && (strcount < strs.length));
+                } while ((accu.length() < lenLigne) && (strcount < strs.length));
             }
-            textlist.add(accu);
+
+            textList.add(accu);
         }
 
-        do{
-            size=size--;
+        do {
+            size--;
             paint.setTextSize(size);
-            depasse=false;
-            for(i=0;i<nblignes;i++){
-                paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>oval.getMray()*1.8){
-                    depasse=true;
+            overflows=false;
+
+            for(int i=0;i<nbLines;i++) {
+                paint.getTextBounds(textList.get(i), 0, textList.get(i).length(), bounds);
+                if(bounds.width()>oval.getmRay()*1.8){
+                    overflows=true;
                 }
             }
-        }while(depasse);
 
-        for(i=0;i<nblignes;i++){
-            paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), oval.getMpt().x - (bounds.width())/2,oval.getMpt().y-(nblignes/2-i)*size , paint);
+        }while (overflows);
+
+        for (int i=0 ; i<nbLines ; i++) {
+            paint.getTextBounds(textList.get(i), 0, textList.get(i).length(), bounds);
+            canvas.drawText(textList.get(i), oval.getmPt().x - (bounds.width())/2, oval.getmPt().y-(nbLines/2-i)*size, paint);
         }
     }
+
+
 
     /**
      * Return the resource id of the sample image. Note that this class always returns 0, indicating
@@ -129,41 +197,42 @@ public class Window extends PanZoomView {
      *
      * @return int
      */
-
     public int sampleDrawableId () {
         return 0;
     }
+
+
 
     /**
      * Return true if panning is supported.
      *
      * @return boolean
      */
-
     public boolean supportsPan () {
         return true;
     }
+
+
 
     /**
      * Return true if scaling is done around the focus point of the pinch.
      *
      * @return boolean
      */
-
     public boolean supportsScaleAtFocusPoint () {
         return true;
     }
+
+
 
     /**
      * Return true if pinch zooming is supported.
      *
      * @return boolean
      */
-
     public boolean supportsZoom () {
         return true;
     }
-
 
 }
 

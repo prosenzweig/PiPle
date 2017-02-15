@@ -1,51 +1,58 @@
 package com.piple.res;
 
-import android.graphics.Color;
+
+
 import android.graphics.Point;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-
-import java.util.ArrayList;
 import java.util.Date;
 
-public class Oval {
+
+
+/**
+ * Class Oval
+ *
+ * Contains a circle shape used as container of a message.
+ */
+public class Oval
+{
+
+
+
+    /// RESOURCES ///
 
     private ShapeDrawable mDrawable;
-    private int mray;
-    private Point mpt;
-
-
-
-    private String mmessage;
-    private ArrayList Ovallist = new ArrayList();
-
-
-
-
-    private int type, iduser, idmessage;
+    private int mRay;
+    private Point mPt;
+    private String mMessage;
+    private int type, idUser, idMessage;
     private boolean important, viewed, silent;
-    private Date createdate;
+    private Date createDate;
 
 
 
-    public Oval(ShapeDrawable mDrawable, String mmessage, int iduser, int type, int idmessage, boolean important, boolean viewed, boolean silent, Date createdate) {
+    /// CONSTRUCTORS ///
+
+    public Oval(ShapeDrawable mDrawable, String mMessage, int idUser, int type, int idMessage, boolean important, boolean viewed, boolean silent, Date createDate)
+    {
         this.mDrawable = mDrawable;
-        this.mmessage = mmessage;
-        this.iduser = iduser;
+        this.mMessage = mMessage;
+        this.idUser = idUser;
         this.type = type;
-        this.idmessage = idmessage;
+        this.idMessage = idMessage;
         this.important = important;
         this.viewed = viewed;
         this.silent = silent;
-        this.createdate = createdate;
-
-
+        this.createDate = createDate;
 
         mDrawable = new ShapeDrawable(new OvalShape());
-
     }
+
+
+
+    /// GETTERS & SETTERS ///
 
     public void setcolor(int color){
         this.mDrawable.getPaint().setColor(color);
@@ -56,11 +63,12 @@ public class Oval {
     }
 
     public void setpos(float x, float y){
-        mDrawable.setBounds((int)x-mray, (int)y-mray, (int)x+mray, (int)y+mray);
+        mDrawable.setBounds((int)x- mRay, (int)y- mRay, (int)x+ mRay, (int)y+ mRay);
     }
+
     public void setOval(int mray, Point mpoint, int color){
-        this.mpt=mpoint;
-        this.mray=mray;
+        this.mPt =mpoint;
+        this.mRay =mray;
         int[] colors = {0xffffffff, color};
         float[] stops = {0.8f, 1f};
         mDrawable.setBounds(mpoint.x-mray, mpoint.y-mray, mpoint.x+mray, mpoint.y+mray);
@@ -74,35 +82,28 @@ public class Oval {
         this.mDrawable = mDrawable;
     }
 
-    public int getMray() {
-        return mray;
+    public int getmRay() {
+        return mRay;
     }
 
-    public void setMray(int mray) {
-        this.mray = mray;
-    }
-    public Point getMpt() {
-        return mpt;
+    public void setmRay(int mRay) {
+        this.mRay = mRay;
     }
 
-    public void setMpt(Point mpt) {
-        this.mpt = mpt;
+    public Point getmPt() {
+        return mPt;
     }
 
-    public String getMmessage() {
-        return mmessage;
+    public void setmPt(Point mPt) {
+        this.mPt = mPt;
     }
 
-    public void setMmessage(String mmessage) {
-        this.mmessage = mmessage;
+    public String getmMessage() {
+        return mMessage;
     }
 
-    public ArrayList getOvallist() {
-        return Ovallist;
-    }
-
-    public void setOvallist(ArrayList ovallist) {
-        Ovallist = ovallist;
+    public void setmMessage(String mMessage) {
+        this.mMessage = mMessage;
     }
 
     public int getType() {
@@ -113,20 +114,20 @@ public class Oval {
         this.type = type;
     }
 
-    public int getIduser() {
-        return iduser;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public void setIduser(int iduser) {
-        this.iduser = iduser;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
-    public int getIdmessage() {
-        return idmessage;
+    public int getIdMessage() {
+        return idMessage;
     }
 
-    public void setIdmessage(int idmessage) {
-        this.idmessage = idmessage;
+    public void setIdMessage(int idMessage) {
+        this.idMessage = idMessage;
     }
 
     public boolean isImportant() {
@@ -153,11 +154,12 @@ public class Oval {
         this.silent = silent;
     }
 
-    public Date getCreatedate() {
-        return createdate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreatedate(Date createdate) {
-        this.createdate = createdate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
+
 }

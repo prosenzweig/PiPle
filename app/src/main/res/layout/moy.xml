@@ -6,8 +6,8 @@
 
     <com.piple.res.Window
         android:id="@+id/zoomview"
-        android:layout_width="4000px"
-        android:layout_height="4000px" />
+        android:layout_width="4000dp"
+        android:layout_height="4000dp" />
 
 </LinearLayout>
 
