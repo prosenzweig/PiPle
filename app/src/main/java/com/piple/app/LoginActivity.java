@@ -25,6 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.piple.res.User;
 
 /**
  * Demonstrate Firebase Authentication using a Google ID Token.
@@ -147,7 +148,11 @@ public class LoginActivity extends FragmentActivity implements
                         }
 
                         else {
-
+                           /* Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            User myuser = new User(task.getResult().getUser().getUid(), task.getResult().getUser().getEmail());
+                            intent.putExtra("currentuser",myuser);
+                            startActivity(intent);
+                             */
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             finish();
                         }

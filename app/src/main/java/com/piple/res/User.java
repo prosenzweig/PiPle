@@ -14,7 +14,7 @@ public class User {
     private String pseudo;
     private ArrayList ContactList;
     private Image profilpicture;
-    private ArrayList
+    private ArrayList Universelist;
 
     public User(String id, String pseudo) {
         this.id = id;
@@ -52,4 +52,5 @@ public class User {
     public void setProfilpicture(Image profilpicture) {
         this.profilpicture = profilpicture;
     }
+
 }

@@ -101,8 +101,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
 
-        findViewById(R.id.button2).setOnClickListener(this);
-        findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
+       // findViewById(R.id.button2).setOnClickListener(this);
+        //findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
 
 
         //jerem auth
@@ -123,7 +123,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             mUsername = mFirebaseUser.getDisplayName();
             Toast.makeText(HomeActivity.this, "coool" + mUsername,
                     Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+          //  startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
            /* if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }*/
