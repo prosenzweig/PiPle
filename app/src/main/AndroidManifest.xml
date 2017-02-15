@@ -58,5 +58,10 @@
             </service>
         </activity>
 
+        <activity
+            android:name="com.piple.app.SettingsActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
     </application>
 </manifest>

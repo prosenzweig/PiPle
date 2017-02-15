@@ -1,14 +1,23 @@
 package com.piple.app;
 
-import android.app.Activity;
+
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+
 
 /**
  * Class RegisterActivity
- *      extends Activity
+ *      extends AppCompatActivity
  */
-public class RegisterActivity extends Activity
+public class RegisterActivity
+        extends
+            AppCompatActivity
 {
+
+
+
     /**
      * Method onCreate
      * Implements the behavior of the activity when it is created.
@@ -19,4 +28,5 @@ public class RegisterActivity extends Activity
     {
 
     }
+
 }
