@@ -41,13 +41,13 @@ public class Window extends PanZoomView {
 
     public void drawOnCanvas (Canvas canvas) {
 
-        Point ptPapa = new Point(200,200);
+        Point ptPapa = new Point(100,100);
        // Oval Papa = new Oval(150, ptPapa, 0xffff0000);
         /*Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00);
         Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff);
         Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);*/
         //Papa.getmDrawable().draw(canvas);
-        drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa, 150);
+        //drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa);
         /*enfant1.getmDrawable().draw(canvas);
         enfant2.getmDrawable().draw(canvas);
         drawtext(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
@@ -111,7 +111,7 @@ public class Window extends PanZoomView {
             depasse=false;
             for(i=0;i<nblignes;i++){
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>oval.ray*1.8){
+                if(bounds.width()>oval.getMray()*1.8){
                     depasse=true;
                 }
             }
@@ -119,7 +119,7 @@ public class Window extends PanZoomView {
 
         for(i=0;i<nblignes;i++){
             paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), oval.pt.x - (bounds.width())/2,oval.pt.y-(nblignes/2-i)*size , paint);
+            canvas.drawText(textlist.get(i), oval.getMpt().x - (bounds.width())/2,oval.getMpt().y-(nblignes/2-i)*size , paint);
         }
     }
 

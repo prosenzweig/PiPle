@@ -99,7 +99,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getActionBar().setTitle("PiPle - Universe");
+        getSupportActionBar().setTitle("PiPle - Universe");  // provide compatibility to all the versions
 
         //jerem auth
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -109,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
         mFirebaseAuth = FirebaseAuth.getInstance();
         //mFirebaseDatabaseReference = FirebaseAuth.getInstance().getReference();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, LoginActivity.class));
@@ -131,6 +133,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
                 .build();
 
     }
+    
 
 
     @Override
@@ -154,15 +157,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
-    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
-        public void onLongPress(MotionEvent e) {
-            Log.e("", "Longpress detected");
-        }
-    });
 
-    public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
-    }
 
 
     @Override

@@ -14,9 +14,13 @@ public class Oval {
 
     private ShapeDrawable mDrawable;
     private int mray;
+    private Point mpt;
+
+
 
     private String mmessage;
     private ArrayList Ovallist = new ArrayList();
+
 
 
 
@@ -55,7 +59,7 @@ public class Oval {
         mDrawable.setBounds((int)x-mray, (int)y-mray, (int)x+mray, (int)y+mray);
     }
     public void setOval(int mray, Point mpoint, int color){
-
+        this.mpt=mpoint;
         this.mray=mray;
         int[] colors = {0xffffffff, color};
         float[] stops = {0.8f, 1f};
@@ -66,5 +70,94 @@ public class Oval {
 
     }
 
-}
+    public void setmDrawable(ShapeDrawable mDrawable) {
+        this.mDrawable = mDrawable;
+    }
 
+    public int getMray() {
+        return mray;
+    }
+
+    public void setMray(int mray) {
+        this.mray = mray;
+    }
+    public Point getMpt() {
+        return mpt;
+    }
+
+    public void setMpt(Point mpt) {
+        this.mpt = mpt;
+    }
+
+    public String getMmessage() {
+        return mmessage;
+    }
+
+    public void setMmessage(String mmessage) {
+        this.mmessage = mmessage;
+    }
+
+    public ArrayList getOvallist() {
+        return Ovallist;
+    }
+
+    public void setOvallist(ArrayList ovallist) {
+        Ovallist = ovallist;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getIduser() {
+        return iduser;
+    }
+
+    public void setIduser(int iduser) {
+        this.iduser = iduser;
+    }
+
+    public int getIdmessage() {
+        return idmessage;
+    }
+
+    public void setIdmessage(int idmessage) {
+        this.idmessage = idmessage;
+    }
+
+    public boolean isImportant() {
+        return important;
+    }
+
+    public void setImportant(boolean important) {
+        this.important = important;
+    }
+
+    public boolean isViewed() {
+        return viewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        this.viewed = viewed;
+    }
+
+    public boolean isSilent() {
+        return silent;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
+    }
+
+    public Date getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(Date createdate) {
+        this.createdate = createdate;
+    }
+}
