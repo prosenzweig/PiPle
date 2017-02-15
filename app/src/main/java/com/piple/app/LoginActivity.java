@@ -155,9 +155,9 @@ public class LoginActivity
 
 
     /**
-     * Method googleSignIn
+     * Method signIn
      *
-     * Allows an registered user to sign in.
+     * Allows a registered user to sign in.
      *
      * @param email mail address used for his account
      * @param password password to access his account
@@ -330,5 +330,3 @@ public class LoginActivity
     }
 
 }
-
-

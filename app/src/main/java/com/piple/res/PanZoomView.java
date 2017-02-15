@@ -228,6 +228,7 @@ public class PanZoomView
                     final float dx = x - mLastTouchX;
                     final float dy = y - mLastTouchY;
 
+                    // TODO : il faut recuperer la taille de l'écran et l'on peut ensuite gérer des limites de déplacement
                     mPosX += dx;
                     mPosY += dy;
                     //mFocusX = mPosX;

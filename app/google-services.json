@@ -8,14 +8,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:443043859033:android:1ed79de1cc5e248c",
+        "mobilesdk_app_id": "1:443043859033:android:384a14a85347230d",
         "android_client_info": {
           "package_name": "com.piple.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "443043859033-tjushrpodbrlosr9gphjutmavdmpu1am.apps.googleusercontent.com",
+          "client_id": "443043859033-u1r1fv96od58i114ccm2if6uttsl72m8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.piple.app",
+            "certificate_hash": "66F1DB75F04656603EBC77E3BCBFBEA197ADBA42"
+          }
+        },
+        {
+          "client_id": "443043859033-3qo4devnq48eqjfj4jk6oeohkfpt6fus.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.piple.app",

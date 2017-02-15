@@ -1,5 +1,7 @@
 package com.piple.res;
 
+
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,8 +10,14 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Date;
+
+
 
 /**
  * Class Window
@@ -17,7 +25,6 @@ import java.util.ArrayList;
  *
  * Window in which a universe will be contained.
  */
-
 public class Window
         extends
             PanZoomView
@@ -69,6 +76,7 @@ public class Window
     }
 
 
+
     /**
      * Method drawOnCanvas
      *
@@ -76,19 +84,21 @@ public class Window
      *
      * @param canvas screen of the phone
      */
-    public void drawOnCanvas(Canvas canvas)
+    public void drawOnCanvas (Canvas canvas)
     {
-        /*Point ptPapa = new Point(100,100);
-        Oval Papa = new Oval(150, ptPapa, 0xffff0000);
-        Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00);
-        Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff);
-        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        Point ptPapa = new Point(100,100);
+        Oval Papa = new Oval(150, ptPapa, 0xffff0000, null);
+        Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00, null);
+        Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff, null);
+        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff, null);
         Papa.getmDrawable().draw(canvas);
-        drawText(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", ptPapa);
+        drawText(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", Papa);
         enfant1.getmDrawable().draw(canvas);
         enfant2.getmDrawable().draw(canvas);
-        drawText(canvas, "texte cours",beChildof(ptPapa, 150, 60, 0) , 60);
-        enfant3.getmDrawable().draw(canvas);*/
+        drawText(canvas, "texte cours",enfant2);
+        enfant3.getmDrawable().draw(canvas);
     }
 
 
@@ -180,8 +190,7 @@ public class Window
                     overflows=true;
                 }
             }
-
-        }while (overflows);
+        } while (overflows);
 
         for (int i=0 ; i<nbLines ; i++) {
             paint.getTextBounds(textList.get(i), 0, textList.get(i).length(), bounds);

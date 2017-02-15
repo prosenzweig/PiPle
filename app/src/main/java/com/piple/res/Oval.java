@@ -26,7 +26,7 @@ public class Oval
     private ShapeDrawable mDrawable;
     private int mRay;
     private Point mPt;
-    private String mMessage;
+    private Message mMessage;
     private int type, idUser, idMessage;
     private boolean important, viewed, silent;
     private Date createDate;
@@ -35,7 +35,7 @@ public class Oval
 
     /// CONSTRUCTORS ///
 
-    public Oval(ShapeDrawable mDrawable, String mMessage, int idUser, int type, int idMessage, boolean important, boolean viewed, boolean silent, Date createDate)
+    public Oval(ShapeDrawable mDrawable, Message mMessage, int idUser, int type, int idMessage, boolean important, boolean viewed, boolean silent, Date createDate)
     {
         this.mDrawable = mDrawable;
         this.mMessage = mMessage;
@@ -48,6 +48,21 @@ public class Oval
         this.createDate = createDate;
 
         mDrawable = new ShapeDrawable(new OvalShape());
+    }
+
+
+
+    public Oval(int ray, Point pt, int color, Message msg )
+    {
+        this.mPt=pt;
+        this.mRay=ray;
+        this.mMessage=msg;
+        int[] colors = {0xffffffff, color};
+        float[] stops = {0.8f, 1f};
+        mDrawable = new ShapeDrawable(new OvalShape());
+        mDrawable.setBounds(pt.x-ray, pt.y-ray, pt.x+ray, pt.y+ray);
+        mDrawable.getPaint().setColor(color);
+        mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
     }
 
 
@@ -74,11 +89,9 @@ public class Oval
         mDrawable.setBounds(mpoint.x-mray, mpoint.y-mray, mpoint.x+mray, mpoint.y+mray);
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(mray,mray,mray, colors, stops, Shader.TileMode.MIRROR ));
-
-
     }
 
-    public void setmDrawable(ShapeDrawable mDrawable) {
+    public void setDrawable(ShapeDrawable mDrawable) {
         this.mDrawable = mDrawable;
     }
 
@@ -98,11 +111,11 @@ public class Oval
         this.mPt = mPt;
     }
 
-    public String getmMessage() {
+    public Message getmMessage() {
         return mMessage;
     }
 
-    public void setmMessage(String mMessage) {
+    public void setmMessage(Message mMessage) {
         this.mMessage = mMessage;
     }
 
