@@ -1,22 +1,33 @@
 package com.piple.res;
 
+
+
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by Paul on 15/02/2017.
- */
 
+
+/**
+ * Class Message
+ *
+ * Contains a message and its information.
+ */
 public class Message {
 
 
-    private String mmessage;
-    private ArrayList<Message> Ovallist = new ArrayList();
 
+    /// RESOURCES ///
+
+    private String mmessage;
+    private ArrayList<Message> Ovallist = new ArrayList<>();
     private int type;
     private String iduser, idmessage;
     private boolean important, viewed, silent;
     private Date createdate;
+
+
+
+    /// CONSTRUCTORS ///
 
     public Message(String mmessage, ArrayList<Message> ovallist, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate) {
         this.mmessage = mmessage;
@@ -30,6 +41,9 @@ public class Message {
         this.createdate = createdate;
     }
 
+
+
+    /// GETTERS & SETTERS ///
 
     public String getMmessage() {
         return mmessage;

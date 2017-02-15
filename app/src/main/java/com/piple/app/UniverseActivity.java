@@ -43,7 +43,6 @@ public class UniverseActivity
     private String mUsername;
     public static final String ANONYMOUS = "anonymous";
 
-    // Firebase instance variables
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;

@@ -43,7 +43,8 @@ public class LoginActivity
             GoogleApiClient.OnConnectionFailedListener
 {
 
-    
+
+
     /// RESOURCES ///
     
     private static final String TAG = "LoginActivity";
@@ -119,6 +120,7 @@ public class LoginActivity
             }
         };
     }
+
 
 
     /**
@@ -275,6 +277,7 @@ public class LoginActivity
                     }
                 });
     }
+
 
 
     /**

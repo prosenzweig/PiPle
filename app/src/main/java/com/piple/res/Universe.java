@@ -1,18 +1,31 @@
 package com.piple.res;
 
+
+
 import java.util.ArrayList;
 
-/**
- * Created by jeremie on 15/02/2017.
- */
 
-public class Universe {
+
+/**
+ * Class Universe
+ *
+ * Contains a whole universe.
+ */
+public class Universe
+{
+
+
+
+    /// RESOURCES ///
 
     private String id;
-
     private String name;
     private ArrayList universeUserList;
     private boolean currentUniverse;
+
+
+
+    /// CONSTRUCTORS ///
 
     public Universe(Contact user, String name, String id) {
         universeUserList = new ArrayList();
@@ -20,6 +33,10 @@ public class Universe {
         this.name = name;
         this.id = id;
     }
+
+
+
+    /// GETTERS & SETTERS ///
 
     public String getId() {
         return id;
@@ -52,4 +69,5 @@ public class Universe {
     public void setCurrentUniverse(boolean currentUniverse) {
         this.currentUniverse = currentUniverse;
     }
+
 }
