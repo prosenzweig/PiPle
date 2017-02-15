@@ -130,6 +130,7 @@ public class LoginActivity extends FragmentActivity implements
 
     //FOR EMAIL PASSWORD SINGIN
     private void signin( String email, String password){
+
         mFirebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -146,6 +147,7 @@ public class LoginActivity extends FragmentActivity implements
                         }
 
                         else {
+
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             finish();
                         }

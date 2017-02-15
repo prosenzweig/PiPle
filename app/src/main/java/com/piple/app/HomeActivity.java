@@ -69,7 +69,7 @@ import com.piple.res.Window;
  *
  * Creates the main activity.
  */
-public class HomeActivity extends AppCompatActivity implements View.OnTouchListener , GoogleApiClient.OnConnectionFailedListener {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener , GoogleApiClient.OnConnectionFailedListener {
 
 
     //jerem for auth
@@ -99,8 +99,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle("PiPle - Universe");
-        getSupportActionBar().setTitle("PiPle - Universe");  // provide compatibility to all the versions
+
+
+        findViewById(R.id.button2).setOnClickListener(this);
+        findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
+
 
         //jerem auth
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -133,7 +136,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
                 .build();
 
     }
-    
 
 
     @Override
@@ -157,12 +159,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnTouchListe
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
+    public boolean createuniverse() {
 
 
+        return true;
+    }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.buttonnewuniverse) {
+            if (!createuniverse()) {
+                Toast.makeText(this, "apparently you are not god ( cannot create universe).", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+
+            }
+        }
     }
 }
 

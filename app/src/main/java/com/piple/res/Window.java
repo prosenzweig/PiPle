@@ -57,7 +57,6 @@ public class Window extends PanZoomView {
     }
 
 
-
     public Point beChildof(Point father,int fatherRay, int mRay, double angle ){
         Point mpoint = new Point();
         mpoint.x=(int)(father.x + Math.sin(angle)*(margin+fatherRay+mRay));
