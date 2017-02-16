@@ -60,6 +60,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.piple.res.Universe;
 import com.piple.res.Window;
 
 /**
@@ -99,6 +100,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("blabufdhjksdwn");
+        startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
+        finish();
 
 
        // findViewById(R.id.button2).setOnClickListener(this);

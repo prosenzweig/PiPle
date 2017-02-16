@@ -11,16 +11,17 @@ public class Message {
 
 
     private String mmessage;
-    private ArrayList<Message> Ovallist = new ArrayList();
+    private ArrayList<Message> children = new ArrayList();
+    private Message father;
 
     private int type;
     private String iduser, idmessage;
     private boolean important, viewed, silent;
     private Date createdate;
 
-    public Message(String mmessage, ArrayList<Message> ovallist, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate) {
+    public Message(String mmessage, ArrayList<Message> ovallist, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate, Message father) {
         this.mmessage = mmessage;
-        Ovallist = ovallist;
+        children = ovallist;
         this.type = type;
         this.iduser = iduser;
         this.idmessage = idmessage;
@@ -28,6 +29,7 @@ public class Message {
         this.viewed = viewed;
         this.silent = silent;
         this.createdate = createdate;
+        this.father=father;
     }
 
 
@@ -39,12 +41,12 @@ public class Message {
         this.mmessage = mmessage;
     }
 
-    public ArrayList getOvallist() {
-        return Ovallist;
+    public ArrayList<Message> getChildren() {
+        return children;
     }
 
     public void setOvallist(ArrayList ovallist) {
-        Ovallist = ovallist;
+        children = ovallist;
     }
 
     public int getType() {

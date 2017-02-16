@@ -8,8 +8,11 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.Math;
 import java.util.ArrayList;
@@ -44,30 +47,63 @@ public class Window extends PanZoomView {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("http://piple.firebase.google.com/");
+        DatabaseReference ref = database.getReference("Messages");
 
-        ref.child("Messages").child("test").setValue(new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date()) );
+        Message root = new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), null);
+        Message child1 = new Message("Comment allez-vous monsieur?", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),root);
+        Message child2 = new Message("très bien Merci !", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1);
+        Message child3 = new Message("En vrai ça marche plutot", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
 
-        Point ptPapa = new Point(100,100);
-        Oval Papa = new Oval(150, ptPapa, 0xffff0000, null);
-        Oval enfant1 = new Oval(50, beChildof(ptPapa, 150, 50, Math.PI/4), 0xff00ff00, null);
-        Oval enfant2 = new Oval(60, beChildof(ptPapa, 150, 60, 0), 0xff0000ff, null);
-        Oval enfant3 = new Oval(100, beChildof(ptPapa, 150, 100, Math.PI/2), 0x99ff00ff, null);
-        Papa.getmDrawable().draw(canvas);
-        drawtext(canvas, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus venenatis leo eu mi ultricies maximus. In porttitor pharetra ultricies. Donec vulputate risus vel leo convallis, eu ultricies justo lobortis. Suspendisse rutrum ligula libero, sit amet vulputate mauris consequat vel. Sed id posuere est. In lobortis, ligula sed commodo rutrum, nisi est interdum velit, vel porta quam lorem id felis. Aliquam hendrerit rhoncus magna, non sodales velit feugiat at. Nunc aliquet laoreet arcu, eu varius purus pretium ut. Donec purus massa, feugiat eu leo et, lobortis maximus ex. Integer eros ante, dignissim ut consectetur eu, feugiat vel diam. Nunc eu velit eros. Nam ultrices eget risus ac ultricies. Interdum et malesuada fames ac ante ipsum primis in faucibus.", Papa);
-        enfant1.getmDrawable().draw(canvas);
-        enfant2.getmDrawable().draw(canvas);
-        drawtext(canvas, "texte cours",enfant2);
-        enfant3.getmDrawable().draw(canvas);
+        root.getChildren().add(child1);
+        root.getChildren().add(child3);
+        child1.getChildren().add(child2);
+
+        child1.getChildren().add(new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), null));
+        child1.getChildren().add(new Message("Comment allez-vous monsieur?", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),root));
+        child1.getChildren().add(new Message("très bien Merci !", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1));
+
+        /*ref.child(root.getIdmessage()).setValue(root );
+        ref.child(child1.getIdmessage()).setValue( child1);
+        ref.child(child2.getIdmessage()).setValue(child2);
+        ref.child(child3.getIdmessage()).setValue(child3 );*/
+
+
+        /*
+        ref.addValueEventListener(new ValueEventListener() {
+                                      @Override
+                                      public void onDataChange(DataSnapshot dataSnapshot) {
+                                          Message post = dataSnapshot.getValue(Message.class);
+                                          System.out.println("coucoucoucoucouc"+post.getMmessage());
+                                      }
+
+                                      @Override
+                                      public void onCancelled(DatabaseError databaseError) {
+                                          System.out.println("failllllleeedddd");
+                                      }
+                                  });*/
+
+        System.out.println("blablablablablabl");
+        drawMessages(canvas,new Oval(100, new Point(200,200),0xffffff00,root));
 
 
     }
 
+    public void drawMessages(Canvas canvas,Oval root){
+        int nbchildren = root.getMsg().getChildren().size();
+        double angle = Math.PI/nbchildren;
+        root.getmDrawable().draw(canvas);
+        drawtext(canvas, root.getMsg().getMmessage(),root);
+        for(int i=0; i<root.getMsg().getChildren().size(); i++ ){
+            Message msg = root.getMsg().getChildren().get(i);
+            drawMessages(canvas,new Oval(70, beChildof(root, 70, angle*i-Math.PI/2),0xffffff00, msg));
+        }
+    }
 
-    public Point beChildof(Point father,int fatherRay, int mRay, double angle ){
+
+    public Point beChildof(Oval father, int mRay, double angle ){
         Point mpoint = new Point();
-        mpoint.x=(int)(father.x + Math.sin(angle)*(margin+fatherRay+mRay));
-        mpoint.y=(int)(father.y + Math.cos(angle)*(margin+fatherRay+mRay));
+        mpoint.x=(int)(father.getpt().x + Math.sin(angle)*(margin+father.getray()+mRay));
+        mpoint.y=(int)(father.getpt().y + Math.cos(angle)*(margin+father.getray()+mRay));
         return mpoint;
     }
     public void drawtext(Canvas canvas, String text, Oval oval){

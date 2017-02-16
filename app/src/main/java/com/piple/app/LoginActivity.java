@@ -25,6 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.piple.res.Universe;
 import com.piple.res.User;
 
 /**
@@ -122,7 +123,7 @@ public class LoginActivity extends FragmentActivity implements
                         }
 
                         else {
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            startActivity(new Intent(LoginActivity.this, UniverseActivity.class));
                             finish();
                         }
                     }

@@ -15,9 +15,7 @@ public class Oval {
     private ShapeDrawable mDrawable;
     private int ray;
     private Point pt;
-    Message msg;
-
-
+    private Message msg;
 
 
 
@@ -48,6 +46,11 @@ public class Oval {
 
     public void setpos(float x, float y){
         mDrawable.setBounds((int)x-ray, (int)y-ray, (int)x+ray, (int)y+ray);
+    }
+
+
+    public Message getMsg() {
+        return msg;
     }
 
     public void setDrawable(ShapeDrawable mDrawable) {
