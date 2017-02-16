@@ -1,5 +1,7 @@
 package com.piple.res;
 
+
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,13 +14,25 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-public class PanZoomView extends View {
+
+
+/**
+ * Class PanZoomView
+ *      extends View
+ *
+ * Class already coded that creates an almost infinite window in which we can scroll, zoom in&out, ...
+ */
+public class PanZoomView
+        extends
+            View
+{
+
+
+
+    /// RESOURCES ///
 
     static protected final boolean ScaleAtFocusPoint = false;
     static protected final int DefaultDrawableId = 0x7f020053;
-
-    Oval C1, C2, C3, C4, C5;
-
 
     protected Drawable mSampleImage;
     protected Context mContext;
@@ -46,8 +60,9 @@ public class PanZoomView extends View {
     protected boolean mSupportsScaleAtFocus = true;
 
 
-    /**
-     */
+
+    /// CONSTRUCTORS ///
+
     public PanZoomView (Context context) {
         this(context, null, 0);
     }
@@ -56,20 +71,24 @@ public class PanZoomView extends View {
         this(context, attrs, 0);
     }
 
-    public PanZoomView (Context context, AttributeSet attrs, int defStyle) {
+    public PanZoomView (Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
         mContext = context;
         setupToDraw (context, attrs, defStyle);
         setupScaleDetector (context, attrs, defStyle);
     }
 
+
+
+    /// METHODS ///
+
     /**
      * Calculate the inSampleSize to use in BitmapFactory.Options in order
      * to load a drawable resource into a bitmap of the specified size.
      */
-
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
+    {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -85,12 +104,13 @@ public class PanZoomView extends View {
         return inSampleSize;
     }
 
+
+
     /**
      * Decode a resource into a bitmap of the specified size.
      */
-
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight)
+    {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -105,6 +125,8 @@ public class PanZoomView extends View {
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
+
+
     /**
      * Do whatever drawing is appropriate for this view.
      * The canvas object is already set up to be drawn on. That means that all translations and scaling
@@ -113,16 +135,18 @@ public class PanZoomView extends View {
      * @param canvas Canvas
      * @return void
      */
-
-    public void drawOnCanvas (Canvas canvas) {
+    public void drawOnCanvas (Canvas canvas)
+    {
 
     }
+
 
 
     /**
      * onDraw
      */
-    @Override public void onDraw(Canvas canvas) {
+    @Override public void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
 
         canvas.save();
@@ -166,12 +190,14 @@ public class PanZoomView extends View {
         canvas.restore();
     }
 
+
+
     /**
      * Handle touch and multitouch events so panning and zooming can be supported.
      *
      */
-
-    @Override public boolean onTouchEvent(MotionEvent ev) {
+    @Override public boolean onTouchEvent(MotionEvent ev)
+    {
 
         // If we are not supporting either zoom or pan, return early.
         if (!mSupportsZoom && !mSupportsPan) return false;
@@ -202,6 +228,7 @@ public class PanZoomView extends View {
                     final float dx = x - mLastTouchX;
                     final float dy = y - mLastTouchY;
 
+                    // TODO : il faut recuperer la taille de l'écran et l'on peut ensuite gérer des limites de déplacement
                     mPosX += dx;
                     mPosY += dy;
                     //mFocusX = mPosX;
@@ -245,26 +272,30 @@ public class PanZoomView extends View {
         return true;
     }
 
+
+
     /**
      * Return the resource id of the sample image.
      *
      * @return int
      */
-
     public int sampleDrawableId () {
         return DefaultDrawableId;
     }
+
+
 
     /**
      * This method sets up the scale detector object used by the view. It is called by the constructor.
      *
      * @return void
      */
-
     protected void setupScaleDetector (Context context, AttributeSet attrs, int defStyle) {
         // Create our ScaleGestureDetector
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
     }
+
+
 
     /**
      * This method performs whatever set up is necessary to do drawing. It is called by the constructor.
@@ -274,7 +305,6 @@ public class PanZoomView extends View {
      *
      * @return void
      */
-
     protected void setupToDraw (Context context, AttributeSet attrs, int defStyle) {
         mSupportsPan = supportsPan ();
         mSupportsZoom = supportsZoom ();
@@ -287,40 +317,43 @@ public class PanZoomView extends View {
     }
 
 
+
     public boolean supportsPan () {
         return true;
     }
+
+
 
     /**
      * Return true if scaling is done around the focus point of the pinch.
      *
      * @return boolean
      */
-
     public boolean supportsScaleAtFocusPoint () {
         return ScaleAtFocusPoint;
     }
+
+
 
     /**
      * Return true if pinch zooming is supported.
      *
      * @return boolean
      */
-
     public boolean supportsZoom () {
         return true;
     }
 
-/**
- */
+
+
 // Class definitions
 
     /**
      * ScaleListener
      *
      */
-
-    protected class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    protected class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+    {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             if (!mSupportsZoom) return true;
@@ -336,4 +369,4 @@ public class PanZoomView extends View {
         }
     }
 
-} // end class
+}

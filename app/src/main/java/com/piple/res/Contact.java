@@ -1,21 +1,39 @@
 package com.piple.res;
 
+
+
 import android.media.Image;
 
-/**
- * Created by jeremie on 15/02/2017.
- */
 
-public class Contact {
+
+/**
+ * Class Contact
+ *
+ * Stores the information of a contact.
+ */
+public class Contact
+{
+
+
+
+    /// RESOURCES ///
 
     private String pseudo;
     private String id;
     private Image profilpict;
 
+
+
+    /// CONSTRUCTORS ///
+
     public Contact(String pseudo, String id) {
         this.pseudo = pseudo;
         this.id = id;
     }
+
+
+
+    /// GETTERS & SETTERS ///
 
     public String getPseudo() {
         return pseudo;
@@ -40,4 +58,5 @@ public class Contact {
     public void setId(String id) {
         this.id = id;
     }
+
 }

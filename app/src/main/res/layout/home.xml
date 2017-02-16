@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,7 +8,6 @@
     android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <TextView
         android:text="UniversePiPle"
@@ -21,18 +19,14 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="18dp"
         android:layout_marginStart="18dp"
-        android:layout_marginTop="6dp"
-        android:layout_x="40dp"
-        android:layout_y="45dp" />
+        android:layout_marginTop="6dp" />
 
     <android.support.design.widget.FloatingActionButton
-            android:backgroundTint="#FFFFFF"
-            android:id="@+id/button2"
-            android:hapticFeedbackEnabled="true"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-        android:layout_x="42dp"
-            android:layout_y="65dp"
+        android:backgroundTint="#FFFFFF"
+        android:id="@+id/button2"
+        android:hapticFeedbackEnabled="true"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
         android:layout_below="@+id/textView2"
         android:layout_alignLeft="@+id/textView2"
         android:layout_alignStart="@+id/textView2"
@@ -47,14 +41,11 @@
         android:id="@+id/buttonnewuniverse"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="#FFFFFF"
-        android:layout_x="289dp"
-        android:layout_y="498dp"
         android:layout_marginRight="46dp"
         android:layout_marginEnd="46dp"
         android:layout_marginBottom="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
 
 </RelativeLayout>

@@ -1,24 +1,53 @@
 package com.piple.res;
 
+
+
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-/**
- * Created by jeremie on 15/02/2017.
- */
 
-public class User {
+
+/**
+ * Class User
+ *
+ * Contains a user and his information.
+ */
+public class User
+{
+
+
+
+    /// RESOURCES ///
 
     private String id;
     private String pseudo;
     private ArrayList ContactList;
     private Image profilpicture;
-    private ArrayList Universelist;
+    private ArrayList universelist;
+
+
+
+    /// CONSTRUCTORS ///
 
     public User(String id, String pseudo) {
+        universelist = new ArrayList();
         this.id = id;
         this.pseudo = pseudo;
+    }
+
+
+
+    /// GETTERS & SETTERS ///
+
+    public ArrayList getUniverselist() {
+        return universelist;
+    }
+
+    public void setUniverselist(Universe universe) {
+        universelist.add(universe);
     }
 
     public String getId() {
