@@ -21,7 +21,6 @@ import java.util.Date;
 
 public class Window extends PanZoomView {
 
-    private static int margin =15;
     public Window(Context context) {
         super(context);
 
@@ -49,27 +48,37 @@ public class Window extends PanZoomView {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Messages");
 
-        Message root = new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), null);
-        Message child1 = new Message("Comment allez-vous monsieur?", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),root);
-        Message child2 = new Message("très bien Merci !", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1);
-        Message child3 = new Message("En vrai ça marche plutot", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
+        Message root = new Message("root", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), null);
+        Message child1 = new Message("root child1", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),root);
+        Message child2 = new Message("root child2", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), root);
+        Message child3 = new Message("root child3", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
+        Message child4 = new Message("root child4", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
+        Message child5 = new Message("root chil5", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
 
         root.getChildren().add(child1);
+        root.getChildren().add(child2);
         root.getChildren().add(child3);
-        child1.getChildren().add(child2);
+        root.getChildren().add(child4);
 
-        child1.getChildren().add(new Message("blabla", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), null));
-        child1.getChildren().add(new Message("Comment allez-vous monsieur?", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),root));
-        child1.getChildren().add(new Message("très bien Merci !", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1));
+        child3.getChildren().add(new Message("child1 child1", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
+        child3.getChildren().add(new Message("child1 child2", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
+        child3.getChildren().add(new Message("child1 child3", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),child1));
+        child3.getChildren().add(new Message("child1 child4", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1));
 
-        /*ref.child(root.getIdmessage()).setValue(root );
+        child4.getChildren().add(new Message("child4 child1", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
+        child4.getChildren().add(new Message("child4 child2", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
+        child4.getChildren().add(new Message("child4 child3", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),child1));
+        child4.getChildren().add(new Message("child4 child4", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1));
+
+
+        ref.child(root.getIdmessage()).setValue(root );
         ref.child(child1.getIdmessage()).setValue( child1);
         ref.child(child2.getIdmessage()).setValue(child2);
-        ref.child(child3.getIdmessage()).setValue(child3 );*/
+        ref.child(child3.getIdmessage()).setValue(child3 );
 
 
-        /*
-        ref.addValueEventListener(new ValueEventListener() {
+
+        /*ref.addValueEventListener(new ValueEventListener() {
                                       @Override
                                       public void onDataChange(DataSnapshot dataSnapshot) {
                                           Message post = dataSnapshot.getValue(Message.class);
@@ -82,25 +91,28 @@ public class Window extends PanZoomView {
                                       }
                                   });*/
 
-        System.out.println("blablablablablabl");
-        drawMessages(canvas,new Oval(100, new Point(200,200),0xffffff00,root));
+        drawMessages(canvas,new Oval((int)Math.abs(50*(root.getChildren().size()*0.25+1)), new Point(200,200),0xffffff00,root),0);
 
 
     }
 
-    public void drawMessages(Canvas canvas,Oval root){
+    public void drawMessages(Canvas canvas,Oval root, double rootangle){
         int nbchildren = root.getMsg().getChildren().size();
         double angle = Math.PI/nbchildren;
         root.getmDrawable().draw(canvas);
         drawtext(canvas, root.getMsg().getMmessage(),root);
+
         for(int i=0; i<root.getMsg().getChildren().size(); i++ ){
             Message msg = root.getMsg().getChildren().get(i);
-            drawMessages(canvas,new Oval(70, beChildof(root, 70, angle*i-Math.PI/2),0xffffff00, msg));
+            int mray = (int)Math.abs(50*(msg.getChildren().size()*0.25+1));
+            //int mray =(int)Math.abs(root.getray()*(0.5+0.04*msg.getChildren().size()));
+            Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg);
+            drawMessages(canvas,child, angle*i-Math.PI/2+rootangle+angle/2);
         }
     }
 
 
-    public Point beChildof(Oval father, int mRay, double angle ){
+    public Point beChildof(Oval father, int mRay, double angle, double margin ){
         Point mpoint = new Point();
         mpoint.x=(int)(father.getpt().x + Math.sin(angle)*(margin+father.getray()+mRay));
         mpoint.y=(int)(father.getpt().y + Math.cos(angle)*(margin+father.getray()+mRay));
@@ -148,12 +160,12 @@ public class Window extends PanZoomView {
         }
 
         do{
-            size=size--;
+            size--;
             paint.setTextSize(size);
             depasse=false;
             for(i=0;i<nblignes;i++){
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>oval.getray()*1.8){
+                if(bounds.width()>oval.getray()*1.6){
                     depasse=true;
                 }
             }

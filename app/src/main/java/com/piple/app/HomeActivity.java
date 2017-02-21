@@ -93,6 +93,7 @@ public class HomeActivity
         findViewById(R.id.button2).setOnClickListener(this);
         findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
         database = FirebaseDatabase.getInstance();
+
         myRefUniverse = database.getReference("Universe");
         myRefUser = database.getReference("User");
 
@@ -104,18 +105,23 @@ public class HomeActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
+
         //Check if user is identified
         if (mFirebaseUser == null) {
+            System.out.println("\n user : "+mFirebaseUser);
             //If no, launch LoginActivity
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+            System.out.println("\n user : "+mFirebaseUser);
+            return;
         } else {
             //If yes, get his email and welcome him
             mUsername = mFirebaseUser.getEmail();
             Toast.makeText(HomeActivity.this, "Hey there, " + mUsername, Toast.LENGTH_SHORT).show();
+            yourself = new User(mFirebaseUser.getUid(), mFirebaseUser.getEmail());
         }
 
-        yourself = new User(mFirebaseUser.getUid(), mFirebaseUser.getEmail());
+
     }
 
 
@@ -187,7 +193,7 @@ public class HomeActivity
                     Toast.makeText(HomeActivity.this, "damn.", Toast.LENGTH_SHORT).show();
                     myRefUser.setValue(yourself);
                     myRefUniverse.setValue(myuniverse);
-                    Toast.makeText(HomeActivity.this, "damn.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "hooo.", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
                     finish();
                 }

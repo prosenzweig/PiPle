@@ -75,6 +75,7 @@ public class UniverseActivity
             //If no, launch LoginActivity
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+            return;
         }
             //TODO : ajouter les events sur références nécessaires pour getter l'univers et l'user.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -82,9 +83,6 @@ public class UniverseActivity
                                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                                 .build();
     }
-
-
-
     /**
      * Method onStart
      *      overrides method from AppCompatActivity
