@@ -18,6 +18,7 @@ public class Message {
     private String iduser, idmessage;
     private boolean important, viewed, silent;
     private Date createdate;
+    private Oval oval;
 
     public Message(String mmessage, ArrayList<Message> ovallist, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate, Message father) {
         this.mmessage = mmessage;

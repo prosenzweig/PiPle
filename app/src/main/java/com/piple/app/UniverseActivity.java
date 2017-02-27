@@ -16,7 +16,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-
+import com.piple.res.GORview;
+import com.piple.res.RoadView;
+import com.piple.res.Window;
 
 
 /**
@@ -46,6 +48,14 @@ public class UniverseActivity
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private Window mywindow;
+
+    //our different views
+    private RoadView roadView = new RoadView(false);
+    private GORview goarview = new GORview();
+
+
+
 
 
 
@@ -60,7 +70,8 @@ public class UniverseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.moy);
+        mywindow=new Window(this.getApplicationContext());
+        setContentView(mywindow);
 
         //Set preferences and defaults
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -77,11 +88,13 @@ public class UniverseActivity
             finish();
             return;
         }
-            //TODO : ajouter les events sur références nécessaires pour getter l'univers et l'user.
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                                 .enableAutoManage(this, this /* OnConnectionFailedListener */)
                                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                                 .build();
+
+        //TODO: add function to get user, contact, ad messages of the universe chosen
     }
     /**
      * Method onStart
@@ -112,6 +125,13 @@ public class UniverseActivity
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Check if user is signed in.
+        // TODO: Add code to check if user is signed in.
     }
 
 }

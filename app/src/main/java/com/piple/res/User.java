@@ -6,8 +6,13 @@ import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -15,6 +20,7 @@ import java.util.ArrayList;
  *
  * Contains a user and his information.
  */
+@IgnoreExtraProperties
 public class User
 {
 
@@ -31,11 +37,27 @@ public class User
 
 
     /// CONSTRUCTORS ///
+    public User(){  //toujours avoir un constructeur vide // Default constructor required for calls to DataSnapshot.getValue(Post.class)
+
+    }
 
     public User(String id, String pseudo) {
         universelist = new ArrayList();
         this.id = id;
         this.pseudo = pseudo;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("Id", id);
+        result.put("Pseudo", pseudo);
+        result.put("ContactList", ContactList);
+        result.put("ProfilPicture", profilpicture);
+        result.put("UniverseList", universelist);
+
+
+        return result;
     }
 
 

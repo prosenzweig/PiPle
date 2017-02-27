@@ -33,7 +33,7 @@ public class PanZoomView
 
     static protected final boolean ScaleAtFocusPoint = false;
     static protected final int DefaultDrawableId = 0x7f020053;
-
+    protected int scalingweight=2;
     protected Drawable mSampleImage;
     protected Context mContext;
     protected float mPosX;
@@ -43,6 +43,7 @@ public class PanZoomView
     protected float mFocusX;    // these two focus variables are not needed
     protected float mFocusY;
 
+    protected boolean zooming=false; //to have a smoother zoom
     protected float mLastTouchX;
     protected float mLastTouchY;
 
@@ -163,11 +164,17 @@ public class PanZoomView
                 if (mScaleDetector.isInProgress()) {
                     // Pinch zoom is in progress
                     // if (mSupportsPan) canvas.translate(mPosX, mPosY);
+                    //TODO get ancient focus and save it for zooming to perform an additional zoom to smooth the action
                     mFocusX = mScaleDetector.getFocusX ();
                     mFocusY = mScaleDetector.getFocusY ();
-                    canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
+                    zooming=true;
+                    canvas.translate(x, y);
+                    canvas.scale(mScaleFactor, mScaleFactor);
                     Log.d ("Multitouch", "+p+z x, y, focusX, focusY: " + x + " " + y + " " + mFocusX + " " + mFocusY);
                 } else {
+                    if(zooming){
+
+                    }
                     // Pinch zoom is not in progress. Just do translation of canvas at whatever the current scale is.
                     canvas.translate(x, y);
                     canvas.scale(mScaleFactor, mScaleFactor);
@@ -330,7 +337,7 @@ public class PanZoomView
      * @return boolean
      */
     public boolean supportsScaleAtFocusPoint () {
-        return ScaleAtFocusPoint;
+        return false;
     }
 
 
@@ -354,19 +361,40 @@ public class PanZoomView
      */
     protected class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
     {
+
+
+
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             if (!mSupportsZoom) return true;
-            mScaleFactor *= detector.getScaleFactor();
+            //store old sclale factor
+
+            float oldScaleFator = mScaleFactor;
+            mScaleFactor *= (detector.getScaleFactor()*detector.getScaleFactor());
 
             // Don't let the object get too small or too large.
-            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
+            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 10.0f));
+
             mFocusX = detector.getFocusX ();
             mFocusY = detector.getFocusY ();
+
+            //distance between focus and old origin
+            float dx = mFocusX-mPosX;
+            float dy = mFocusY-mPosY;
+            //distance between focus and new origin after rescale
+            float dxSc = dx * mScaleFactor / oldScaleFator;
+            float dySc = dy * mScaleFactor / oldScaleFator;
+
+            // calcul of the new origin
+            mPosX = mFocusX - dxSc;
+            mPosY = mFocusY - dySc;
 
             invalidate();
             return true;
         }
+
+
+
     }
 
 }

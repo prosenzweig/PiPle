@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Window extends PanZoomView {
+public class Window extends PanZoomView{
+
+    //private Message
 
     public Window(Context context) {
         super(context);
@@ -114,8 +116,8 @@ public class Window extends PanZoomView {
 
     public Point beChildof(Oval father, int mRay, double angle, double margin ){
         Point mpoint = new Point();
-        mpoint.x=(int)(father.getpt().x + Math.sin(angle)*(margin+father.getray()+mRay));
-        mpoint.y=(int)(father.getpt().y + Math.cos(angle)*(margin+father.getray()+mRay));
+        mpoint.x=(int)(father.getfpt().x + Math.sin(angle)*(margin+father.getfray()+mRay));
+        mpoint.y=(int)(father.getfpt().y + Math.cos(angle)*(margin+father.getfray()+mRay));
         return mpoint;
     }
     public void drawtext(Canvas canvas, String text, Oval oval){
@@ -165,7 +167,7 @@ public class Window extends PanZoomView {
             depasse=false;
             for(i=0;i<nblignes;i++){
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>oval.getray()*1.6){
+                if(bounds.width()>oval.getfray()*1.6){
                     depasse=true;
                 }
             }
@@ -173,7 +175,7 @@ public class Window extends PanZoomView {
 
         for(i=0;i<nblignes;i++){
             paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), oval.getpt().x - (bounds.width())/2,oval.getpt().y-(nblignes/2-i)*size , paint);
+            canvas.drawText(textlist.get(i), oval.getfpt().x - (bounds.width())/2,oval.getfpt().y-(nblignes/2-i)*size , paint);
         }
     }
 
@@ -208,12 +210,18 @@ public class Window extends PanZoomView {
         return true;
     }
 
+
+    public void OnZoomAction(){
+        //TODO : si on zoom suffisament alors on arrive en gearofreply view sinon si on dézoom on repasse en roadview et si on continue MOIview
+           /* if(mScaleFactor>0.5f && mScaleFactor<8.9f){
+                myRoadview.set(fathermessage);
+            }*/
+    }
     /**
      * Return true if pinch zooming is supported.
      *
      * @return boolean
      */
-
     public boolean supportsZoom () {
         return true;
     }
