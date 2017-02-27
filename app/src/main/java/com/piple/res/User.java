@@ -32,7 +32,6 @@ public class User
     private String pseudo;
     private ArrayList ContactList;
     private Image profilpicture;
-    private ArrayList universelist;
 
 
 
@@ -42,7 +41,6 @@ public class User
     }
 
     public User(String id, String pseudo) {
-        universelist = new ArrayList();
         this.id = id;
         this.pseudo = pseudo;
     }
@@ -54,7 +52,6 @@ public class User
         result.put("Pseudo", pseudo);
         result.put("ContactList", ContactList);
         result.put("ProfilPicture", profilpicture);
-        result.put("UniverseList", universelist);
 
 
         return result;
@@ -63,14 +60,6 @@ public class User
 
 
     /// GETTERS & SETTERS ///
-
-    public ArrayList getUniverselist() {
-        return universelist;
-    }
-
-    public void setUniverselist(Universe universe) {
-        universelist.add(universe);
-    }
 
     public String getId() {
         return id;

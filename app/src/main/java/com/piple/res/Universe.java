@@ -2,6 +2,8 @@ package com.piple.res;
 
 
 
+import android.media.Image;
+
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
@@ -24,7 +26,8 @@ public class Universe
     private String id;
     private String name;
     private ArrayList universeUserList;
-    private boolean currentUniverse;
+    private ArrayList MOIList;
+    private Image  icon;
 
 
 
@@ -41,6 +44,11 @@ public class Universe
         this.name = name;
         this.id = id;
     }
+    public Universe(ArrayList Contacts, String name, String id) {
+        universeUserList = Contacts;
+        this.name = name;
+        this.id = id;
+    }
 
     @Exclude
     public Map<String, Object> toMap() {
@@ -48,14 +56,14 @@ public class Universe
         result.put("Id", id);
         result.put("Name", name);
         result.put("UniverseUserList", universeUserList);
-        result.put("CurrentUniverse", currentUniverse);
-
         return result;
     }
-    //public Universe toUniverse(Map<String, Object> univmap){
+    @Exclude
+    public Universe toUniverse(Map<String, Object> univmap){
 
-       //return  new Universe(univmap.get("id"), univmap
-   // }
+        ArrayList contactList = (ArrayList) univmap.get("UniverseUserList");
+       return  new Universe(contactList, univmap.get("Name").toString(), univmap.get("Id").toString());
+   }
 
 
     /// GETTERS & SETTERS ///
@@ -82,14 +90,6 @@ public class Universe
 
     public void setUniverseUserList(ArrayList user) {
         this.universeUserList = user;
-    }
-
-    public boolean isCurrentUniverse() {
-        return currentUniverse;
-    }
-
-    public void setCurrentUniverse(boolean currentUniverse) {
-        this.currentUniverse = currentUniverse;
     }
 
 }

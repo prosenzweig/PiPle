@@ -2,10 +2,12 @@ package com.piple.app;
 
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +15,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,10 +36,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.piple.res.Contact;
 import com.piple.res.Universe;
+import com.piple.res.UniverseAdapter;
 import com.piple.res.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -77,7 +87,9 @@ public class HomeActivity
 
     private String m_Universename = "";
 
-
+    //LAYOUT
+    public ListView mlistview;
+    private List<Universe> Universes;
 
     /// METHODS ///
 
@@ -101,8 +113,10 @@ public class HomeActivity
         }
 
         setContentView(R.layout.home);
-        findViewById(R.id.button2).setOnClickListener(this);
         findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
+
+        //la listview dans laquelle on set un onclick listener pour chaques item
+        mlistview = (ListView) findViewById(R.id.listname);
         database = FirebaseDatabase.getInstance();
 
         myRefUniverse = database.getReference("Universe");
@@ -157,13 +171,22 @@ public class HomeActivity
         myRefUniverse.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> Universemap = (HashMap<String, Object>) dataSnapshot.getValue();
+                Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                 System.out.println("value gotten");
-                if(Universemap.get("Id")==yourself.getId()) {
-                   // Universe aUniverse = toUniverse(Universemap);
-                    //createNewButton(aUniverse);
+                Universe aUniverse = new Universe();
+                aUniverse = aUniverse.toUniverse(universeMap);
+                ArrayList UserList = aUniverse.getUniverseUserList();
+                ListIterator iterator =  UserList.listIterator();
+                    while(iterator.hasNext()){
+                        System.out.println("iterate");
+                        Contact cont = (Contact) iterator.next();
+                if( cont.getId()==yourself.getId()) {
+
+                    Universes.add(aUniverse);
+
                 }
-            }
+
+            }}
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -185,7 +208,20 @@ public class HomeActivity
 
             }
         });
+        createNewButton(Universes);
+        mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                //on prend l'univers à la position correspondante en esperant que ça soit la même
+                String currentUniverseId = Universes.get(position).getId();
 
+                //on envois l'info de l'univers selectioné à l'univers activity puis on l'appel.
+                Intent sendUniverse = new Intent(HomeActivity.this, UniverseActivity.class);
+                sendUniverse.putExtra("currentUniverse", currentUniverseId);
+                startActivity(sendUniverse);
+                finish();
+            }
+        });
     }
     @Override
     public void onStop(){
@@ -214,14 +250,13 @@ public class HomeActivity
     }
 
 
-    public boolean createNewButton(Universe aUniverse){
-        TextView name = new TextView(this);
-        name.setText(aUniverse.getName());
-        name.setWidth(90);
-        name.setHeight(24);
-        View thisview = findViewById(R.id.main);
-        return true;
+    public boolean createNewButton(List Universes){
 
+        //on créer un adapter qui contiendra grosse modo touts les element de la liste univers
+        UniverseAdapter adapter = new UniverseAdapter(HomeActivity.this, Universes);
+        mlistview.setAdapter(adapter);
+
+    return true; // c'était au cas ou
     }
 
 
@@ -239,6 +274,7 @@ public class HomeActivity
         int i = v.getId();
         if (i == R.id.buttonnewuniverse) {
 
+            //on créer une boite de dialogue avvec de l'input dedans
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Universe name :");
             final EditText input = new EditText(this);
@@ -254,24 +290,20 @@ public class HomeActivity
                     //TODO : do the same with an universe that i a child (in the DB ) for them not to erase each other at every instanciation
                     m_Universename = input.getText().toString();
                     Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, m_Universename);
-                    yourself.setUniverselist(myuniverse);
-                    myuniverse.setCurrentUniverse(false);
 
-                    Toast.makeText(HomeActivity.this, "damn.", Toast.LENGTH_SHORT).show();
+
                     //TODO look if it work with a regular name
-                    /*String key = myRefUser.push().getKey();
-                    Map<String, Object> UserValues = yourself.toMap();
-                    Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put(key, UserValues);
-                    myRefUser.updateChildren(childUpdates);*/ //pas besoin de faire ça ...
+
+
+                    //c'est comme ça que l'on save de la data de la bonne façon
                     String key = myRefUniverse.push().getKey();
                     Map<String, Object> UniverseValues = myuniverse.toMap();
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put(key, UniverseValues);
+                    //on peut en sauver de grandes quantité d'un coup avec plusieurs put
                     myRefUniverse.updateChildren(childUpdates);
-                    Toast.makeText(HomeActivity.this, "hooo.", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(HomeActivity.this, UniverseActivity.class));
-                    finish();
+                    Toast.makeText(HomeActivity.this, "newuniverse created.", Toast.LENGTH_SHORT).show();
+
                 }
             });
 
@@ -283,18 +315,15 @@ public class HomeActivity
             });
 
             builder.show();
-        }else {
-            //TODO :get the universe corresponding to the button and set it as current universe in the DB usins the createbutton method
-            //that we have just u pof this comment;
-
-
-            //TODO start universe activity
-
         }
 
 
         }
+
+
+
 
 
 }
+
 

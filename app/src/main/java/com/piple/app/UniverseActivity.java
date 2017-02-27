@@ -16,8 +16,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.piple.res.GORview;
 import com.piple.res.RoadView;
+import com.piple.res.User;
 import com.piple.res.Window;
 
 
@@ -55,6 +57,7 @@ public class UniverseActivity
     private GORview goarview = new GORview();
 
 
+    private User yourself;
 
 
 
@@ -81,6 +84,8 @@ public class UniverseActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         //Check if user is identified
         if (mFirebaseUser == null) {
             //If no, launch LoginActivity
@@ -88,13 +93,17 @@ public class UniverseActivity
             finish();
             return;
         }
+        //If yes, get his email and welcome him
+        mUsername = mFirebaseUser.getEmail();
+        yourself = new User(mFirebaseUser.getUid(), mFirebaseUser.getEmail());
+
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                                 .enableAutoManage(this, this /* OnConnectionFailedListener */)
                                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                                 .build();
 
-        //TODO: add function to get user, contact, ad messages of the universe chosen
+
     }
     /**
      * Method onStart
@@ -105,8 +114,13 @@ public class UniverseActivity
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in.
-        // TODO: Add code to check if user is signed in.
+        //TODO: add function to get user, contact, ad messages of the universe chosen
+
+        //on récupère la fonction qui get l'utilisateur
+        Intent intent = getIntent();
+        String universeId = intent.getExtras().getString("currentUniverse");
+
+
     }
 
 
