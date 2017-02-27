@@ -159,6 +159,10 @@ public class HomeActivity
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> Universemap = (HashMap<String, Object>) dataSnapshot.getValue();
                 System.out.println("value gotten");
+                if(Universemap.get("Id")==yourself.getId()) {
+                   // Universe aUniverse = toUniverse(Universemap);
+                    //createNewButton(aUniverse);
+                }
             }
 
             @Override
@@ -180,32 +184,7 @@ public class HomeActivity
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        }); /* {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                ArrayList Contactlist = (ArrayList) dataSnapshot.getValue(ArrayList.class);
-                System.out.println("value gotten");
-                ListIterator iterator = Contactlist.listIterator();
-                while(iterator.hasNext()) {
-
-                    if(iterator.getId()== yourself.getId()){
-
-                    }
-                }
-                if(aUniverse != null){
-                   // createNewButton(aUniverse);
-                    System.out.println("\n we see it : "+aUniverse);
-
-                }else return;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
+        });
 
     }
     @Override

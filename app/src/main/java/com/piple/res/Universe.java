@@ -52,6 +52,10 @@ public class Universe
 
         return result;
     }
+    //public Universe toUniverse(Map<String, Object> univmap){
+
+       //return  new Universe(univmap.get("id"), univmap
+   // }
 
 
     /// GETTERS & SETTERS ///
