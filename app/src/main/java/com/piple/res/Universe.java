@@ -8,6 +8,7 @@ import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -55,13 +56,31 @@ public class Universe
         HashMap<String, Object> result = new HashMap<>();
         result.put("Id", id);
         result.put("Name", name);
+        ListIterator iterator = universeUserList.listIterator();
+        while(iterator.hasNext()){
+
+            Contact contact= (Contact)iterator.next();
+            HashMap<String,Object> contacthashed= contact.toMap();
+            iterator.previous();
+            iterator.set(contacthashed);
+            iterator.next();
+        }
         result.put("UniverseUserList", universeUserList);
+
         return result;
     }
     @Exclude
     public Universe toUniverse(Map<String, Object> univmap){
 
         ArrayList contactList = (ArrayList) univmap.get("UniverseUserList");
+        ListIterator iterator = contactList.listIterator();
+        while(iterator.hasNext()){
+            HashMap<String,Object> hashedcontact = (HashMap<String,Object>) iterator.next();
+            Contact contact=new Contact(hashedcontact.get("pseudo").toString(), hashedcontact.get("Id").toString());
+            iterator.previous();
+            iterator.set(contact);
+            iterator.next();
+        }
        return  new Universe(contactList, univmap.get("Name").toString(), univmap.get("Id").toString());
    }
 

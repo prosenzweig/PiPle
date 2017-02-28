@@ -21,7 +21,7 @@
 
     <ImageView
         tools:background="#AAA"
-        android:id="@+id/imagebubble"
+        android:id="@+id/image"
         android:hapticFeedbackEnabled="true"
         android:layout_width="40dp"
         android:layout_height="40dp"

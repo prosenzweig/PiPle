@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.piple.res.Contact;
 import com.piple.res.Universe;
@@ -84,7 +85,7 @@ public class HomeActivity
     private DatabaseReference myRefUser;
     private FirebaseDatabase database;
     private User yourself;
-
+    private boolean UserhasUniverses;
     private String m_Universename = "";
 
     //LAYOUT
@@ -118,6 +119,7 @@ public class HomeActivity
         //la listview dans laquelle on set un onclick listener pour chaques item
         mlistview = (ListView) findViewById(R.id.listname);
         database = FirebaseDatabase.getInstance();
+        Universes= new ArrayList<>();
 
         myRefUniverse = database.getReference("Universe");
         myRefUser = database.getReference("User");
@@ -160,11 +162,9 @@ public class HomeActivity
      * Implements the behavior of the activity when it is started.
      */
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         //TODO : get user's contacts ( later)
-
 
         //TODO : get user's universes and display them and set buttons on thoses
 
@@ -176,17 +176,26 @@ public class HomeActivity
                 Universe aUniverse = new Universe();
                 aUniverse = aUniverse.toUniverse(universeMap);
                 ArrayList UserList = aUniverse.getUniverseUserList();
-                ListIterator iterator =  UserList.listIterator();
-                    while(iterator.hasNext()){
-                        System.out.println("iterate");
-                        Contact cont = (Contact) iterator.next();
-                if( cont.getId()==yourself.getId()) {
+                ListIterator iterator = UserList.listIterator();
 
-                    Universes.add(aUniverse);
+                while (iterator.hasNext()) {
 
-                }
+                    Contact cont = (Contact) iterator.next();
 
-            }}
+                    if (cont.getId().equals(yourself.getId())) {
+                        System.out.println(yourself.getId());
+
+                        Universes.add(aUniverse);
+                        UserhasUniverses=true;
+
+
+
+
+                    }
+
+                }MajLayout();
+
+            }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -208,20 +217,33 @@ public class HomeActivity
 
             }
         });
-        createNewButton(Universes);
-        mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                //on prend l'univers à la position correspondante en esperant que ça soit la même
-                String currentUniverseId = Universes.get(position).getId();
 
-                //on envois l'info de l'univers selectioné à l'univers activity puis on l'appel.
-                Intent sendUniverse = new Intent(HomeActivity.this, UniverseActivity.class);
-                sendUniverse.putExtra("currentUniverse", currentUniverseId);
-                startActivity(sendUniverse);
-                finish();
-            }
-        });
+    }
+
+    public void MajLayout(){
+        if (UserhasUniverses) {
+            createNewButton(Universes);
+            mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    //on prend l'univers à la position correspondante en esperant que ça soit la même
+                    String currentUniverseId = Universes.get(position).getId();
+
+                    //on envois l'info de l'univers selectioné à l'univers activity puis on l'appel.
+                    Intent sendUniverse = new Intent(HomeActivity.this, UniverseActivity.class);
+                    sendUniverse.putExtra("currentUniverse", currentUniverseId);
+                    startActivity(sendUniverse);
+                    finish();
+                }
+            });
+
+        }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+
+
     }
     @Override
     public void onStop(){
@@ -254,7 +276,9 @@ public class HomeActivity
 
         //on créer un adapter qui contiendra grosse modo touts les element de la liste univers
         UniverseAdapter adapter = new UniverseAdapter(HomeActivity.this, Universes);
+        System.out.println("putted");
         mlistview.setAdapter(adapter);
+        System.out.println("putted");
 
     return true; // c'était au cas ou
     }

@@ -4,6 +4,8 @@ package com.piple.res;
 
 import android.media.Image;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -34,6 +36,12 @@ public class Contact
 
 
     /// GETTERS & SETTERS ///
+    public HashMap<String,Object> toMap(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("Id", id);
+        result.put("pseudo", pseudo);
+        return result;
+    }
 
     public String getPseudo() {
         return pseudo;
