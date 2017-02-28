@@ -14,11 +14,13 @@ public class Message {
     private ArrayList<Message> children = new ArrayList();
     private Message father;
 
-    private int type;
+    private int type, childnumb, likenumb, poids;
     private String iduser, idmessage;
-    private boolean important, viewed, silent;
+    private boolean hasbubble, important, viewed, silent;
     private Date createdate;
-    private Oval oval;
+    private Oval Roval,Goval;
+
+
 
     public Message(String mmessage, ArrayList<Message> ovallist, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate, Message father) {
         this.mmessage = mmessage;

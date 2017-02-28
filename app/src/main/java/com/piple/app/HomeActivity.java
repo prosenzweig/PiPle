@@ -166,7 +166,7 @@ public class HomeActivity
         super.onStart();
         //TODO : get user's contacts ( later)
 
-        //TODO : get user's universes and display them and set buttons on thoses
+
 
         myRefUniverse.addChildEventListener(new ChildEventListener() {
             @Override
@@ -311,19 +311,15 @@ public class HomeActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    //TODO : do the same with an universe that i a child (in the DB ) for them not to erase each other at every instanciation
                     m_Universename = input.getText().toString();
                     Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, m_Universename);
-
-
-                    //TODO look if it work with a regular name
-
 
                     //c'est comme ça que l'on save de la data de la bonne façon
                     String key = myRefUniverse.push().getKey();
                     Map<String, Object> UniverseValues = myuniverse.toMap();
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put(key, UniverseValues);
+
                     //on peut en sauver de grandes quantité d'un coup avec plusieurs put
                     myRefUniverse.updateChildren(childUpdates);
                     Toast.makeText(HomeActivity.this, "newuniverse created.", Toast.LENGTH_SHORT).show();

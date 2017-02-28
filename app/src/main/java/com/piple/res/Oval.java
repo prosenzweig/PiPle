@@ -37,7 +37,7 @@ public class Oval {
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(fray,fray,fray, colors, stops, Shader.TileMode.MIRROR ));
     }
-
+    public Oval(){}
 
 
 

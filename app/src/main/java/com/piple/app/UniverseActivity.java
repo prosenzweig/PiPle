@@ -119,6 +119,8 @@ public class UniverseActivity
         //on récupère la fonction qui get l'utilisateur
         Intent intent = getIntent();
         String universeId = intent.getExtras().getString("currentUniverse");
+        //TODO if DBmodification, use all the function from the views to recalculate everything.
+
 
 
     }
@@ -145,7 +147,7 @@ public class UniverseActivity
     public void onPause() {
         super.onPause();
         // Check if user is signed in.
-        // TODO: Add code to check if user is signed in.
+
     }
 
 }

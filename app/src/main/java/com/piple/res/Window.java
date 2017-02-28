@@ -46,7 +46,7 @@ public class Window extends PanZoomView{
 
     public void drawOnCanvas (Canvas canvas) {
 
-
+        //TODO put everything back where it needs to be
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Messages");
 
@@ -121,6 +121,8 @@ public class Window extends PanZoomView{
         return mpoint;
     }
     public void drawtext(Canvas canvas, String text, Oval oval){
+
+        //TODO create subfunction
         int i;
         Paint paint = new Paint();
         int size=50;
@@ -179,6 +181,10 @@ public class Window extends PanZoomView{
         }
     }
 
+
+
+
+    //TODO : avoir la fonction de passage entre les deux views
     /**
      * Return the resource id of the sample image. Note that this class always returns 0, indicating
      * that there is no sample drawable.
