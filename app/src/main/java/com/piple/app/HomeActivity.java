@@ -116,6 +116,8 @@ public class HomeActivity
         setContentView(R.layout.home);
         findViewById(R.id.buttonnewuniverse).setOnClickListener(this);
 
+        //TODO change w/ gridView like (https://developer.android.com/guide/topics/ui/layout/gridview.html)
+
         //la listview dans laquelle on set un onclick listener pour chaques item
         mlistview = (ListView) findViewById(R.id.listname);
         database = FirebaseDatabase.getInstance();
@@ -231,6 +233,7 @@ public class HomeActivity
 
                     //on envois l'info de l'univers selectioné à l'univers activity puis on l'appel.
                     Intent sendUniverse = new Intent(HomeActivity.this, UniverseActivity.class);
+
                     sendUniverse.putExtra("currentUniverse", currentUniverseId);
                     startActivity(sendUniverse);
                     finish();
@@ -276,9 +279,8 @@ public class HomeActivity
 
         //on créer un adapter qui contiendra grosse modo touts les element de la liste univers
         UniverseAdapter adapter = new UniverseAdapter(HomeActivity.this, Universes);
-        System.out.println("putted");
         mlistview.setAdapter(adapter);
-        System.out.println("putted");
+
 
     return true; // c'était au cas ou
     }

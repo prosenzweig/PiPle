@@ -9,17 +9,7 @@
     android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <ListView
-        android:id="@+id/listname"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        />
 
-
-    </ScrollView>
     <android.support.design.widget.FloatingActionButton
 
         android:layout_width="70dp"
@@ -27,11 +17,29 @@
         android:id="@+id/buttonnewuniverse"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="#FFFFFF"
-        android:layout_marginRight="46dp"
-        android:layout_marginEnd="46dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="22dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="21dp"
+        android:layout_marginEnd="21dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
+    <ListView
+        android:id="@+id/listname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        </ListView>
+
+
+    </ScrollView>
 
 </RelativeLayout>

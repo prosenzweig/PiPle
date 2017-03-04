@@ -46,7 +46,7 @@ public class UniverseAdapter extends ArrayAdapter<Universe> {
         viewHolder.Universename.setText(Universe.getName());
         //TODO : set real image
         viewHolder.Unimage.setBackgroundColor(1234);
-        System.out.println("returned");
+
         return convertView;
     }
 

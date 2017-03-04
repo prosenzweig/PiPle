@@ -17,8 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.piple.res.GORview;
-import com.piple.res.RoadView;
 import com.piple.res.User;
 import com.piple.res.Window;
 
@@ -53,8 +51,6 @@ public class UniverseActivity
     private Window mywindow;
 
     //our different views
-    private RoadView roadView = new RoadView(false);
-    private GORview goarview = new GORview();
 
 
     private User yourself;
@@ -119,7 +115,9 @@ public class UniverseActivity
         //on récupère la fonction qui get l'utilisateur
         Intent intent = getIntent();
         String universeId = intent.getExtras().getString("currentUniverse");
+        Toast.makeText(this, universeId, Toast.LENGTH_SHORT).show();
         //TODO if DBmodification, use all the function from the views to recalculate everything.
+
 
 
 
