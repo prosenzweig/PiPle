@@ -15,10 +15,20 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.piple.res.Contact;
+import com.piple.res.Universe;
 import com.piple.res.User;
 import com.piple.res.Window;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.ListIterator;
+import java.util.Map;
 
 
 /**
@@ -46,9 +56,13 @@ public class UniverseActivity
     public static final String ANONYMOUS = "anonymous";
 
     private DatabaseReference mFirebaseDatabaseReference;
+    private DatabaseReference mRefMessages;
+    private DatabaseReference mRefUniverse;
+    private DatabaseReference mRefUser;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private Window mywindow;
+    private Universe currentUniverse;
 
     //our different views
 
@@ -81,7 +95,7 @@ public class UniverseActivity
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-
+        mRefUniverse = FirebaseDatabase.getInstance().getReference("Universe");
         //Check if user is identified
         if (mFirebaseUser == null) {
             //If no, launch LoginActivity
@@ -100,6 +114,8 @@ public class UniverseActivity
                                 .build();
 
 
+
+
     }
     /**
      * Method onStart
@@ -114,8 +130,79 @@ public class UniverseActivity
 
         //on récupère la fonction qui get l'utilisateur
         Intent intent = getIntent();
-        String universeId = intent.getExtras().getString("currentUniverse");
+        final String universeId = intent.getExtras().getString("currentUniverse");
         Toast.makeText(this, universeId, Toast.LENGTH_SHORT).show();
+
+        //ICI on initialise juste l'univers dans lequel on est avec tout ses messages
+        mRefUniverse.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                //on chope l'univers sur lequel on est et on le met en mode objet
+                if(dataSnapshot.getKey().equals(universeId)){
+                    Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                    System.out.println("universe gotten");
+                   currentUniverse = new Universe();
+                    currentUniverse = currentUniverse.toUniverse(universeMap);
+                }
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mRefMessages= mRefUniverse.child(universeId);
+        // on ne s'interessera pour l'instant qu'aux nouveaux messages et pas au modif de user et autre
+        //TODO : Faire ces ajouts pour l'ajout de partenaire a la conv et autre.
+        // ici on instancie les nouveaux messages qui arrivent en faisant attention à ne pas prendre ceux de l'instanciation du début...
+        mRefMessages.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            // on l'a deja added donc il ne s'agit maintenant que de get les modifs
+            }
+
+            //SI il y a un changement dans l'arraylist MOI checker :
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // si les deux objets ont réellement changé
+                if(dataSnapshot.getKey().equals("MOIList")) {
+                    //TODO checker quel moi a changé et le modifier en conséquence
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         //TODO if DBmodification, use all the function from the views to recalculate everything.
 
 

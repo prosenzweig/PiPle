@@ -314,10 +314,11 @@ public class HomeActivity
                 public void onClick(DialogInterface dialog, int which) {
 
                     m_Universename = input.getText().toString();
-                    Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, m_Universename);
+
 
                     //c'est comme ça que l'on save de la data de la bonne façon
                     String key = myRefUniverse.push().getKey();
+                    Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, key);
                     Map<String, Object> UniverseValues = myuniverse.toMap();
                     Map<String, Object> childUpdates = new HashMap<>();
                     childUpdates.put(key, UniverseValues);

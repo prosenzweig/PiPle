@@ -38,6 +38,12 @@ public class Universe
 // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
+    public Universe(String id, String name, ArrayList universeUserList, ArrayList MOIList) {
+        this.id = id;
+        this.name = name;
+        this.universeUserList = universeUserList;
+        this.MOIList = MOIList;
+    }
 
     public Universe(Contact user, String name, String id) {
         universeUserList = new ArrayList();
@@ -67,6 +73,17 @@ public class Universe
         }
         result.put("UniverseUserList", universeUserList);
 
+        iterator = MOIList.listIterator();
+        while(iterator.hasNext()){
+
+            MOI mymoi= (MOI)iterator.next();
+            HashMap<String,Object> contacthashed= mymoi.toMap();
+            iterator.previous();
+            iterator.set(contacthashed);
+            iterator.next();
+        }
+        result.put("MOIList", MOIList);
+
         return result;
     }
     @Exclude
@@ -76,12 +93,26 @@ public class Universe
         ListIterator iterator = contactList.listIterator();
         while(iterator.hasNext()){
             HashMap<String,Object> hashedcontact = (HashMap<String,Object>) iterator.next();
-            Contact contact=new Contact(hashedcontact.get("pseudo").toString(), hashedcontact.get("Id").toString());
+            Contact contact=new Contact(hashedcontact.get("Pseudo").toString(), hashedcontact.get("Id").toString());
             iterator.previous();
             iterator.set(contact);
             iterator.next();
         }
-       return  new Universe(contactList, univmap.get("Name").toString(), univmap.get("Id").toString());
+        iterator = MOIList.listIterator();
+
+        while(iterator.hasNext()){
+
+            //on s'occupe directement des MOI de l'univers
+
+            HashMap<String,Object> hashedMOI = (HashMap<String,Object>) iterator.next();
+            Message father = new Message();
+            father = father.toMessage((HashMap<String,Object>)hashedMOI.get("Father"));
+            MOI mmoi=new MOI(hashedMOI.get("Name").toString(), father ,(boolean)hashedMOI.get("Delete"), (boolean)hashedMOI.get("Silent") );
+            iterator.previous();
+            iterator.set(mmoi);
+            iterator.next();
+        }
+       return  new Universe(univmap.get("Id").toString(), univmap.get("Name").toString(), contactList, MOIList );
    }
 
 

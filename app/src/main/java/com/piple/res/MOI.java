@@ -2,6 +2,9 @@ package com.piple.res;
 
 import android.graphics.drawable.shapes.Shape;
 
+import java.util.HashMap;
+import java.util.ListIterator;
+
 /**
  * Created by jeremie on 27/02/2017.
  */
@@ -9,20 +12,37 @@ import android.graphics.drawable.shapes.Shape;
 public class MOI {
 
     private String name;
-    private Message Father;
+    private Message father;
     private Shape shape;
     private boolean delete=false;
-    private boolean silenced=false;
+    private boolean silent=false;
 
 
     public MOI(){
 
     }
 
+    public MOI(String name, Message father, boolean delete, boolean silent) {
+        this.name = name;
+        this.father = father;
+        this.delete = delete;
+        this.silent = silent;
+    }
+
     public MOI(String name, Message father) {
         this.name = name;
-        Father = father;
+        father = father;
     }
+    public HashMap<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("Name", name);
+        HashMap<String,Object> hashfather = father.toMap();
+        result.put("Father", hashfather);
+        result.put("Delete", delete);
+        result.put("Silent",silent);
+        return result;
+    }
+
 
     public String getName() {
         return name;
@@ -33,11 +53,11 @@ public class MOI {
     }
 
     public Message getFather() {
-        return Father;
+        return father;
     }
 
     public void setFather(Message father) {
-        Father = father;
+        father = father;
     }
 
     public Shape getShape() {
@@ -57,10 +77,10 @@ public class MOI {
     }
 
     public boolean isSilenced() {
-        return silenced;
+        return silent;
     }
 
     public void setSilenced(boolean silenced) {
-        this.silenced = silenced;
+        this.silent = silenced;
     }
 }

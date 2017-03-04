@@ -39,7 +39,7 @@ public class Contact
     public HashMap<String,Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("Id", id);
-        result.put("pseudo", pseudo);
+        result.put("Pseudo", pseudo);
         return result;
     }
 
