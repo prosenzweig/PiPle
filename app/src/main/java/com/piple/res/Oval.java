@@ -1,11 +1,14 @@
 package com.piple.res;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.view.View;
+import android.widget.Button;
 
 public class Oval {
 
@@ -17,7 +20,7 @@ public class Oval {
     private int fray;
     private Point fpt;
     private Contact contact;
-    private Message msg;
+    private Button mbut;
 
     //FOR THE LinkVIEW (jerem's )
     
@@ -25,27 +28,40 @@ public class Oval {
     private int rdistance;
 
 
-    public Oval(int fray, Point fpt, int color, Message msg ) {
+    public Oval(int fray, Point fpt, int color, Context cont) {
+        //super(cont);
 
+
+        mbut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("\n CA MARCHE \n");
+            }
+        });
+        /*this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //blablabla
+            }
+        });*/
         this.fpt=fpt;
         this.fray=fray;
-        this.msg=msg;
         int[] colors = {0xffffffff, color};
         float[] stops = {0.8f, 1f};
         mDrawable = new ShapeDrawable(new OvalShape());
         mDrawable.setBounds(fpt.x-fray, fpt.y-fray, fpt.x+fray, fpt.y+fray);
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(fray,fray,fray, colors, stops, Shader.TileMode.MIRROR ));
+        mbut.setCompoundDrawablesWithIntrinsicBounds(mDrawable, null, null, null);
     }
-    public Oval(){}
+    public Oval(Context cont) {
 
-
-
-
-
-    public void setMsg(Message msg){
-        this.msg=msg;
     }
+
+
+
+
+
 
     public void setcolor(int color){
         this.mDrawable.getPaint().setColor(color);
@@ -60,9 +76,6 @@ public class Oval {
     }
 
 
-    public Message getMsg() {
-        return msg;
-    }
 
     public void setDrawable(ShapeDrawable mDrawable) {
         this.mDrawable = mDrawable;

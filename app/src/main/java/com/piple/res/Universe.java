@@ -28,7 +28,7 @@ public class Universe
     private String name;
     private ArrayList universeUserList;
     private ArrayList MOIList;
-    private Image  icon;
+    //private Image  icon;
 
 
 
@@ -86,6 +86,7 @@ public class Universe
             iterator.set(contacthashed);
             iterator.next();
         }}
+        else MOIList =  new ArrayList<MOI>();
         result.put("MOIList", MOIList);
 
         return result;
@@ -105,7 +106,7 @@ public class Universe
             iterator.set(contact);
             iterator.next();
         }
-        
+
         ArrayList MOIList = (ArrayList) univmap.get("MOIList");
         if(MOIList!=null){
         iterator = MOIList.listIterator();

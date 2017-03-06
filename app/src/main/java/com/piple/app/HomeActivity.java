@@ -182,8 +182,8 @@ public class HomeActivity
                 //on se retrouve avec un map car c'est comme ça que l'on sauve et récupère les données
                 //sur firebase ( vu qu'elles sont pars"e en JSON )
                 Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                System.out.println("value gotten");
-                Universe aUniverse = new Universe();
+               System.out.println("value gotten");
+                Universe aUniverse = dataSnapshot.getValue(Universe.class);
                 aUniverse = aUniverse.toUniverse(universeMap);
                 ArrayList UserList = aUniverse.getUniverseUserList();
                 ListIterator iterator = UserList.listIterator();

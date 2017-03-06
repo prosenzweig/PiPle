@@ -1,12 +1,18 @@
 package com.piple.res;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,13 +25,31 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Window extends PanZoomView{
+public class Window extends PanZoomView implements View.OnClickListener {
 
-    //private Message
+
+    private Universe theuniverse;
+    private Message currenttyped;
+    private String currentmessage;
 
     public Window(Context context) {
         super(context);
+        this.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                System.out.println("clicklong");
+                return false;
+            }
+        });
 
+    }
+
+    public Universe getTheuniverse() {
+        return theuniverse;
+    }
+
+    public void setTheuniverse(Universe theuniverse) {
+        this.theuniverse = theuniverse;
     }
 
     public Window (Context context, AttributeSet attrs) {
@@ -80,7 +104,7 @@ public class Window extends PanZoomView{
             Message msg = root.getMsg().getChildren().get(i);
             int mray = (int)Math.abs(50*(msg.getChildren().size()*0.25+1));
             //int mray =(int)Math.abs(root.getray()*(0.5+0.04*msg.getChildren().size()));
-            Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg);
+            Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg, getContext());
             drawMessages(canvas,child, angle*i-Math.PI/2+rootangle+angle/2);
         }
     }
@@ -152,6 +176,37 @@ public class Window extends PanZoomView{
             canvas.drawText(textlist.get(i), oval.getfpt().x - (bounds.width())/2,oval.getfpt().y-(nblignes/2-i)*size , paint);
         }
     }
+
+
+
+    @Override public boolean onTouchEvent(MotionEvent ev)
+    {
+        boolean ret = super.onTouchEvent(ev);
+        ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        Message message = new Message();
+        message.setGoval(new Oval(30, new Point((int)ev.getX(), (int)ev.getY()), Color.BLACK, this.getContext()));
+        currenttyped = message;
+        return ret;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+
+       Log.d("TEST", "Key Down  :" + keyCode + " String : " + currentmessage);
+       currentmessage += (char) event.getUnicodeChar();
+        currenttyped.setMmessage(currentmessage);
+        
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+
+
+
+
 
 
 
@@ -233,6 +288,13 @@ public class Window extends PanZoomView{
     public void CreateOvalandsetRay(Message message)
     {
         //TODO: iteration pour calculer le rayon de toutes les bubbles et les instancier en les donnant à leur message et le faire que pour les 4 plus grosses
+    }
+
+    @Override
+    public void onClick(View v) {
+        //((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        System.out.println("BONJOUUUUR");
     }
 
 

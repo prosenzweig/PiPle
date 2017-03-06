@@ -23,9 +23,9 @@ public class Message {
 
 
 
-    public Message(String mmessage, ArrayList<Message> ovallist, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate) {
+    public Message(String mmessage, ArrayList<Message> children, int type, String iduser, String idmessage, boolean important, boolean viewed, boolean silent, Date createdate) {
         this.mmessage = mmessage;
-        children = ovallist;
+        this.children = children;
         this.type = type;
         this.iduser = iduser;
         this.idmessage = idmessage;
@@ -93,6 +93,7 @@ public class Message {
         return  new Message(messagemap.get("mMessage").toString(),children, (int)messagemap.get("Type"),(int)messagemap.get("ChildNumb"),(int)messagemap.get("LikeNumb"),(int)messagemap.get("Poids"),messagemap.get("IdUser").toString(),messagemap.get("IdMessage").toString(),(boolean)messagemap.get("Important"),(boolean)messagemap.get("Viewed"),(boolean)messagemap.get("Silent"),(Date)messagemap.get("CreateDate"));
     }
 
+
     public String getMmessage() {
         return mmessage;
     }
@@ -105,8 +106,8 @@ public class Message {
         return children;
     }
 
-    public void setOvallist(ArrayList ovallist) {
-        children = ovallist;
+    public void setChildren(ArrayList children) {
+        this.children = children;
     }
 
     public int getType() {
@@ -163,5 +164,21 @@ public class Message {
 
     public void setCreatedate(Date createdate) {
         this.createdate = createdate;
+    }
+
+    public Oval getRoval() {
+        return Roval;
+    }
+
+    public void setRoval(Oval roval) {
+        Roval = roval;
+    }
+
+    public Oval getGoval() {
+        return Goval;
+    }
+
+    public void setGoval(Oval goval) {
+        Goval = goval;
     }
 }

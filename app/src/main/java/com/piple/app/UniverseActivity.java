@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,7 +43,8 @@ public class UniverseActivity
         extends
             AppCompatActivity
         implements
-            GoogleApiClient.OnConnectionFailedListener
+            GoogleApiClient.OnConnectionFailedListener,
+        View.OnClickListener
 {
 
 
@@ -144,6 +146,7 @@ public class UniverseActivity
                     System.out.println("universe gotten");
                     currentUniverse = new Universe();
                     currentUniverse = currentUniverse.toUniverse(universeMap);
+                    mywindow.setTheuniverse(currentUniverse);
                 }
             }
 
@@ -185,6 +188,8 @@ public class UniverseActivity
                 // si les deux objets ont réellement changé
                 if(dataSnapshot.getKey().equals("MOIList")) {
                     //TODO checker quel moi a changé et le modifier en conséquence
+
+                    mywindow.setTheuniverse(currentUniverse);
                 }
             }
 
@@ -205,6 +210,15 @@ public class UniverseActivity
         });
         //TODO if DBmodification, use all the function from the views to recalculate everything.
 
+
+
+        mywindow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                System.out.println("LONG CLICK");
+                return false;
+            }
+        });
 
 
 
@@ -235,4 +249,9 @@ public class UniverseActivity
 
     }
 
+
+    @Override
+    public void onClick(View v) {
+        System.out.println("BBBOOONNNOUUR");
+    }
 }
