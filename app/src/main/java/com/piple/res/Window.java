@@ -66,7 +66,7 @@ public class Window extends PanZoomView{
                                           System.out.println("failllllleeedddd");
                                       }
                                   });*/
-        
+
 
     }
 

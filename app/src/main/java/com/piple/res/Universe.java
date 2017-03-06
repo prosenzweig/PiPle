@@ -75,6 +75,8 @@ public class Universe
         }
         result.put("UniverseUserList", universeUserList);
         // celle de mapping des MOI
+        if (MOIList!=null){
+
         iterator = MOIList.listIterator();
         while(iterator.hasNext()){
 
@@ -83,7 +85,7 @@ public class Universe
             iterator.previous();
             iterator.set(contacthashed);
             iterator.next();
-        }
+        }}
         result.put("MOIList", MOIList);
 
         return result;
@@ -103,6 +105,9 @@ public class Universe
             iterator.set(contact);
             iterator.next();
         }
+        
+        ArrayList MOIList = (ArrayList) univmap.get("MOIList");
+        if(MOIList!=null){
         iterator = MOIList.listIterator();
 
         while(iterator.hasNext()){
@@ -116,7 +121,7 @@ public class Universe
             iterator.previous();
             iterator.set(mmoi);
             iterator.next();
-        }
+        }}
        return  new Universe(univmap.get("Id").toString(), univmap.get("Name").toString(), contactList, MOIList );
    }
 

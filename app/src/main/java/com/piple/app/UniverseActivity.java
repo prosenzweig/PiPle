@@ -142,7 +142,7 @@ public class UniverseActivity
                 if(dataSnapshot.getKey().equals(universeId)){
                     Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     System.out.println("universe gotten");
-                   currentUniverse = new Universe();
+                    currentUniverse = new Universe();
                     currentUniverse = currentUniverse.toUniverse(universeMap);
                 }
             }
