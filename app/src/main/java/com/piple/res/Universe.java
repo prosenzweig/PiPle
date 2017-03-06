@@ -58,11 +58,13 @@ public class Universe
     }
 
     @Exclude
+    // on map l'univers
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("Id", id);
         result.put("Name", name);
         ListIterator iterator = universeUserList.listIterator();
+        // on appel la fonction de mapping des contacts
         while(iterator.hasNext()){
 
             Contact contact= (Contact)iterator.next();
@@ -72,7 +74,7 @@ public class Universe
             iterator.next();
         }
         result.put("UniverseUserList", universeUserList);
-
+        // celle de mapping des MOI
         iterator = MOIList.listIterator();
         while(iterator.hasNext()){
 
@@ -91,6 +93,9 @@ public class Universe
 
         ArrayList contactList = (ArrayList) univmap.get("UniverseUserList");
         ListIterator iterator = contactList.listIterator();
+
+        //ICI ON MAP DIRECTEMENT LE MOI ET LE CONTACT DANS LA FONCTION ( parce que )
+
         while(iterator.hasNext()){
             HashMap<String,Object> hashedcontact = (HashMap<String,Object>) iterator.next();
             Contact contact=new Contact(hashedcontact.get("Pseudo").toString(), hashedcontact.get("Id").toString());

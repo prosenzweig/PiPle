@@ -31,8 +31,9 @@ public class MOI {
 
     public MOI(String name, Message father) {
         this.name = name;
-        father = father;
+        this.father = father;
     }
+
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("Name", name);

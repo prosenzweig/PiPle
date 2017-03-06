@@ -50,6 +50,9 @@ public class Message {
         this.silent = silent;
         this.createdate = createdate;
     }
+    // Two recursive functions for mapping the message and all its childs.
+
+    //TODO: create functions just to map one message.
 
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();

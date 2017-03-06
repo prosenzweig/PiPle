@@ -50,33 +50,7 @@ public class Window extends PanZoomView{
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Messages");
 
-        Message root = new Message("root", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), null);
-        Message child1 = new Message("root child1", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),root);
-        Message child2 = new Message("root child2", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), root);
-        Message child3 = new Message("root child3", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
-        Message child4 = new Message("root child4", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
-        Message child5 = new Message("root chil5", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","poair",true, true, true, new Date(), root);
 
-        root.getChildren().add(child1);
-        root.getChildren().add(child2);
-        root.getChildren().add(child3);
-        root.getChildren().add(child4);
-
-        child3.getChildren().add(new Message("child1 child1", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
-        child3.getChildren().add(new Message("child1 child2", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
-        child3.getChildren().add(new Message("child1 child3", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),child1));
-        child3.getChildren().add(new Message("child1 child4", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1));
-
-        child4.getChildren().add(new Message("child4 child1", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
-        child4.getChildren().add(new Message("child4 child2", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","lkjhlkh",true, true, true, new Date(), child1));
-        child4.getChildren().add(new Message("child4 child3", new ArrayList<Message>(), 0,"FbTRfsFwywTtvGPA8ZbnM5Bq5pC3","kjhkj",true, true, true, new Date(),child1));
-        child4.getChildren().add(new Message("child4 child4", new ArrayList<Message>(), 0,"0GiPT5h7h1RJ1TrFWcRApMhrmPH3","uidd",true, true, true, new Date(), child1));
-
-
-        ref.child(root.getIdmessage()).setValue(root );
-        ref.child(child1.getIdmessage()).setValue( child1);
-        ref.child(child2.getIdmessage()).setValue(child2);
-        ref.child(child3.getIdmessage()).setValue(child3 );
 
 
 
@@ -92,9 +66,7 @@ public class Window extends PanZoomView{
                                           System.out.println("failllllleeedddd");
                                       }
                                   });*/
-
-        drawMessages(canvas,new Oval((int)Math.abs(50*(root.getChildren().size()*0.25+1)), new Point(200,200),0xffffff00,root),0);
-
+        
 
     }
 

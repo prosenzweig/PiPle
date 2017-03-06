@@ -36,6 +36,8 @@ public class Contact
 
 
     /// GETTERS & SETTERS ///
+
+    // on a juste la fonction de mapping car l'autre est dasn le map de l'univers
     public HashMap<String,Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("Id", id);

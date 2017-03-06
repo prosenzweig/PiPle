@@ -108,6 +108,8 @@ public class HomeActivity
         super.onCreate(savedInstanceState);
 
         try {
+            // ça marche jamais
+            //TODO: trouver autre chose pour renommer l'activité dans l'UI
             getSupportActionBar().setTitle("PiPle - Universe");
         } catch (NullPointerException npe) {
             npe.printStackTrace();
@@ -123,6 +125,7 @@ public class HomeActivity
         database = FirebaseDatabase.getInstance();
         Universes= new ArrayList<>();
 
+        // les références pour acceder à la base de donnée
         myRefUniverse = database.getReference("Universe");
         myRefUser = database.getReference("User");
 
@@ -172,13 +175,20 @@ public class HomeActivity
 
         myRefUniverse.addChildEventListener(new ChildEventListener() {
             @Override
+
+            //on met un listener pour initialiser tout les enfants
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                //on se retrouve avec un map car c'est comme ça que l'on sauve et récupère les données
+                //sur firebase ( vu qu'elles sont pars"e en JSON )
                 Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                 System.out.println("value gotten");
                 Universe aUniverse = new Universe();
                 aUniverse = aUniverse.toUniverse(universeMap);
                 ArrayList UserList = aUniverse.getUniverseUserList();
                 ListIterator iterator = UserList.listIterator();
+                // on parcours les contacts pour savoir si l'univers appartient à l'utilisateur
+                //si oui on le lui présente
 
                 while (iterator.hasNext()) {
 
@@ -221,9 +231,10 @@ public class HomeActivity
         });
 
     }
-
+        // on met à jour le layout avec la son des univers présents
     public void MajLayout(){
         if (UserhasUniverses) {
+            //cette fontion créer des boutons univers dans la listview.
             createNewButton(Universes);
             mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
@@ -298,9 +309,10 @@ public class HomeActivity
     public void onClick(View v)
     {
         int i = v.getId();
+        // si on appui sur le bouton + :
         if (i == R.id.buttonnewuniverse) {
 
-            //on créer une boite de dialogue avvec de l'input dedans
+            //on créer une boite de dialogue avvec de l'input dedans pour récupérer le nom de l'univers
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Universe name :");
             final EditText input = new EditText(this);
@@ -317,10 +329,14 @@ public class HomeActivity
 
 
                     //c'est comme ça que l'on save de la data de la bonne façon
+                    // on récupère la clef
                     String key = myRefUniverse.push().getKey();
+                    // on créer l'objet avec celle ci
                     Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, key);
+
                     Map<String, Object> UniverseValues = myuniverse.toMap();
                     Map<String, Object> childUpdates = new HashMap<>();
+                    // on le sauve avec la clef correspondante et l'univers mappé :
                     childUpdates.put(key, UniverseValues);
 
                     //on peut en sauver de grandes quantité d'un coup avec plusieurs put

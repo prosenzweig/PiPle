@@ -34,6 +34,8 @@ public class UniverseAdapter extends ArrayAdapter<Universe> {
 
         UniverseViewHolder viewHolder = (UniverseViewHolder) convertView.getTag();
         if(viewHolder == null){
+            // on créer ce qui va contenir cette partie de vue ( cela peut être  bien plus complexe ofcourse)
+            //Lié au layout  universe button
             viewHolder = new UniverseViewHolder();
             viewHolder.Universename = (TextView) convertView.findViewById(R.id.name);
             System.out.println("viewcreate");
