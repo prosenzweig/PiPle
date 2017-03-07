@@ -45,6 +45,9 @@ public class Oval {
         mDrawable.setBounds((int)(x-ray),(int)(y-ray),(int)(x+ray),(int)(y+ray));
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
+
+
+
     }
 
 
@@ -55,8 +58,77 @@ public class Oval {
 
     public void draw(Canvas canvas){
 
+
+
+
+     */
+
+    public void draw(Canvas canvas){
+
+
+        super.draw(canvas);
         mDrawable.draw(canvas);
-        Log.d("dddo","ddd");
+
+
+        if(text!=null) {
+            int i;
+            Paint paint = new Paint();
+            int size = 50;
+            ArrayList<String> textlist = new ArrayList();
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(size);
+            Rect bounds = new Rect();
+            boolean depasse;
+
+
+            if (text.length() > 144) {
+                text = text.substring(0, 144);
+                text = text + "...";
+            }
+
+            int nblignes = text.length() / 20;
+            if (nblignes == 0) {
+                nblignes = 1;
+            }
+            String[] strs = text.split(" ");
+            int[] len = new int[strs.length];
+
+
+            for (i = 0; i < strs.length; i++) {
+                len[i] = strs[i].length();
+            }
+            int lenligne = text.length() / nblignes;
+            int strcount = 0;
+            String accu;
+            for (i = 0; i < nblignes; i++) {
+                accu = "";
+                if (strcount < strs.length) {
+                    do {
+                        accu = accu + " " + strs[strcount];
+                        strcount++;
+                    } while ((accu.length() < lenligne) && (strcount < strs.length));
+                }
+                textlist.add(accu);
+            }
+
+            do {
+                size--;
+                paint.setTextSize(size);
+                depasse = false;
+                for (i = 0; i < nblignes; i++) {
+                    paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
+                    if (bounds.width() > ray * 1.6) {
+                        depasse = true;
+                    }
+                }
+            } while (depasse);
+
+            for (i = 0; i < nblignes; i++) {
+                paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
+                canvas.drawText(textlist.get(i), x - (bounds.width()) / 2, y - (nblignes / 2 - i) * size, paint);
+            }
+        }
+
     }
 
 

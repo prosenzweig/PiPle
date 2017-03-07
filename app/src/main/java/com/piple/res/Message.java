@@ -100,6 +100,7 @@ public class Message {
 
     public void setMmessage(String mmessage) {
         this.mmessage = mmessage;
+        Goval.setText(mmessage);
     }
 
     public ArrayList<Message> getChildren() {
@@ -180,6 +181,7 @@ public class Message {
 
     public void setGoval(Oval goval) {
         Goval = goval;
+        Goval.setText(mmessage);
     }
 
 
