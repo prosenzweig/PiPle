@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Window extends PanZoomView implements View.OnClickListener {
+public class Window extends PanZoomView {
 
 
     private Universe theuniverse;
@@ -36,14 +36,23 @@ public class Window extends PanZoomView implements View.OnClickListener {
     private Canvas mycanvas;
     private Context windowcontext;
    private boolean creatinganoval=false;
+    /*final GestureDetector gestureDetector = new GestureDetector(getContext()) {
+        public void onLongPress(MotionEvent e) {
+            System.out.print("\n looong click");
+            ((InputMethodManager) windowcontext.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+            creatinganoval=true;
+        }
+    });*/
+
 
     public Window(Context context) {
         super(context);
         windowcontext=context;
 
-        Message message = new Message();
-        message.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
-        currenttyped = message;
+
+        Message currentyped = new Message();
+        currentyped.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
 
 
 
@@ -69,6 +78,7 @@ public class Window extends PanZoomView implements View.OnClickListener {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         currenttyped.getGoval().OnDraw(canvas);
+        currenttyped.getGoval().getmDrawable().draw(canvas);
 
 
         canvas.save();
@@ -94,13 +104,14 @@ public class Window extends PanZoomView implements View.OnClickListener {
     }
 
 
-    public Point beChildof(Oval father, int mRay, double angle, double margin ){
-       /* Point mpoint = new Point();
+    /*public Point beChildof(Oval father, int mRay, double angle, double margin ){
+        Point mpoint = new Point();
         mpoint.x=(int)(father.getfpt().x + Math.sin(angle)*(margin+father.getfray()+mRay));
         mpoint.y=(int)(father.getfpt().y + Math.cos(angle)*(margin+father.getfray()+mRay));
+
         return mpoint;
-        */
-    }
+
+    }*/
 
 
 
@@ -114,19 +125,18 @@ mAutoCenterAnimator.start();*/
     @Override public boolean onTouchEvent(MotionEvent ev)
     {
         boolean ret = super.onTouchEvent(ev);
-
+      //  gestureDetector.onTouchEvent(ev);
             return ret;
 
     }
 
+
     public boolean onLongClick(){
 
-        System.out.print("\n looong click");
-        ((InputMethodManager) windowcontext.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-        creatinganoval=true;
         return true;
     }
+
 
 
 
@@ -228,7 +238,6 @@ mAutoCenterAnimator.start();*/
         //TODO: iteration pour calculer le rayon de toutes les bubbles et les instancier en les donnant à leur message et le faire que pour les 4 plus grosses
     }
 
-    @Override
     public void onClick(View v) {
         //((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
 

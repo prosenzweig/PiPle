@@ -213,7 +213,7 @@ public class UniverseActivity
         });
         //TODO if DBmodification, use all the function from the views to recalculate everything.
 
-        mywindow.setOnLongClickListener(new View.OnLongClickListener() {
+       /* mywindow.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
@@ -222,7 +222,7 @@ public class UniverseActivity
                 System.out.println("longclick");
                 return true;
             }
-        });
+        });*/
 
 
     }

@@ -90,7 +90,7 @@ public class Oval extends View{
                 super.setKeyListener(input);
             }
         };
-        mbut.setCompoundDrawablesWithIntrinsicBounds(mDrawable, null, null, null);
+      //  mbut.setCompoundDrawablesWithIntrinsicBounds(mDrawable, null, null, null);
     }
     public Oval(Context cont) {
     super(cont);
