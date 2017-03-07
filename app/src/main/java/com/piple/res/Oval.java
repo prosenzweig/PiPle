@@ -54,43 +54,6 @@ public class Oval extends View{
         mDrawable.setBounds((int)(x-ray),(int)(y-ray),(int)(x+ray),(int)(y+ray));
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
-        mbut= new CompoundButton(getContext()) {
-            @Override
-            public boolean isChecked() {
-                System.out.print("checkedbutton");
-                return super.isChecked();
-            }
-
-            /**
-             * Sets the key listener to be used with this TextView.  This can be null
-             * to disallow user input.  Note that this method has significant and
-             * subtle interactions with soft keyboards and other input method:
-             * see {@link KeyListener#getInputType() KeyListener.getContentType()}
-             * for important details.  Calling this method will replace the current
-             * content type of the text view with the content type returned by the
-             * key listener.
-             * <p>
-             * Be warned that if you want a TextView with a key listener or movement
-             * method not to be focusable, or if you want a TextView without a
-             * key listener or movement method to be focusable, you must call
-             * {@link #setFocusable} again after calling this to get the focusability
-             * back the way you want it.
-             *
-             * @param input
-             * @attr ref android.R.styleable#TextView_numeric
-             * @attr ref android.R.styleable#TextView_digits
-             * @attr ref android.R.styleable#TextView_phoneNumber
-             * @attr ref android.R.styleable#TextView_inputMethod
-             * @attr ref android.R.styleable#TextView_capitalize
-             * @attr ref android.R.styleable#TextView_autoText
-             */
-            @Override
-            public void setKeyListener(KeyListener input) {
-                System.out.print("keyheard");
-                super.setKeyListener(input);
-            }
-        };
-      //  mbut.setCompoundDrawablesWithIntrinsicBounds(mDrawable, null, null, null);
     }
     public Oval(Context cont) {
     super(cont);

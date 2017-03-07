@@ -170,6 +170,7 @@ public class PanZoomView
                     zooming=true;
                     canvas.translate(x, y);
                     canvas.scale(mScaleFactor, mScaleFactor);
+                    Log.d ("Multitouch", "+p-z x, y : " + x + " " + y);
                 } else {
                     if(zooming){
 
@@ -184,7 +185,7 @@ public class PanZoomView
                 mFocusX = mScaleDetector.getFocusX ();
                 mFocusY = mScaleDetector.getFocusY ();
                 canvas.scale(mScaleFactor, mScaleFactor, mFocusX -mPosX0, mFocusY -mPosY0);
-
+                Log.d ("Multitouch", "+p-z x, y : " + x + " " + y);
             }
         }
 

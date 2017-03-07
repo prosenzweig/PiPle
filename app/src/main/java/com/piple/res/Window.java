@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -33,8 +34,8 @@ public class Window extends PanZoomView {
     private Universe theuniverse;
     private Message currenttyped;
     private String currentmessage;
-    private Canvas mycanvas;
     private Context windowcontext;
+    private ScaleGestureDetector mScaleDetect;
    private boolean creatinganoval=false;
     /*final GestureDetector gestureDetector = new GestureDetector(getContext()) {
         public void onLongPress(MotionEvent e) {
@@ -54,6 +55,7 @@ public class Window extends PanZoomView {
         currenttyped = new Message();
         currenttyped.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
         currenttyped.setMmessage(" ");
+        mScaleDetect = new ScaleGestureDetector(context, new longPressListener());
 
 
 
@@ -78,11 +80,18 @@ public class Window extends PanZoomView {
 
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.save();
         currenttyped.getGoval().OnDraw(canvas);
 
 
-        canvas.save();
+
         canvas.restore();
+
+    }
+
+    public void drawOnCanvas (Canvas canvas)
+    {
+
     }
 
 
@@ -124,7 +133,7 @@ mAutoCenterAnimator.start();*/
 
 
 
-    @Override public boolean onTouchEvent(MotionEvent ev)
+   /* @Override public boolean onTouchEvent(MotionEvent ev)
     {
         boolean ret = super.onTouchEvent(ev);
       //  gestureDetector.onTouchEvent(ev);
@@ -133,14 +142,10 @@ mAutoCenterAnimator.start();*/
         invalidate();
             return ret;
 
-    }
+    }*/
 
 
-    public boolean onLongClick(){
 
-
-        return true;
-    }
 
 
 
@@ -243,14 +248,29 @@ mAutoCenterAnimator.start();*/
         //TODO: iteration pour calculer le rayon de toutes les bubbles et les instancier en les donnant à leur message et le faire que pour les 4 plus grosses
     }
 
-    public void onClick(View v) {
+
         //((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-        System.out.println("BONJOUUUUR");
-    }
+
 
 
     //TODO create IHM
+
+
+
+    protected class longPressListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+    {
+
+        public void onLongPress(MotionEvent event) {
+
+        Log.d("press","it happened");
+
+        }
+
+
+
+
+    }
 }
 
 

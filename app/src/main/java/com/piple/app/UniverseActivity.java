@@ -89,6 +89,7 @@ public class UniverseActivity
     {
         super.onCreate(savedInstanceState);
         mywindow=new Window(this.getApplicationContext());
+
         setContentView(mywindow);
 
         //Set preferences and defaults
@@ -213,16 +214,7 @@ public class UniverseActivity
         });
         //TODO if DBmodification, use all the function from the views to recalculate everything.
 
-       /* mywindow.setOnLongClickListener(new View.OnLongClickListener() {
 
-            @Override
-            public boolean onLongClick(View v) {
-                final Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(100);
-                System.out.println("longclick");
-                return true;
-            }
-        });*/
 
 
     }
