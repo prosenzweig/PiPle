@@ -181,4 +181,6 @@ public class Message {
     public void setGoval(Oval goval) {
         Goval = goval;
     }
+
+
 }

@@ -26,17 +26,29 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.ListIterator;
 
 
 public class Window extends PanZoomView {
 
 
-    private Universe theuniverse;
+
+    /*
+    RESSOURCES
+     */
+    private Universe theuniverse = null;
     private Message currenttyped;
     private String currentmessage;
+
+    //on commence en roadview
+    private Roadview  roadview = new Roadview(true);
+
     private Context windowcontext;
-    private ScaleGestureDetector mScaleDetect;
-   private boolean creatinganoval=false;
+    private ScaleGestureDetector mPressDetect;
+
+
+
     /*final GestureDetector gestureDetector = new GestureDetector(getContext()) {
         public void onLongPress(MotionEvent e) {
             System.out.print("\n looong click");
@@ -47,15 +59,19 @@ public class Window extends PanZoomView {
     });*/
 
 
+
     public Window(Context context) {
+
         super(context);
         windowcontext=context;
 
 
         currenttyped = new Message();
-        currenttyped.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
+        currenttyped.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK));
         currenttyped.setMmessage(" ");
-        mScaleDetect = new ScaleGestureDetector(context, new longPressListener());
+
+
+        mPressDetect = new ScaleGestureDetector(context, new longPressListener());
 
 
 
@@ -64,39 +80,155 @@ public class Window extends PanZoomView {
     public Universe getTheuniverse() {
         return theuniverse;
     }
-
     public void setTheuniverse(Universe theuniverse) {
         this.theuniverse = theuniverse;
     }
-
     public Window (Context context, AttributeSet attrs) {
         super (context, attrs);
     }
-
     public Window (Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
 
-    public void onDraw(Canvas canvas) {
+
+
+
+
+    /**
+     *
+     * DRAWINGS
+     *
+     *
+     * Do whatever drawing is appropriate for this view.
+     * The canvas object is already set up to be drawn on. That means that all translations and scaling
+     * operations have already been done.
+     *
+     * @param canvas Canvas
+     * @return void
+     */
+
+
+    @Override public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        currenttyped.getGoval().OnDraw(canvas);
-
-
-
+        drawOnCanvas (canvas);
         canvas.restore();
 
     }
 
+
     public void drawOnCanvas (Canvas canvas)
     {
+        if(roadview.isRoadview()){
+            if(theuniverse!=null) {
+                //TODO: afficher le nom de l'univers en gras en haut a gauche avec si un appuis sur la zone alors on lance HomeActivity
+                if (theuniverse.getMOIList() != null) {
+                    ListIterator iterator = theuniverse.getMOIList().listIterator();
+                    while (iterator.hasNext()) {
+                        MOI moi = (MOI)iterator.next();
+                        drawtheMOI(moi.getFather(), canvas);
+                    }
+                }
+
+            }
+        }
 
     }
 
 
 
-    public void drawMessages(Canvas canvas,Message root, double rootangle){
+
+    
+   public void drawtheMOI(Message message, Canvas canvas){
+
+       message.getRoval().draw(canvas);
+       ListIterator iterator= message.getChildren().listIterator();
+       while(iterator.hasNext()){
+           drawtheMOI((Message)iterator.next(),canvas);
+       }
+
+   }
+
+
+    public void todrawMoi(int num, MOI moi){
+
+
+        //TODO do differents if its in GORview or RoadView
+        Message message = moi.getFather();
+        //TODO code this function
+        message.setRoval(roadview.CreateOval(message,0,num*2000));
+        //TODO code the instanciation of message and name and other Oval component
+        moi.setFather(message);
+
+        ArrayList children= moi.getFather().getChildren();
+
+        todrawMessage(children, 0, num*2000);
+
+    }
+
+    public void todrawMessage(ArrayList<Message> children, float fatherposx, float fatherposy){
+
+        if(children!=null) {
+            //TODO code this fonction that returns only the 5 biggest messages and if there is more return a 6th special message that will make the draw message create a special bubble containing special info
+            ArrayList childrentodraw = roadview.amongthebiggest(children);
+            for (int i = 0; i < children.size(); i++) {
+                Message message = children.get(i);
+                message.setRoval(roadview.CreateOval(message, fatherposx, fatherposy));
+                message.setRoval(roadview.checkforcollision(message.getRoval(), theuniverse));
+                todrawMessage(message.getChildren(),message.getRoval().getX(),message.getRoval().getY());
+            }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        public void OnZoomAction(){
+        //TODO : si on zoom suffisament alors on arrive en gearofreply view sinon si on dézoom on repasse en roadview et si on continue MOIview
+           /* if(mScaleFactor>0.5f && mScaleFactor<8.9f){
+                myRoadview.set(fathermessage);
+            }*/
+    }
+
+
+
+
+
+
+
+        //((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+
+
+
+    //TODO create IHM
+
+
+
+    protected class longPressListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+    {
+
+        public void onLongPress(MotionEvent event) {
+
+            Log.d("press","it happened");
+
+        }
+    }
+
+}
+
+
+
+
+
+/*public void drawMessages(Canvas canvas,Message root, double rootangle){
     int nbchildren = root.getChildren().size();
     double angle = Math.PI/nbchildren;
 
@@ -122,7 +254,7 @@ public class Window extends PanZoomView {
 
         return mpoint;
 
-    }
+    }*/
 
 
 
@@ -159,124 +291,6 @@ mAutoCenterAnimator.start();*/
 
                 to delete keybord
      */
-
-
-
-
-
-
-
-
-
-
-    //TODO : avoir la fonction de passage entre les deux views
-    /**
-     * Return the resource id of the sample image. Note that this class always returns 0, indicating
-     * that there is no sample drawable.
-     *
-     * @return int
-     */
-
-    public int sampleDrawableId () {
-        return 0;
-    }
-
-    /**
-     * Return true if panning is supported.
-     *
-     * @return boolean
-     */
-
-    public boolean supportsPan () {
-        return true;
-    }
-
-    /**
-     * Return true if scaling is done around the focus point of the pinch.
-     *
-     * @return boolean
-     */
-
-    public boolean supportsScaleAtFocusPoint () {
-        return true;
-    }
-
-
-    public void OnZoomAction(){
-        //TODO : si on zoom suffisament alors on arrive en gearofreply view sinon si on dézoom on repasse en roadview et si on continue MOIview
-           /* if(mScaleFactor>0.5f && mScaleFactor<8.9f){
-                myRoadview.set(fathermessage);
-            }*/
-    }
-    /**
-     * Return true if pinch zooming is supported.
-     *
-     * @return boolean
-     */
-    public boolean supportsZoom () {
-        return true;
-    }
-
-
-
-    /*
-
-
-    ROADVIEW
-
-     */
-    public boolean set(Message father){
-        CreateOvalandsetRay(father);
-        //TODO iteration pour checker la distance normale que devrait avoir chaques enfant par rapport à son père si on ne l'a pas déjà
-       /* ListIterator iterator = children.listIterator();
-        while(iterator.hasNext()){
-
-            iterator.getChildren().get
-
-        }*/
-
-        //TODO fonction pour calculer le poid si on ne l'a pas déjà
-
-        //TODO Iteration pour checker si il y a superposition,
-        //TODO qui change cela en repoussant les l
-
-
-        return true;
-    }
-    public void CreateOvalandsetRay(Message message)
-    {
-        //TODO: iteration pour calculer le rayon de toutes les bubbles et les instancier en les donnant à leur message et le faire que pour les 4 plus grosses
-    }
-
-
-        //((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-
-
-
-    //TODO create IHM
-
-
-
-    protected class longPressListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
-    {
-
-        public void onLongPress(MotionEvent event) {
-
-        Log.d("press","it happened");
-
-        }
-
-
-
-
-    }
-}
-
-
-
-
-
 
 
 
