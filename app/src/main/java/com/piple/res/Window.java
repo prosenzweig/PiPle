@@ -76,52 +76,30 @@ public class Window extends PanZoomView implements View.OnClickListener {
     }
 
 
-    public void drawOnCanvas (Canvas canvas) {
-
-        //TODO put everything back where it needs to be
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Messages");
-
-
-
-
-
-        /*ref.addValueEventListener(new ValueEventListener() {
-                                      @Override
-                                      public void onDataChange(DataSnapshot dataSnapshot) {
-                                          Message post = dataSnapshot.getValue(Message.class);
-                                          System.out.println("coucoucoucoucouc"+post.getMmessage());
-                                      }
-
-                                      @Override
-                                      public void onCancelled(DatabaseError databaseError) {
-                                          System.out.println("failllllleeedddd");
-                                      }
-                                  });*/
-
-
-    }
 
     public void drawMessages(Canvas canvas,Oval root, double rootangle){
-       /* int nbchildren = root.getMsg().getChildren().size();
-        double angle = Math.PI/nbchildren;
-        root.getmDrawable().draw(canvas);
-        drawtext(canvas, root.getMsg().getMmessage(),root);
+   /* int nbchildren = root.getMsg().getChildren().size();
+    double angle = Math.PI/nbchildren;
 
-        for(int i=0; i<root.getMsg().getChildren().size(); i++ ){
-            Message msg = root.getMsg().getChildren().get(i);
-            int mray = (int)Math.abs(50*(msg.getChildren().size()*0.25+1));
-            //int mray =(int)Math.abs(root.getray()*(0.5+0.04*msg.getChildren().size()));
-            Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg, getContext());
-            drawMessages(canvas,child, angle*i-Math.PI/2+rootangle+angle/2);
-        }*/
+    drawtext(canvas, root.getMsg().getMmessage(),root);
+
+    for(int i=0; i<root.getMsg().getChildren().size(); i++ ){
+        Message msg = root.getMsg().getChildren().get(i);
+        int mray = (int)Math.abs(50*(msg.getChildren().size()*0.25+1));
+        //int mray =(int)Math.abs(root.getray()*(0.5+0.04*msg.getChildren().size()));
+        Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg);
+        drawMessages(canvas,child, angle*i-Math.PI/2+rootangle+angle/2);
+        */
+
     }
 
 
     public Point beChildof(Oval father, int mRay, double angle, double margin ){
-        Point mpoint = new Point();
-
+       /* Point mpoint = new Point();
+        mpoint.x=(int)(father.getfpt().x + Math.sin(angle)*(margin+father.getfray()+mRay));
+        mpoint.y=(int)(father.getfpt().y + Math.cos(angle)*(margin+father.getfray()+mRay));
         return mpoint;
+        */
     }
 
 
