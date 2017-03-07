@@ -51,8 +51,9 @@ public class Window extends PanZoomView {
         windowcontext=context;
 
 
-        Message currentyped = new Message();
-        currentyped.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
+        currenttyped = new Message();
+        currenttyped.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
+        currenttyped.setMmessage(" ");
 
 
 
@@ -78,7 +79,6 @@ public class Window extends PanZoomView {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         currenttyped.getGoval().OnDraw(canvas);
-        currenttyped.getGoval().getmDrawable().draw(canvas);
 
 
         canvas.save();
@@ -87,31 +87,33 @@ public class Window extends PanZoomView {
 
 
 
-    public void drawMessages(Canvas canvas,Oval root, double rootangle){
-   /* int nbchildren = root.getMsg().getChildren().size();
+    public void drawMessages(Canvas canvas,Message root, double rootangle){
+    int nbchildren = root.getChildren().size();
     double angle = Math.PI/nbchildren;
 
-    drawtext(canvas, root.getMsg().getMmessage(),root);
+    root.getGoval().OnDraw(canvas);
 
-    for(int i=0; i<root.getMsg().getChildren().size(); i++ ){
-        Message msg = root.getMsg().getChildren().get(i);
-        int mray = (int)Math.abs(50*(msg.getChildren().size()*0.25+1));
+
+    for(int i=0; i<root.getChildren().size(); i++ ) {
+        Message msg = root.getChildren().get(i);
+        int mray = (int) Math.abs(50 * (msg.getChildren().size() * 0.25 + 1));
         //int mray =(int)Math.abs(root.getray()*(0.5+0.04*msg.getChildren().size()));
-        Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg);
-        drawMessages(canvas,child, angle*i-Math.PI/2+rootangle+angle/2);
-        */
+        Point mpt = beChildof(root.getGoval(), mray, angle * i - Math.PI / 2 + rootangle + angle / 2, Math.abs(15 + msg.getChildren().size() * mray * 0.25));
+        msg.setGoval(new Oval(mray, mpt.x, mpt.y, 0xffffff00, getContext()));
+        drawMessages(canvas, msg, angle * i - Math.PI / 2 + rootangle + angle / 2);
+    }
 
     }
 
 
-    /*public Point beChildof(Oval father, int mRay, double angle, double margin ){
+    public Point beChildof(Oval father, int mRay, double angle, double margin ){
         Point mpoint = new Point();
-        mpoint.x=(int)(father.getfpt().x + Math.sin(angle)*(margin+father.getfray()+mRay));
-        mpoint.y=(int)(father.getfpt().y + Math.cos(angle)*(margin+father.getfray()+mRay));
+        mpoint.x=(int)(father.getX()+ Math.sin(angle)*(margin+father.getRay()+mRay));
+        mpoint.y=(int)(father.getY() + Math.cos(angle)*(margin+father.getRay()+mRay));
 
         return mpoint;
 
-    }*/
+    }
 
 
 
@@ -126,6 +128,9 @@ mAutoCenterAnimator.start();*/
     {
         boolean ret = super.onTouchEvent(ev);
       //  gestureDetector.onTouchEvent(ev);
+
+        currenttyped.setGoval(new Oval(ev.getX(),ev.getY(),100,Color.BLUE,getContext()));
+        invalidate();
             return ret;
 
     }
