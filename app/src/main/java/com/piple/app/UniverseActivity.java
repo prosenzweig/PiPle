@@ -5,6 +5,7 @@ package com.piple.app;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -43,13 +44,15 @@ public class UniverseActivity
         extends
             AppCompatActivity
         implements
-            GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener
+            GoogleApiClient.OnConnectionFailedListener
 {
 
 
 
     /// RESOURCES ///
+
+
+
 
     private static final String TAG = "UniverseActivity";
     private SharedPreferences mSharedPreferences;
@@ -210,16 +213,16 @@ public class UniverseActivity
         });
         //TODO if DBmodification, use all the function from the views to recalculate everything.
 
-
-
         mywindow.setOnLongClickListener(new View.OnLongClickListener() {
+
             @Override
             public boolean onLongClick(View v) {
-                System.out.println("LONG CLICK");
-                return false;
+                final Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(100);
+                System.out.println("longclick");
+                return true;
             }
         });
-
 
 
     }
@@ -249,9 +252,4 @@ public class UniverseActivity
 
     }
 
-
-    @Override
-    public void onClick(View v) {
-        System.out.println("BBBOOONNNOUUR");
-    }
 }

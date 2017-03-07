@@ -185,7 +185,7 @@ public class HomeActivity
                System.out.println("value gotten");
                 Universe aUniverse = dataSnapshot.getValue(Universe.class);
                 aUniverse = aUniverse.toUniverse(universeMap);
-                ArrayList UserList = aUniverse.getUniverseUserList();
+                ArrayList UserList = aUniverse.getuniverseUserList();
                 ListIterator iterator = UserList.listIterator();
                 // on parcours les contacts pour savoir si l'univers appartient à l'utilisateur
                 //si oui on le lui présente

@@ -58,7 +58,7 @@ public class PanZoomView
     // The next three are set by calling supportsPan, supportsZoom, ...
     protected boolean mSupportsPan = true;
     protected boolean mSupportsZoom = true;
-    protected boolean mSupportsScaleAtFocus = true;
+    protected boolean mSupportsScaleAtFocus = false;
 
 
 
@@ -170,7 +170,6 @@ public class PanZoomView
                     zooming=true;
                     canvas.translate(x, y);
                     canvas.scale(mScaleFactor, mScaleFactor);
-                    Log.d ("Multitouch", "+p+z x, y, focusX, focusY: " + x + " " + y + " " + mFocusX + " " + mFocusY);
                 } else {
                     if(zooming){
 
@@ -178,7 +177,6 @@ public class PanZoomView
                     // Pinch zoom is not in progress. Just do translation of canvas at whatever the current scale is.
                     canvas.translate(x, y);
                     canvas.scale(mScaleFactor, mScaleFactor);
-                    Log.d ("Multitouch", "+p+z x, y : " + x + " " + y);
                 }
             } else if (mSupportsZoom) {
                 // Not working perfectly when mPosX0 is set.
@@ -187,7 +185,6 @@ public class PanZoomView
                 mFocusY = mScaleDetector.getFocusY ();
                 canvas.scale(mScaleFactor, mScaleFactor, mFocusX -mPosX0, mFocusY -mPosY0);
 
-                Log.d ("Multitouch", "-p+s x, y, focusX, focusY: " + mPosX0 + " " + mPosY0 + " " + mFocusX + " " + mFocusY);
             }
         }
 
@@ -392,6 +389,7 @@ public class PanZoomView
             invalidate();
             return true;
         }
+
 
 
 

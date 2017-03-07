@@ -38,7 +38,6 @@ public class UniverseAdapter extends ArrayAdapter<Universe> {
             //Lié au layout  universe button
             viewHolder = new UniverseViewHolder();
             viewHolder.Universename = (TextView) convertView.findViewById(R.id.name);
-            System.out.println("viewcreate");
             viewHolder.Unimage = (ImageView) convertView.findViewById(R.id.image);
             convertView.setTag(viewHolder);
         }

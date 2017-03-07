@@ -1,64 +1,180 @@
 package com.piple.res;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RadialGradient;
+import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.text.method.KeyListener;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 
-public class Oval {
+import java.util.ArrayList;
+
+public class Oval extends View{
 
     private ShapeDrawable mDrawable;
     private boolean message, msgholder, faceholder; // la bbubble peut être plusieurs choses en effet;
     private int importance; // remplace size ici
     //FOR THE GearofReply VIEW (paul's)
+    private String text;
 
-    private int fray;
-    private Point fpt;
+
+    private float x,y,ray;
     private Contact contact;
-    private Button mbut;
-
     //FOR THE LinkVIEW (jerem's )
     
     private int rray;
     private int rdistance;
+    private Button mbut;
 
-
-    public Oval(int fray, Point fpt, int color, Context cont) {
-        //super(cont);
-
-
-        mbut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("\n CA MARCHE \n");
-            }
-        });
-        /*this.setOnClickListener(new OnClickListener() {
+    public Oval(float x,float y, float ray, int color, Context cont) {
+        super(cont);
+        this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //blablabla
+
+
             }
-        });*/
-        this.fpt=fpt;
-        this.fray=fray;
+        });
+        this.x=x;
+        this.y=y;
+        this.ray=ray;
+
         int[] colors = {0xffffffff, color};
         float[] stops = {0.8f, 1f};
         mDrawable = new ShapeDrawable(new OvalShape());
-        mDrawable.setBounds(fpt.x-fray, fpt.y-fray, fpt.x+fray, fpt.y+fray);
+        mDrawable.setBounds((int)(x-ray),(int)(y-ray),(int)(x+ray),(int)(y+ray));
         mDrawable.getPaint().setColor(color);
-        mDrawable.getPaint().setShader(new RadialGradient(fray,fray,fray, colors, stops, Shader.TileMode.MIRROR ));
+        mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
+        mbut= new CompoundButton(getContext()) {
+            @Override
+            public boolean isChecked() {
+                System.out.print("checkedbutton");
+                return super.isChecked();
+            }
+
+            /**
+             * Sets the key listener to be used with this TextView.  This can be null
+             * to disallow user input.  Note that this method has significant and
+             * subtle interactions with soft keyboards and other input method:
+             * see {@link KeyListener#getInputType() KeyListener.getContentType()}
+             * for important details.  Calling this method will replace the current
+             * content type of the text view with the content type returned by the
+             * key listener.
+             * <p>
+             * Be warned that if you want a TextView with a key listener or movement
+             * method not to be focusable, or if you want a TextView without a
+             * key listener or movement method to be focusable, you must call
+             * {@link #setFocusable} again after calling this to get the focusability
+             * back the way you want it.
+             *
+             * @param input
+             * @attr ref android.R.styleable#TextView_numeric
+             * @attr ref android.R.styleable#TextView_digits
+             * @attr ref android.R.styleable#TextView_phoneNumber
+             * @attr ref android.R.styleable#TextView_inputMethod
+             * @attr ref android.R.styleable#TextView_capitalize
+             * @attr ref android.R.styleable#TextView_autoText
+             */
+            @Override
+            public void setKeyListener(KeyListener input) {
+                System.out.print("keyheard");
+                super.setKeyListener(input);
+            }
+        };
         mbut.setCompoundDrawablesWithIntrinsicBounds(mDrawable, null, null, null);
     }
     public Oval(Context cont) {
-
+    super(cont);
     }
 
+    /*
+    EXEMPLE AUTRE
 
+
+
+
+
+
+
+
+     */
+
+    public void OnDraw(Canvas canvas){
+
+
+        mDrawable.draw(canvas);
+        Log.d("dddo","ddd");
+
+
+        if(text!=null) {
+            int i;
+            Paint paint = new Paint();
+            int size = 50;
+            ArrayList<String> textlist = new ArrayList();
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(size);
+            Rect bounds = new Rect();
+            boolean depasse;
+
+
+            if (text.length() > 144) {
+                text = text.substring(0, 144);
+                text = text + "...";
+            }
+
+            int nblignes = text.length() / 20;
+            if (nblignes == 0) {
+                nblignes = 1;
+            }
+            String[] strs = text.split(" ");
+            int[] len = new int[strs.length];
+
+
+            for (i = 0; i < strs.length; i++) {
+                len[i] = strs[i].length();
+            }
+            int lenligne = text.length() / nblignes;
+            int strcount = 0;
+            String accu;
+            for (i = 0; i < nblignes; i++) {
+                accu = "";
+                if (strcount < strs.length) {
+                    do {
+                        accu = accu + " " + strs[strcount];
+                        strcount++;
+                    } while ((accu.length() < lenligne) && (strcount < strs.length));
+                }
+                textlist.add(accu);
+            }
+
+            do {
+                size--;
+                paint.setTextSize(size);
+                depasse = false;
+                for (i = 0; i < nblignes; i++) {
+                    paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
+                    if (bounds.width() > ray * 1.6) {
+                        depasse = true;
+                    }
+                }
+            } while (depasse);
+
+            for (i = 0; i < nblignes; i++) {
+                paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
+                canvas.drawText(textlist.get(i), x - (bounds.width()) / 2, y - (nblignes / 2 - i) * size, paint);
+            }
+        }
+
+    }
 
 
 
@@ -71,30 +187,13 @@ public class Oval {
         return mDrawable;
     }
 
-    public void setpos(float x, float y){
-        mDrawable.setBounds((int)x-fray, (int)y-fray, (int)x+fray, (int)y+fray);
-    }
-
 
 
     public void setDrawable(ShapeDrawable mDrawable) {
         this.mDrawable = mDrawable;
     }
 
-    public int getfray() {
-        return fray;
-    }
 
-    public void setfray(int mfray) {
-        this.fray = mfray;
-    }
-    public Point getfpt() {
-        return fpt;
-    }
-
-    public void setfpt(Point mfpt) {
-        this.fpt = mfpt;
-    }
 
     public boolean isMessage() {
         return message;
@@ -128,21 +227,7 @@ public class Oval {
         this.importance = importance;
     }
 
-    public int getFray() {
-        return fray;
-    }
 
-    public void setFray(int fray) {
-        this.fray = fray;
-    }
-
-    public Point getFpt() {
-        return fpt;
-    }
-
-    public void setFpt(Point fpt) {
-        this.fpt = fpt;
-    }
 
     public Contact getContact() {
         return contact;
@@ -166,5 +251,51 @@ public class Oval {
 
     public void setRdistance(int rdistance) {
         this.rdistance = rdistance;
+    }
+
+    public void setmDrawable(ShapeDrawable mDrawable) {
+        this.mDrawable = mDrawable;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public float getX() {
+        return x;
+    }
+
+    public void setX(Float x) {
+        this.x = x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
+    }
+
+    public void setY(Float y) {
+        this.y = y;
+    }
+
+    public Float getRay() {
+        return ray;
+    }
+
+    public void setRay(Float ray) {
+        this.ray = ray;
+    }
+
+    public Button getMbut() {
+        return mbut;
+    }
+
+    public void setMbut(Button mbut) {
+        this.mbut = mbut;
     }
 }

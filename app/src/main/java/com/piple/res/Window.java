@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,16 +33,19 @@ public class Window extends PanZoomView implements View.OnClickListener {
     private Universe theuniverse;
     private Message currenttyped;
     private String currentmessage;
+    private Canvas mycanvas;
+    private Context windowcontext;
+   private boolean creatinganoval=false;
 
     public Window(Context context) {
         super(context);
-        this.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                System.out.println("clicklong");
-                return false;
-            }
-        });
+        windowcontext=context;
+
+        Message message = new Message();
+        message.setGoval(new Oval(0,0 ,(float) 80, Color.BLACK, windowcontext));
+        currenttyped = message;
+
+
 
     }
 
@@ -63,6 +68,9 @@ public class Window extends PanZoomView implements View.OnClickListener {
 
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        currenttyped.getGoval().OnDraw(canvas);
+
+
         canvas.save();
         canvas.restore();
     }
@@ -95,7 +103,7 @@ public class Window extends PanZoomView implements View.OnClickListener {
     }
 
     public void drawMessages(Canvas canvas,Oval root, double rootangle){
-        int nbchildren = root.getMsg().getChildren().size();
+       /* int nbchildren = root.getMsg().getChildren().size();
         double angle = Math.PI/nbchildren;
         root.getmDrawable().draw(canvas);
         drawtext(canvas, root.getMsg().getMmessage(),root);
@@ -106,101 +114,53 @@ public class Window extends PanZoomView implements View.OnClickListener {
             //int mray =(int)Math.abs(root.getray()*(0.5+0.04*msg.getChildren().size()));
             Oval child = new Oval(mray, beChildof(root,mray,angle*i-Math.PI/2+rootangle+angle/2,Math.abs(15+msg.getChildren().size()*mray*0.25)),0xffffff00, msg, getContext());
             drawMessages(canvas,child, angle*i-Math.PI/2+rootangle+angle/2);
-        }
+        }*/
     }
 
 
     public Point beChildof(Oval father, int mRay, double angle, double margin ){
         Point mpoint = new Point();
-        mpoint.x=(int)(father.getfpt().x + Math.sin(angle)*(margin+father.getfray()+mRay));
-        mpoint.y=(int)(father.getfpt().y + Math.cos(angle)*(margin+father.getfray()+mRay));
+
         return mpoint;
     }
-    public void drawtext(Canvas canvas, String text, Oval oval){
-
-        //TODO create subfunction
-        int i;
-        Paint paint = new Paint();
-        int size=50;
-        ArrayList<String> textlist = new ArrayList();
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(size);
-        Rect bounds = new Rect();
-        boolean depasse;
 
 
-        if(text.length()>144){
-            text = text.substring(0,144);
-            text=text+"...";
-        }
 
-        int nblignes=text.length()/20;
-        if(nblignes==0){
-            nblignes=1;
-        }
-        String[] strs = text.split(" ");
-        int[] len = new int[strs.length];
-
-
-        for(i=0;i<strs.length;i++){
-            len[i]=strs[i].length();
-        }
-        int lenligne = text.length()/nblignes;
-        int strcount=0;
-        String accu;
-        for(i=0;i<nblignes;i++){
-            accu="";
-            if(strcount<strs.length) {
-                do {
-                    accu = accu + " " + strs[strcount];
-                    strcount++;
-                } while ((accu.length() < lenligne) && (strcount < strs.length));
-            }
-            textlist.add(accu);
-        }
-
-        do{
-            size--;
-            paint.setTextSize(size);
-            depasse=false;
-            for(i=0;i<nblignes;i++){
-                paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                if(bounds.width()>oval.getfray()*1.6){
-                    depasse=true;
-                }
-            }
-        }while(depasse);
-
-        for(i=0;i<nblignes;i++){
-            paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-            canvas.drawText(textlist.get(i), oval.getfpt().x - (bounds.width())/2,oval.getfpt().y-(nblignes/2-i)*size , paint);
-        }
-    }
+    /*mAutoCenterAnimator = ObjectAnimator.ofInt(PieChart.this, "PieRotation", 0);
+mAutoCenterAnimator.setIntValues(targetAngle);
+mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);
+mAutoCenterAnimator.start();*/
 
 
 
     @Override public boolean onTouchEvent(MotionEvent ev)
     {
         boolean ret = super.onTouchEvent(ev);
-        ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-        Message message = new Message();
-        message.setGoval(new Oval(30, new Point((int)ev.getX(), (int)ev.getY()), Color.BLACK, this.getContext()));
-        currenttyped = message;
-        return ret;
+            return ret;
+
+    }
+
+    public boolean onLongClick(){
+
+        System.out.print("\n looong click");
+        ((InputMethodManager) windowcontext.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        creatinganoval=true;
+        return true;
     }
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
 
-       Log.d("TEST", "Key Down  :" + keyCode + " String : " + currentmessage);
-       currentmessage += (char) event.getUnicodeChar();
-        currenttyped.setMmessage(currentmessage);
-        
-        return super.onKeyDown(keyCode, event);
-    }
+
+    /* ONButton pressed I don't care which one :
+
+    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(this.getWindowToken(), 0);
+
+                to delete keybord
+     */
 
 
 
@@ -300,6 +260,11 @@ public class Window extends PanZoomView implements View.OnClickListener {
 
     //TODO create IHM
 }
+
+
+
+
+
 
 
 

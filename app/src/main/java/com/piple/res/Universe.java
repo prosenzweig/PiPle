@@ -145,12 +145,19 @@ public class Universe
         this.name = name;
     }
 
-    public ArrayList getUniverseUserList() {
+    public ArrayList getuniverseUserList() {
         return universeUserList;
     }
 
-    public void setUniverseUserList(ArrayList user) {
+    public void setuniverseUserList(ArrayList user) {
         this.universeUserList = user;
     }
 
+    public ArrayList getMOIList() {
+        return MOIList;
+    }
+
+    public void setMOIList(ArrayList MOIList) {
+        this.MOIList = MOIList;
+    }
 }
