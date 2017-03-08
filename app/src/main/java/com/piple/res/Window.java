@@ -1,66 +1,43 @@
 package com.piple.res;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.lang.Math;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
 import static android.view.GestureDetector.*;
 
 
-public class Window extends PanZoomView implements OnGestureListener{
+public class Window extends PanZoomView implements GestureDetector.OnGestureListener{
 
 
     private Universe theuniverse;
     private Message currenttyped;
+    private Message root;
     private String currentmessage;
-    private Canvas mycanvas;
     private Context windowcontext;
-    private boolean creatinganoval=false;
+    private GestureDetectorCompat mDetector;
+
 
     public Window(Context context) {
         super(context);
 
-        currenttyped = new Message();
-        currenttyped.setGoval(new Oval(500,100 ,(float) 80, Color.BLACK, getContext()));
-        currenttyped.setMmessage(" ");
+        root = new Message();
+        root.setGoval(new Oval(500,100 ,(float) 80, Color.BLACK, getContext()));
+        root.setMmessage(" ");
         Message child1 = new Message();
-        currenttyped.getChildren().add(child1);
+        root.getChildren().add(child1);
 
-
+        mDetector=new GestureDetectorCompat(getContext(),this);
     }
-
-    public Universe getTheuniverse() {
-        return theuniverse;
-    }
-
-    public void setTheuniverse(Universe theuniverse) {
-        this.theuniverse = theuniverse;
-    }
-
     public Window (Context context, AttributeSet attrs) {
         super (context, attrs);
     }
@@ -70,26 +47,19 @@ public class Window extends PanZoomView implements OnGestureListener{
     }
 
 
+
+    //C'EST ICI QU'ON DESSINE
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);
-        drawMessages(canvas,currenttyped,0);
+        drawMessages(canvas,root,0);
     }
 
-    public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.save();
-        canvas.restore();
-    }
 
-    /*
-
-    Function to check if the point is inside the message's oval.
-
-     */
 
     //TODO: change with oval because two kinds of oval function
 
+    //RENVOI LA BULLE SUR LAQUELLE ON A CLICKED
     public Message clickedOn(Point pt, Message root){
 
         Message retour = null;
@@ -108,21 +78,27 @@ public class Window extends PanZoomView implements OnGestureListener{
         }
     }
 
+
+    //FONCTION RECURSIVE D'AFFICHAGE DE L'ARBRE A PARTIR DE LA RACINE (commencer avec un angle de 0)
     public void drawMessages(Canvas canvas,Message root, double rootangle){
 
         int nbchildren = root.getChildren().size();
         double angle = Math.PI/nbchildren;
-
         root.getGoval().draw(canvas);
 
 
         for(int i=0; i<nbchildren; i++ ) {
             Message msg = root.getChildren().get(i);
-            
+            double mangle =  angle * i - Math.PI / 2 + rootangle + angle / 2;
+
+            // DECISION DU RAYON
             //int mray = (int) Math.abs(50 * (msg.getChildren().size() * 0.25 + 1));
             int mray =(int)Math.abs(root.getGoval().getRay()*(0.5+0.04*msg.getChildren().size()));
-            double mangle =  angle * i - Math.PI / 2 + rootangle + angle / 2;
+
+            //DECISION DE LA MARGE
             double margin = 15 + msg.getChildren().size() * mray * 0.25;
+
+
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
             msg.setGoval(new Oval(mray, mpt.x, mpt.y, 0xffffff00, getContext()));
             drawMessages(canvas, msg, mangle);
@@ -131,6 +107,7 @@ public class Window extends PanZoomView implements OnGestureListener{
         }
 
 
+        //Renvoie le point du centre de la bulle pour que celle-ci soit placé correctement (en fonction du père, du rayon, de l'angle et de la marge
     public Point beChildof(Oval father, int mRay, double angle, double margin ){
         Point mpoint = new Point();
         mpoint.x=(int)(father.getX()+ Math.sin(angle)*(margin+father.getRay()+mRay));
@@ -142,50 +119,26 @@ public class Window extends PanZoomView implements OnGestureListener{
 
 
 
-    /*mAutoCenterAnimator = ObjectAnimator.ofInt(PieChart.this, "PieRotation", 0);
-mAutoCenterAnimator.setIntValues(targetAngle);
-mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);
-mAutoCenterAnimator.start();*/
+    @Override
+    public void onLongPress(MotionEvent e) {
 
-
-
-    @Override public boolean onTouchEvent(MotionEvent ev)
-    {
-        boolean ret = super.onTouchEvent(ev);
-
-
-            return ret;
-
+        if(root!=null) {
+            Message clicked = clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
+            if(clicked!=null){
+                clicked.setMmessage(clicked.getMmessage()+"u");
+            }
+        }
+        else{
+            //clavier -> création du premier message
+        }
     }
-
-
-    public boolean onLongClick(){
-
-
-        return true;
+    
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.mDetector.onTouchEvent(event);
+        // Be sure to call the superclass implementation
+        return super.onTouchEvent(event);
     }
-
-
-
-
-
-
-    /* ONButton pressed I don't care which one :
-
-    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(this.getWindowToken(), 0);
-
-                to delete keybord
-     */
-
-
-
-
-
-
-
-
-
 
     //TODO : avoir la fonction de passage entre les deux views
     /**
@@ -266,12 +219,6 @@ mAutoCenterAnimator.start();*/
         //TODO: iteration pour calculer le rayon de toutes les bubbles et les instancier en les donnant à leur message et le faire que pour les 4 plus grosses
     }
 
-    public void onClick(View v) {
-        //((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-        System.out.println("BONJOUUUUR");
-    }
-
     /**
      * Notified when a tap occurs with the down {@link MotionEvent}
      * that triggered it. This will be triggered immediately for
@@ -281,6 +228,8 @@ mAutoCenterAnimator.start();*/
      */
     @Override
     public boolean onDown(MotionEvent e) {
+
+        Log.d("blabla","COUCOUCOUC");
         return false;
     }
 
@@ -329,16 +278,7 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
-    /**
-     * Notified when a long press occurs with the initial on down {@link MotionEvent}
-     * that trigged it.
-     *
-     * @param e The initial on down motion event that started the longpress.
-     */
-    @Override
-    public void onLongPress(MotionEvent e) {
 
-    }
 
     /**
      * Notified of a fling event when it occurs with the initial on down {@link MotionEvent}
@@ -358,6 +298,20 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
+
+    public Universe getTheuniverse() {
+        return theuniverse;
+    }
+
+    public void setTheuniverse(Universe theuniverse) {
+        this.theuniverse = theuniverse;
+    }
+
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.save();
+        canvas.restore();
+    }
 
     //TODO create IHM
 }
