@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -30,6 +32,8 @@ public class PanZoomView
 
 
     /// RESOURCES ///
+
+    static protected Map<String, Integer> totalscreensize = new HashMap<String, Integer>();
 
     static protected final boolean ScaleAtFocusPoint = false;
     static protected final int DefaultDrawableId = 0x7f020053;
@@ -234,6 +238,7 @@ public class PanZoomView
                     final float dy = y - mLastTouchY;
 
                     // TODO : il faut recuperer la taille de l'écran et l'on peut ensuite gérer des limites de déplacement
+                    if(mPosX<)
                     mPosX += dx;
                     mPosY += dy;
                     //mFocusX = mPosX;

@@ -34,6 +34,7 @@ import static android.view.GestureDetector.*;
 public class Window extends PanZoomView implements OnGestureListener{
 
 
+
     private Universe theuniverse;
     private Message currenttyped;
     private String currentmessage;
@@ -49,6 +50,13 @@ public class Window extends PanZoomView implements OnGestureListener{
         currenttyped.setMmessage(" ");
         Message child1 = new Message();
         currenttyped.getChildren().add(child1);
+
+        //used for checking the total size needed for all the bubble to be reachable but not being able to go for miles
+        //without any stops
+        totalscreensize.put("up",0);
+        totalscreensize.put("down",0);
+        totalscreensize.put("right",0);
+        totalscreensize.put("left",0);
 
 
     }
@@ -118,7 +126,7 @@ public class Window extends PanZoomView implements OnGestureListener{
 
         for(int i=0; i<nbchildren; i++ ) {
             Message msg = root.getChildren().get(i);
-            
+
             //int mray = (int) Math.abs(50 * (msg.getChildren().size() * 0.25 + 1));
             int mray =(int)Math.abs(root.getGoval().getRay()*(0.5+0.04*msg.getChildren().size()));
             double mangle =  angle * i - Math.PI / 2 + rootangle + angle / 2;
