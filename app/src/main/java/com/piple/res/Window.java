@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ListIterator;
+import java.util.Map;
 
 import static android.view.GestureDetector.*;
 
@@ -34,14 +35,14 @@ import static android.view.GestureDetector.*;
 public class Window extends PanZoomView implements GestureDetector.OnGestureListener{
 
 
-
+    private FirebaseDatabase database;
     private Universe theuniverse;
     private Message currenttyped;
     private Message root;
     private String currentmessage;
     private Context windowcontext;
     private GestureDetectorCompat mDetector;
-
+    private DatabaseReference mRef;
 
 
     public Window(Context context) {
@@ -59,6 +60,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         totalscreensize.put("left",0);
         currentmessage="";
 
+        database = FirebaseDatabase.getInstance();
 
         mDetector=new GestureDetectorCompat(getContext(),this);
     }
@@ -85,8 +87,10 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);
-        if(root!=null){
-            drawMessages(canvas,root,0);
+        for(int i=0; i<theuniverse.getMOIList().size();i++){
+            MOI mmoi = theuniverse.getMOIList().get(i);
+            mmoi.getFather().setGoval(new Oval(i*1000,100,100,Color.BLUE, getContext()));
+            drawMessages(canvas,mmoi.getFather(),0);
         }
     }
 
@@ -104,9 +108,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     //TODO: change with oval because two kinds of oval function
 
     public Message clickedOn(Point pt, Message root){
-
-       // Message retour = null;
-        Message answer = null;
+        Message answer;
         for(int i = 0; i<root.getChildren().size();i++){
             answer = clickedOn(pt,root.getChildren().get(i));
             if(answer!=null){
@@ -169,57 +171,37 @@ mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);
 mAutoCenterAnimator.start();*/
     @Override
     public void onLongPress(MotionEvent e) {
+        
+        Message clicked;
+        Boolean found = false;
+        for(int i=0;i<theuniverse.getMOIList().size();i++) {
+            if(clickedOn(new Point((int) e.getX(), (int) e.getY()), root)!=null){
+                found = true;
+            }}
 
 
-            Message clicked = clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
-            if (clicked != null) {
-                currenttyped = new Message();
-                clicked.getChildren().add(currenttyped);
-                placeMessage(clicked);
-                InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-            }
 
-        else {
-                InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
 
-                MOI moi = new MOI();
-                root = new Message();
-                root.setGoval(new Oval(200, 150, 100, Color.BLUE, getContext()));
-                currenttyped = root;
-                moi.setFather(root);
-                ArrayList list = theuniverse.getMOIList();
-                list.add(moi);
-                theuniverse.setMOIList(list);
-
-            }
-
-    }
-
-    @Override
-    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
-
-        switch (keyEvent.getUnicodeChar()){
-            case 0 :
-                if(currentmessage.length()>0){
-                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
-                }
-                currenttyped.setMmessage(currentmessage);
-                break;
-            case 10:
-                currenttyped=null;
-                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
-                currentmessage="";
-                break;
-
-            default:
-                currentmessage+=(char)keyEvent.getUnicodeChar();
-                currenttyped.setMmessage(currentmessage);
-                postInvalidate();
-
+        if (found == true) {
+            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
+            currenttyped = new Message();
+            clicked.getChildren().add(currenttyped);
+            placeMessage(clicked);
+            clicked.getChildren().add(currenttyped);
+            InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+        } else {
+            InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+            MOI moi = new MOI();
+            root = new Message();
+            root.setGoval(new Oval(200, 150, 100, Color.BLUE, getContext()));
+            currenttyped = root;
+            moi.setFather(root);
+            ArrayList list = theuniverse.getMOIList();
+            list.add(moi);
+            theuniverse.setMOIList(list);
         }
-        return false;
     }
     
     @Override
@@ -469,7 +451,41 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
+    @Override
+    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
+        switch (keyEvent.getUnicodeChar()){
+            case 0 :
+                if(currentmessage.length()>0){
+                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
+                }
+                currentmessage+=(char)keyEvent.getUnicodeChar();
+                currenttyped.setMmessage(currentmessage);
+                break;
+            case 10:
+
+                String key = mRef.push().getKey();
+                Map<String, Object> MessageValues = currenttyped.toMap();
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put(key, MessageValues);
+                mRef.updateChildren(childUpdates);
+
+
+                currenttyped=null;
+                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
+                currentmessage="";
+                break;
+
+            default:
+            currentmessage+=(char)keyEvent.getUnicodeChar();
+            currenttyped.setMmessage(currentmessage);
+
+
+        }
+
+
+        return false;
+    }
 
 
     //TODO create IHM

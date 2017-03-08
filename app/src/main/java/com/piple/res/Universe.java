@@ -27,7 +27,7 @@ public class Universe
     private String id;
     private String name;
     private ArrayList universeUserList;
-    private ArrayList MOIList;
+    private ArrayList<MOI> MOIList;
     //private Image  icon;
 
 
@@ -150,7 +150,7 @@ public class Universe
         this.universeUserList = user;
     }
 
-    public ArrayList getMOIList() {
+    public ArrayList<MOI> getMOIList() {
         return MOIList;
     }
 
