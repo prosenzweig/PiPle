@@ -327,7 +327,6 @@ public class HomeActivity
 
                     m_Universename = input.getText().toString();
 
-
                     //c'est comme ça que l'on save de la data de la bonne façon
                     // on récupère la clef
                     String key = myRefUniverse.push().getKey();

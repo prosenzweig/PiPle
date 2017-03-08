@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.piple.res.Contact;
+import com.piple.res.MOI;
 import com.piple.res.Universe;
 import com.piple.res.User;
 import com.piple.res.Window;
@@ -158,42 +159,13 @@ public class UniverseActivity
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                if(dataSnapshot.getKey().equals(universeId)){
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mRefMessages= mRefUniverse.child(universeId);
-        // on ne s'interessera pour l'instant qu'aux nouveaux messages et pas au modif de user et autre
-        //TODO : Faire ces ajouts pour l'ajout de partenaire a la conv et autre.
-        // ici on instancie les nouveaux messages qui arrivent en faisant attention à ne pas prendre ceux de l'instanciation du début...
-        mRefMessages.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            // on l'a deja added donc il ne s'agit maintenant que de get les modifs
-            }
-
-            //SI il y a un changement dans l'arraylist MOI checker :
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // si les deux objets ont réellement changé
-                if(dataSnapshot.getKey().equals("MOIList")) {
-                    //TODO checker quel moi a changé et le modifier en conséquence
-
+                    Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                    System.out.println("universe changed");
+                    currentUniverse = currentUniverse.toUniverse(universeMap);
                     mywindow.setTheuniverse(currentUniverse);
+                    mywindow.universeHasBeenChanged();
                 }
             }
 
@@ -212,8 +184,58 @@ public class UniverseActivity
 
             }
         });
-        //TODO if DBmodification, use all the function from the views to recalculate everything.
 
+       /* mRefMessages= mRefUniverse.child(universeId);
+        // on ne s'interessera pour l'instant qu'aux nouveaux messages et pas au modif de user et autre
+        //TODO : Faire ces ajouts pour l'ajout de partenaire a la conv et autre.
+        // ici on instancie les nouveaux messages qui arrivent en faisant attention à ne pas prendre ceux de l'instanciation du début...
+        mRefMessages.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            // on l'a deja added donc il ne s'agit maintenant que de get les modifs
+            }
+
+            //SI il y a un changement dans l'arraylist MOI checker :
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // si les deux objets ont réellement changé
+                if(dataSnapshot.getKey().equals("MOIList")) {
+
+                    //on redéfinis l'univers de window comme celui de référence ( il a put être modifié )
+                    currentUniverse.
+                    mywindow.setTheuniverse();
+
+                    }
+                    // on parcours notre liste de MOI pour chaques MOI reçu
+                    for(int i=0; i<MOImap.size();i++)
+                    {
+                        if(!currentUniverse.getMOIList().get(i).equals(MOImap.get(i))){
+
+                            }
+                        }
+
+                    }
+
+
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
 
 
 

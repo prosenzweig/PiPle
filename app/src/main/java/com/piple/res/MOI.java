@@ -43,6 +43,15 @@ public class MOI {
         result.put("Silent",silent);
         return result;
     }
+    public MOI toMOI(HashMap<String,Object> hashedMOI){
+
+            Message father = new Message();
+            father = father.toMessage((HashMap<String,Object>)hashedMOI.get("Father"));
+            MOI mmoi=new MOI(hashedMOI.get("Name").toString(), father ,(boolean)hashedMOI.get("Delete"), (boolean)hashedMOI.get("Silent") );
+            return mmoi;
+        }
+
+
 
 
     public String getName() {
