@@ -26,6 +26,7 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 import static android.view.GestureDetector.*;
 
@@ -104,7 +105,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
     public Message clickedOn(Point pt, Message root){
 
-        Message retour = null;
+       // Message retour = null;
         Message answer = null;
         for(int i = 0; i<root.getChildren().size();i++){
             answer = clickedOn(pt,root.getChildren().get(i));
@@ -169,25 +170,56 @@ mAutoCenterAnimator.start();*/
     @Override
     public void onLongPress(MotionEvent e) {
 
-        if(root!=null) {
+
             Message clicked = clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
-            if(clicked!=null){
-                currenttyped=new Message();
+            if (clicked != null) {
+                currenttyped = new Message();
                 clicked.getChildren().add(currenttyped);
-                InputMethodManager im = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                placeMessage(clicked);
+                InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
             }
-        }
-        else{
-            InputMethodManager im = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-            root = new Message();
-            root.setGoval(new Oval(200,150,100,Color.BLUE,getContext()));
-            currenttyped=root;
+
+        else {
+                InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+
+                MOI moi = new MOI();
+                root = new Message();
+                root.setGoval(new Oval(200, 150, 100, Color.BLUE, getContext()));
+                currenttyped = root;
+                moi.setFather(root);
+                ArrayList list = theuniverse.getMOIList();
+                list.add(moi);
+                theuniverse.setMOIList(list);
+
+            }
+
+    }
+
+    @Override
+    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
+
+        switch (keyEvent.getUnicodeChar()){
+            case 0 :
+                if(currentmessage.length()>0){
+                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
+                }
+                currenttyped.setMmessage(currentmessage);
+                break;
+            case 10:
+                currenttyped=null;
+                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
+                currentmessage="";
+                break;
+
+            default:
+                currentmessage+=(char)keyEvent.getUnicodeChar();
+                currenttyped.setMmessage(currentmessage);
+                postInvalidate();
 
         }
-
-
+        return false;
     }
     
     @Override
@@ -195,6 +227,67 @@ mAutoCenterAnimator.start();*/
         this.mDetector.onTouchEvent(event);
         // Be sure to call the superclass implementation
         return super.onTouchEvent(event);
+    }
+
+    public void  placeMessage(Message fathertoplace){
+        String id =fathertoplace.getIdmessage();
+        ArrayList listMOI = theuniverse.getMOIList();
+        ListIterator iterator = listMOI.listIterator();
+        //On parcours tout les MOI
+        while(iterator.hasNext()){
+            MOI moi = (MOI) iterator.next();
+            Message father = moi.getFather();
+            //si le message n'a pas le meme id que le father :
+            if(!father.getIdmessage().equals(id)){
+                //father devient le nouveau message a placer qui contient fathertoplace si il est retourné
+               father = findMessageAndPlace(father,fathertoplace);
+                if(father!=null) {
+                    // si il a été retourné c'est qu'il a été modifié donc on le set dans le moi
+                    moi.setFather(father);
+                }
+            }else {
+                // alors c'est le FATHER le bon direct
+                moi.setFather(fathertoplace);
+            }
+            // on set le MOI modifié
+            iterator.previous();
+            iterator.set(moi);
+            iterator.next();
+        }
+        // on set le listMOI modifié
+        theuniverse.setMOIList(listMOI);
+    }
+
+    public Message findMessageAndPlace(Message init, Message fathertoplace){
+        // si il a des enfants
+        if(init.getChildren()!=null) {
+            Message m;
+            // on les parcours
+            for(int i=0; i<init.getChildren().size(); i++){
+                // si un des enfant correspond au father a mettre a jour on le set et on retourne la valeure
+                if(init.getChildren().get(i).getIdmessage().equals(fathertoplace.getIdmessage())) {
+                    ArrayList list = init.getChildren();
+                    list.add(fathertoplace);
+                    init.setChildren(list);
+                    return init;
+                }else {
+                    //si ce n'est pas le cas on check la meme chose mais avec ses enfants de l'enfant
+
+                    // m est retourné si il a été trouvé le bon father
+                    m = findMessageAndPlace(init.getChildren().get(i), fathertoplace);
+                    if(m!=null) {
+                        // si il a été retourné alors on met a jour l'enfant qui a été modifié et retourné et on retourne le père de cette liste
+                        ArrayList list = init.getChildren();
+                        list.set(i,m);
+                        init.setChildren(list);
+                        return init;
+                    }
+                }
+                }
+
+            }
+            // dans tout les autres cas on retourne null
+        return null;
     }
 
 
@@ -376,33 +469,7 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
-    @Override
-    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
-        switch (keyEvent.getUnicodeChar()){
-            case 0 :
-                if(currentmessage.length()>0){
-                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
-                }
-                currentmessage+=(char)keyEvent.getUnicodeChar();
-                currenttyped.setMmessage(currentmessage);
-                break;
-            case 10:
-                currenttyped=null;
-                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
-                currentmessage="";
-                break;
-
-            default:
-            currentmessage+=(char)keyEvent.getUnicodeChar();
-            currenttyped.setMmessage(currentmessage);
-
-
-        }
-
-
-        return false;
-    }
 
 
     //TODO create IHM

@@ -68,7 +68,6 @@ public class UniverseActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private Window mywindow;
-    private Universe currentUniverse;
 
     //our different views
 
@@ -90,7 +89,7 @@ public class UniverseActivity
     {
         super.onCreate(savedInstanceState);
         mywindow=new Window(this.getApplicationContext());
-
+        mywindow.setTheuniverse(new Universe());
         setContentView(mywindow);
 
         //Set preferences and defaults
@@ -149,9 +148,8 @@ public class UniverseActivity
                 if(dataSnapshot.getKey().equals(universeId)){
                     Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     System.out.println("universe gotten");
-                    currentUniverse = new Universe();
-                    currentUniverse = currentUniverse.toUniverse(universeMap);
-                    mywindow.setTheuniverse(currentUniverse);
+                    mywindow.setTheuniverse(mywindow.getTheuniverse().toUniverse(universeMap));
+
                 }
             }
 
@@ -163,9 +161,8 @@ public class UniverseActivity
 
                     Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     System.out.println("universe changed");
-                    currentUniverse = currentUniverse.toUniverse(universeMap);
-                    mywindow.setTheuniverse(currentUniverse);
-                    mywindow.universeHasBeenChanged();
+                    mywindow.setTheuniverse(mywindow.getTheuniverse().toUniverse(universeMap));
+                    mywindow.invalidate();
                 }
             }
 
