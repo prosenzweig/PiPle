@@ -24,6 +24,7 @@ import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 import static android.view.GestureDetector.*;
 
@@ -32,12 +33,14 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
 
-    private Universe theuniverse;
+    private Universe theuniverse=null;
     private Message currenttyped;
     private Message root;
     private String currentmessage;
     private Context windowcontext;
     private GestureDetectorCompat mDetector;
+    //on commence en roadview
+    private Roadview  roadview = new Roadview(true);
 
 
     public Window(Context context) {
@@ -48,6 +51,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         root.setMmessage(" ");
         Message child1 = new Message();
         root.getChildren().add(child1);
+
 
         //used for checking the total size needed for all the bubble to be reachable but not being able to go for miles
         //without any stops
@@ -78,11 +82,35 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
 
-    //C'EST ICI QU'ON DESSINE
+    /**
+     *
+     * DRAWINGS
+     *
+     *
+     * Do whatever drawing is appropriate for this view.
+     * The canvas object is already set up to be drawn on. That means that all translations and scaling
+     * operations have already been done.
+     *
+     * @param canvas Canvas
+     * @return void
+     */
+
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);
-        drawMessages(canvas,root,0);
+        if(roadview.isRoadview()){
+            if(theuniverse!=null) {
+                //TODO: afficher le nom de l'univers en gras en haut a gauche avec si un appuis sur la zone alors on lance HomeActivity
+                if (theuniverse.getMOIList() != null) {
+                    ListIterator iterator = theuniverse.getMOIList().listIterator();
+                    while (iterator.hasNext()) {
+                        MOI moi = (MOI)iterator.next();
+                        drawtheMOI(moi.getFather(), canvas);
+                    }
+                }
+
+            }
+        }
     }
 
     public void onDraw(Canvas canvas) {
@@ -92,6 +120,68 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     }
 
 
+    public void drawtheMOI(Message message, Canvas canvas){
+
+        message.getRoval().draw(canvas);
+        ListIterator iterator= message.getChildren().listIterator();
+        while(iterator.hasNext()){
+            drawtheMOI((Message)iterator.next(),canvas);
+        }
+
+    }
+
+
+    public void todrawMoi(int num, MOI moi){
+
+
+        //TODO do differents if its in GORview or RoadView
+        Message message = moi.getFather();
+        //TODO code this function
+        message.setRoval(roadview.CreateOval(message,0,num*2000));
+        //TODO code the instanciation of message and name and other Oval component
+        moi.setFather(message);
+
+        ArrayList children= moi.getFather().getChildren();
+
+        todrawMessage(children, 0, num*2000);
+
+    }
+
+    public void todrawMessage(ArrayList<Message> children, float fatherposx, float fatherposy){
+
+        if(children!=null) {
+            //TODO code this fonction that returns only the 5 biggest messages and if there is more return a 6th special message that will make the draw message create a special bubble containing special info
+            ArrayList childrentodraw = roadview.amongthebiggest(children);
+            for (int i = 0; i < children.size(); i++) {
+                Message message = children.get(i);
+                message.setRoval(roadview.CreateOval(message, fatherposx, fatherposy));
+                message.setRoval(roadview.checkforcollision(message.getRoval(), theuniverse));
+                todrawMessage(message.getChildren(),message.getRoval().getX(),message.getRoval().getY());
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    public void OnZoomAction(){
+        //TODO : si on zoom suffisament alors on arrive en gearofreply view sinon si on dézoom on repasse en roadview et si on continue MOIview
+           /* if(mScaleFactor>0.5f && mScaleFactor<8.9f){
+                myRoadview.set(fathermessage);
+            }*/
+    }
+
+
+
+
+
+/*
     Function to check if the point is inside the message's oval.
 
      */

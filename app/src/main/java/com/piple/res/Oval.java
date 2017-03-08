@@ -18,70 +18,149 @@ import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 
-public class Oval extends View{
+public class Oval {
 
     private ShapeDrawable mDrawable;
     private boolean message, msgholder, faceholder; // la bbubble peut être plusieurs choses en effet;
     private int importance; // remplace size ici
     //FOR THE GearofReply VIEW (paul's)
-    private String text;
+    private String text, date, name;
 
 
     private float x,y,ray;
-    private Contact contact;
-    //FOR THE LinkVIEW (jerem's )
-
-    private int rray;
     private int rdistance;
     private Button mbut;
 
-    public Oval(float x,float y, float ray, int color, Context cont) {
-        super(cont);
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+    public Oval(float x,float y, float ray, int color) {
 
 
-            }
-        });
         this.x=x;
         this.y=y;
         this.ray=ray;
 
-        int[] colors = {0xffffffff, color};
+        int[] colors = {0xffffffff,(int)color};
         float[] stops = {0.8f, 1f};
         mDrawable = new ShapeDrawable(new OvalShape());
         mDrawable.setBounds((int)(x-ray),(int)(y-ray),(int)(x+ray),(int)(y+ray));
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
-
-
-
-    }
-    public Oval(Context cont) {
-    super(cont);
     }
 
-    /*
-    EXEMPLE AUTRE
+
+    public Oval() {
+    }
 
 
-
-
-
-
-
-
-     */
 
     public void draw(Canvas canvas){
 
-
-        super.draw(canvas);
         mDrawable.draw(canvas);
+        Log.d("dddo","ddd");
+    }
 
 
-        if(text!=null) {
+
+
+    public void setcolor(int color){
+        this.mDrawable.getPaint().setColor(color);
+    }
+
+    public ShapeDrawable getmDrawable(){
+        return mDrawable;
+    }
+
+
+
+    public void setDrawable(ShapeDrawable mDrawable) {
+        this.mDrawable = mDrawable;
+    }
+
+
+
+    public boolean isMessage() {
+        return message;
+    }
+
+    public void setMessage(boolean message) {
+        this.message = message;
+    }
+
+    public boolean isMsgholder() {
+        return msgholder;
+    }
+
+    public void setMsgholder(boolean msgholder) {
+        this.msgholder = msgholder;
+    }
+
+    public boolean isFaceholder() {
+        return faceholder;
+    }
+
+    public void setFaceholder(boolean faceholder) {
+        this.faceholder = faceholder;
+    }
+
+    public int getImportance() {
+        return importance;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
+    public int getRdistance() {
+        return rdistance;
+    }
+
+    public void setRdistance(int rdistance) {
+        this.rdistance = rdistance;
+    }
+
+    public void setmDrawable(ShapeDrawable mDrawable) {
+        this.mDrawable = mDrawable;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+    public float getX() {
+        return x;
+    }
+    public void setX(Float x) {
+        this.x = x;
+    }
+    public float getY() {
+        return y;
+    }
+
+    public void setY(Float y) {
+        this.y = y;
+    }
+
+    public Float getRay() {
+        return ray;
+    }
+
+    public void setRay(Float ray) {
+        this.ray = ray;
+    }
+
+    public Button getMbut() {
+        return mbut;
+    }
+
+    public void setMbut(Button mbut) {
+        this.mbut = mbut;
+    }
+
+}
+        /*if(text!=null) {
             int i;
             Paint paint = new Paint();
             int size = 50;
@@ -139,130 +218,4 @@ public class Oval extends View{
                 canvas.drawText(textlist.get(i), x - (bounds.width()) / 2, y - (nblignes / 2 - i) * size, paint);
             }
         }
-
-    }
-
-
-
-
-    public void setcolor(int color){
-        this.mDrawable.getPaint().setColor(color);
-    }
-
-    public ShapeDrawable getmDrawable(){
-        return mDrawable;
-    }
-
-
-
-    public void setDrawable(ShapeDrawable mDrawable) {
-        this.mDrawable = mDrawable;
-    }
-
-
-
-    public boolean isMessage() {
-        return message;
-    }
-
-    public void setMessage(boolean message) {
-        this.message = message;
-    }
-
-    public boolean isMsgholder() {
-        return msgholder;
-    }
-
-    public void setMsgholder(boolean msgholder) {
-        this.msgholder = msgholder;
-    }
-
-    public boolean isFaceholder() {
-        return faceholder;
-    }
-
-    public void setFaceholder(boolean faceholder) {
-        this.faceholder = faceholder;
-    }
-
-    public int getImportance() {
-        return importance;
-    }
-
-    public void setImportance(int importance) {
-        this.importance = importance;
-    }
-
-
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
-    public int getRray() {
-        return rray;
-    }
-
-    public void setRray(int rray) {
-        this.rray = rray;
-    }
-
-    public int getRdistance() {
-        return rdistance;
-    }
-
-    public void setRdistance(int rdistance) {
-        this.rdistance = rdistance;
-    }
-
-    public void setmDrawable(ShapeDrawable mDrawable) {
-        this.mDrawable = mDrawable;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    @Override
-    public float getX() {
-        return x;
-    }
-
-    public void setX(Float x) {
-        this.x = x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
-    }
-
-    public void setY(Float y) {
-        this.y = y;
-    }
-
-    public Float getRay() {
-        return ray;
-    }
-
-    public void setRay(Float ray) {
-        this.ray = ray;
-    }
-
-    public Button getMbut() {
-        return mbut;
-    }
-
-    public void setMbut(Button mbut) {
-        this.mbut = mbut;
-    }
-
-}
+*/
