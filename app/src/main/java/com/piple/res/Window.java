@@ -27,6 +27,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     private GestureDetectorCompat mDetector;
 
 
+
     public Window(Context context) {
         super(context);
 
@@ -70,7 +71,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
                 return  answer;
             }
         }
-        if(Math.pow(Math.pow(pt.x-root.getGoval().getX(),2)+Math.pow(pt.y-root.getGoval().getY(),2),0.5)<root.getGoval().getRay()){
+        if(Math.pow(Math.pow(pt.x-(root.getGoval().getX()+mPosX),2)+Math.pow(pt.y-(root.getGoval().getY()+mPosY),2),0.5)<root.getGoval().getRay()){
             return root;
         }
         else{
@@ -125,12 +126,19 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         if(root!=null) {
             Message clicked = clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
             if(clicked!=null){
-                clicked.setMmessage(clicked.getMmessage()+"u");
+                if(clicked.getMmessage()=="Bonjour"){
+                    clicked.setMmessage("Au revoir");
+                }
+                else{
+                    clicked.setMmessage("Bonjour");
+                }
             }
         }
         else{
             //clavier -> création du premier message
         }
+
+
     }
     
     @Override
