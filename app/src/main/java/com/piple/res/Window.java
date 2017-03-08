@@ -1,22 +1,35 @@
 package com.piple.res;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 import static android.view.GestureDetector.*;
 
 
 public class Window extends PanZoomView implements GestureDetector.OnGestureListener{
+
 
 
     private Universe theuniverse;
@@ -37,8 +50,25 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Message child1 = new Message();
         root.getChildren().add(child1);
 
+        //used for checking the total size needed for all the bubble to be reachable but not being able to go for miles
+        //without any stops
+        totalscreensize.put("up",0);
+        totalscreensize.put("down",0);
+        totalscreensize.put("right",0);
+        totalscreensize.put("left",0);
+
+
         mDetector=new GestureDetectorCompat(getContext(),this);
     }
+
+    public Universe getTheuniverse() {
+        return theuniverse;
+    }
+
+    public void setTheuniverse(Universe theuniverse) {
+        this.theuniverse = theuniverse;
+    }
+
     public Window (Context context, AttributeSet attrs) {
         super (context, attrs);
     }
@@ -56,11 +86,19 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         drawMessages(canvas,root,0);
     }
 
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.save();
+        canvas.restore();
+    }
 
+
+    Function to check if the point is inside the message's oval.
+
+     */
 
     //TODO: change with oval because two kinds of oval function
 
-    //RENVOI LA BULLE SUR LAQUELLE ON A CLICKED
     public Message clickedOn(Point pt, Message root){
 
         Message retour = null;
@@ -85,6 +123,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
         int nbchildren = root.getChildren().size();
         double angle = Math.PI/nbchildren;
+
         root.getGoval().draw(canvas);
 
 
@@ -120,6 +159,10 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
 
+    /*mAutoCenterAnimator = ObjectAnimator.ofInt(PieChart.this, "PieRotation", 0);
+mAutoCenterAnimator.setIntValues(targetAngle);
+mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);
+mAutoCenterAnimator.start();*/
     @Override
     public void onLongPress(MotionEvent e) {
 
@@ -147,6 +190,28 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         // Be sure to call the superclass implementation
         return super.onTouchEvent(event);
     }
+
+
+
+
+
+
+    /* ONButton pressed I don't care which one :
+
+    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(this.getWindowToken(), 0);
+
+                to delete keybord
+     */
+
+
+
+
+
+
+
+
+
 
     //TODO : avoir la fonction de passage entre les deux views
     /**
@@ -306,20 +371,6 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         return false;
     }
 
-
-    public Universe getTheuniverse() {
-        return theuniverse;
-    }
-
-    public void setTheuniverse(Universe theuniverse) {
-        this.theuniverse = theuniverse;
-    }
-
-    public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.save();
-        canvas.restore();
-    }
 
     //TODO create IHM
 }
