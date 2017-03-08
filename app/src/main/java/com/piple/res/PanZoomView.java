@@ -58,7 +58,7 @@ public class PanZoomView
     // The next three are set by calling supportsPan, supportsZoom, ...
     protected boolean mSupportsPan = true;
     protected boolean mSupportsZoom = true;
-    protected boolean mSupportsScaleAtFocus = false;
+    protected boolean mSupportsScaleAtFocus = true;
 
 
 
@@ -335,7 +335,7 @@ public class PanZoomView
      * @return boolean
      */
     public boolean supportsScaleAtFocusPoint () {
-        return false;
+        return true;
     }
 
 

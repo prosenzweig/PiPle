@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Created by jeremie on 07/03/2017.
- */
+
 
 
 
@@ -33,7 +33,7 @@ public class Roadview {
 
             iterator.getChildren().get
 
-        }*/
+        }
 
         //TODO fonction pour calculer le poid si on ne l'a pas déjà
 
@@ -83,3 +83,4 @@ public class Roadview {
         this.relativpositiontable = relativpositiontable;
     }
 }
+*/
