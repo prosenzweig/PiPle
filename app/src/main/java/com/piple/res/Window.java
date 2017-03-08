@@ -92,7 +92,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         canvas.restore();
     }
 
-
+/*
     Function to check if the point is inside the message's oval.
 
      */

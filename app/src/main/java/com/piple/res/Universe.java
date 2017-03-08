@@ -109,20 +109,17 @@ public class Universe
 
         ArrayList MOIList = (ArrayList) univmap.get("MOIList");
         if(MOIList!=null){
-        iterator = MOIList.listIterator();
+            iterator = MOIList.listIterator();
+            while(iterator.hasNext()){
 
-        while(iterator.hasNext()){
+                MOI moi = new MOI();
+                moi = moi.toMOI((HashMap<String,Object>)iterator.next());
+                iterator.previous();
+                iterator.set(moi);
+                iterator.next();
+            }
 
-            //on s'occupe directement des MOI de l'univers
-
-            HashMap<String,Object> hashedMOI = (HashMap<String,Object>) iterator.next();
-            Message father = new Message();
-            father = father.toMessage((HashMap<String,Object>)hashedMOI.get("Father"));
-            MOI mmoi=new MOI(hashedMOI.get("Name").toString(), father ,(boolean)hashedMOI.get("Delete"), (boolean)hashedMOI.get("Silent") );
-            iterator.previous();
-            iterator.set(mmoi);
-            iterator.next();
-        }}
+        }
        return  new Universe(univmap.get("Id").toString(), univmap.get("Name").toString(), contactList, MOIList );
    }
 
