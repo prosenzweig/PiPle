@@ -13,12 +13,14 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.piple.app.R;
 
 import java.lang.Math;
 import java.util.ArrayList;
@@ -44,11 +46,9 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     public Window(Context context) {
         super(context);
 
-        root = new Message();
-        root.setGoval(new Oval(500,100 ,(float) 80, Color.BLACK, getContext()));
-        root.setMmessage(" ");
-        Message child1 = new Message();
-        root.getChildren().add(child1);
+
+        this.setFocusable(true);
+        this.setFocusableInTouchMode(true);
 
         //used for checking the total size needed for all the bubble to be reachable but not being able to go for miles
         //without any stops
@@ -56,6 +56,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         totalscreensize.put("down",0);
         totalscreensize.put("right",0);
         totalscreensize.put("left",0);
+        currentmessage="";
 
 
         mDetector=new GestureDetectorCompat(getContext(),this);
@@ -83,7 +84,9 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);
-        drawMessages(canvas,root,0);
+        if(root!=null){
+            drawMessages(canvas,root,0);
+        }
     }
 
     public void onDraw(Canvas canvas) {
@@ -140,7 +143,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
-            msg.setGoval(new Oval(mray, mpt.x, mpt.y, 0xffffff00, getContext()));
+            msg.setGoval(new Oval(mpt.x,mpt.y, mray, 0xffffff00, getContext()));
             drawMessages(canvas, msg, mangle);
         }
 
@@ -169,16 +172,19 @@ mAutoCenterAnimator.start();*/
         if(root!=null) {
             Message clicked = clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
             if(clicked!=null){
-                if(clicked.getMmessage()=="Bonjour"){
-                    clicked.setMmessage("Au revoir");
-                }
-                else{
-                    clicked.setMmessage("Bonjour");
-                }
+                currenttyped=new Message();
+                clicked.getChildren().add(currenttyped);
+                InputMethodManager im = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
             }
         }
         else{
-            //clavier -> création du premier message
+            InputMethodManager im = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+            root = new Message();
+            root.setGoval(new Oval(200,150,100,Color.BLUE,getContext()));
+            currenttyped=root;
+
         }
 
 
@@ -302,7 +308,6 @@ mAutoCenterAnimator.start();*/
     @Override
     public boolean onDown(MotionEvent e) {
 
-        Log.d("blabla","COUCOUCOUC");
         return false;
     }
 
@@ -368,6 +373,34 @@ mAutoCenterAnimator.start();*/
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
+
+        switch (keyEvent.getUnicodeChar()){
+            case 0 :
+                if(currentmessage.length()>0){
+                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
+                }
+                currentmessage+=(char)keyEvent.getUnicodeChar();
+                currenttyped.setMmessage(currentmessage);
+                break;
+            case 10:
+                currenttyped=null;
+                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
+                currentmessage="";
+                break;
+
+            default:
+            currentmessage+=(char)keyEvent.getUnicodeChar();
+            currenttyped.setMmessage(currentmessage);
+
+
+        }
+
+
         return false;
     }
 
