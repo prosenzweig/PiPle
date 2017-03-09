@@ -36,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.piple.res.Contact;
+import com.piple.res.MOI;
 import com.piple.res.Universe;
 import com.piple.res.UniverseAdapter;
 import com.piple.res.User;
@@ -332,7 +333,7 @@ public class HomeActivity
                     String key = myRefUniverse.push().getKey();
                     // on créer l'objet avec celle ci
                     Universe myuniverse = new Universe(new Contact(mFirebaseUser.getEmail(),mFirebaseUser.getUid()), m_Universename, key);
-
+                    myuniverse.setMOIList(new ArrayList<MOI>());
                     Map<String, Object> UniverseValues = myuniverse.toMap();
                     Map<String, Object> childUpdates = new HashMap<>();
                     // on le sauve avec la clef correspondante et l'univers mappé :

@@ -67,7 +67,7 @@ public class MOI {
     }
 
     public void setFather(Message father) {
-        father = father;
+        this.father = father;
     }
 
     public Shape getShape() {

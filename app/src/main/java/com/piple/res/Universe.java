@@ -119,7 +119,7 @@ public class Universe
                 iterator.next();
             }
 
-        }
+        }else MOIList = new ArrayList<MOI>();
        return  new Universe(univmap.get("Id").toString(), univmap.get("Name").toString(), contactList, MOIList );
    }
 

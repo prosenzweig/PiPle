@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
-
 import static android.view.GestureDetector.*;
 
 
@@ -171,11 +170,14 @@ mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);
 mAutoCenterAnimator.start();*/
     @Override
     public void onLongPress(MotionEvent e) {
-        
+
         Message clicked;
         Boolean found = false;
-        for(int i=0;i<theuniverse.getMOIList().size();i++) {
-            if(clickedOn(new Point((int) e.getX(), (int) e.getY()), root)!=null){
+        ListIterator list = theuniverse.getMOIList().listIterator();
+        MOI moi = new MOI();
+        while((list.hasNext())&&(!found)) {
+           moi = (MOI)list.next();
+            if(clickedOn(new Point((int) e.getX(), (int) e.getY()),moi.getFather()) !=null){
                 found = true;
             }}
 
@@ -183,24 +185,18 @@ mAutoCenterAnimator.start();*/
 
 
         if (found == true) {
-            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), root);
+            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
             currenttyped = new Message();
-            clicked.getChildren().add(currenttyped);
-            placeMessage(clicked);
             clicked.getChildren().add(currenttyped);
             InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
         } else {
             InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-            MOI moi = new MOI();
-            root = new Message();
-            root.setGoval(new Oval(200, 150, 100, Color.BLUE, getContext()));
-            currenttyped = root;
-            moi.setFather(root);
-            ArrayList list = theuniverse.getMOIList();
-            list.add(moi);
-            theuniverse.setMOIList(list);
+             moi = new MOI();
+            currenttyped = new Message();
+            moi.setFather(currenttyped);
+            theuniverse.getMOIList().add(moi);
         }
     }
     
@@ -270,6 +266,34 @@ mAutoCenterAnimator.start();*/
             }
             // dans tout les autres cas on retourne null
         return null;
+    }
+    @Override
+    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
+
+        switch (keyEvent.getUnicodeChar()){
+            case 0 :
+                if(currentmessage.length()>0){
+                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
+                }
+                currenttyped.setMmessage(currentmessage);
+
+                break;
+            case 10:
+                //TODO change this case and have a true view as on the mockups
+                currenttyped=null;
+                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
+                currentmessage="";
+
+                break;
+
+            default:
+                currentmessage+=(char)keyEvent.getUnicodeChar();
+                currenttyped.setMmessage(currentmessage);
+
+        }
+        postInvalidate();
+
+        return false;
     }
 
 
@@ -451,41 +475,7 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
-    @Override
-    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
-        switch (keyEvent.getUnicodeChar()){
-            case 0 :
-                if(currentmessage.length()>0){
-                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
-                }
-                currentmessage+=(char)keyEvent.getUnicodeChar();
-                currenttyped.setMmessage(currentmessage);
-                break;
-            case 10:
-
-                String key = mRef.push().getKey();
-                Map<String, Object> MessageValues = currenttyped.toMap();
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(key, MessageValues);
-                mRef.updateChildren(childUpdates);
-
-
-                currenttyped=null;
-                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
-                currentmessage="";
-                break;
-
-            default:
-            currentmessage+=(char)keyEvent.getUnicodeChar();
-            currenttyped.setMmessage(currentmessage);
-
-
-        }
-
-
-        return false;
-    }
 
 
     //TODO create IHM
