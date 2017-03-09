@@ -3,6 +3,7 @@ package com.piple.res;
 
 
 import android.media.Image;
+import android.util.Log;
 
 import com.google.firebase.database.Exclude;
 
@@ -27,7 +28,7 @@ public class Universe
     private String id;
     private String name;
     private ArrayList universeUserList;
-    private ArrayList<MOI> MOIList;
+    private ArrayList MOIList;
     //private Image  icon;
 
 
@@ -77,22 +78,31 @@ public class Universe
         // celle de mapping des MOI
         if (MOIList!=null){
 
-        iterator = MOIList.listIterator();
-        while(iterator.hasNext()){
-
-            MOI mymoi= (MOI)iterator.next();
-            HashMap<String,Object> contacthashed= mymoi.toMap();
-            iterator.previous();
-            iterator.set(contacthashed);
-            iterator.next();
-        }}
+               MOIList = MoiListtoMap();
+       }
         else MOIList =  new ArrayList<MOI>();
         result.put("MOIList", MOIList);
 
         return result;
     }
+
+    public ArrayList<HashMap<String,Object>> MoiListtoMap() {
+
+        ArrayList MOIList = new ArrayList();
+        ListIterator iterator = MOIList.listIterator();
+
+        while (iterator.hasNext()) {
+
+            MOI mymoi = (MOI) iterator.next();
+            HashMap<String, Object> moihashed = mymoi.toMap();
+            iterator.previous();
+            iterator.set(moihashed);
+            iterator.next();
+        }
+        return MOIList;
+    }
     @Exclude
-    public Universe toUniverse(Map<String, Object> univmap){
+    public void toUniverse(Map<String, Object> univmap){
 
         ArrayList contactList = (ArrayList) univmap.get("UniverseUserList");
         ListIterator iterator = contactList.listIterator();
@@ -108,19 +118,25 @@ public class Universe
         }
 
         ArrayList MOIList = (ArrayList) univmap.get("MOIList");
-        if(MOIList!=null){
+       if(MOIList!=null){
+           Log.d("UNIVERSE","pas nulle");
             iterator = MOIList.listIterator();
             while(iterator.hasNext()){
-
+                Log.d("UNIVERSE","iteré");
                 MOI moi = new MOI();
-                moi = moi.toMOI((HashMap<String,Object>)iterator.next());
+                moi.toMOI((HashMap<String,Object>)iterator.next());
                 iterator.previous();
                 iterator.set(moi);
                 iterator.next();
             }
 
-        }else MOIList = new ArrayList<MOI>();
-       return  new Universe(univmap.get("Id").toString(), univmap.get("Name").toString(), contactList, MOIList );
+        }
+        else MOIList = new ArrayList<>();
+
+        this.id = univmap.get("Id").toString();
+        this.name = univmap.get("Name").toString();
+        this.universeUserList = contactList;
+        this.MOIList = MOIList;
    }
 
 

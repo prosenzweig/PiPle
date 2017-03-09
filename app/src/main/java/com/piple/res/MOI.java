@@ -37,22 +37,25 @@ public class MOI {
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("Name", name);
-        HashMap<String,Object> hashfather = father.toMap();
+       HashMap<String,Object> hashfather = father.toMap();
         result.put("Father", hashfather);
         result.put("Delete", delete);
         result.put("Silent",silent);
         return result;
     }
-    public MOI toMOI(HashMap<String,Object> hashedMOI){
+    public void toMOI(HashMap<String,Object> hashedMOI){
 
             Message father = new Message();
-            father = father.toMessage((HashMap<String,Object>)hashedMOI.get("Father"));
-            MOI mmoi=new MOI(hashedMOI.get("Name").toString(), father ,(boolean)hashedMOI.get("Delete"), (boolean)hashedMOI.get("Silent") );
-            return mmoi;
+            father.toMessage((HashMap<String,Object>)hashedMOI.get("Father"));
+            if(hashedMOI.get("Name")!=null) {
+                this.name = hashedMOI.get("Name").toString();
+            }
+            this.father =father;
+            this.delete = (boolean)hashedMOI.get("Delete");
+            this.silent = (boolean)hashedMOI.get("Silent") ;
+
+
         }
-
-
-
 
     public String getName() {
         return name;

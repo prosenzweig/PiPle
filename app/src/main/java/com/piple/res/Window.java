@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
+
 import static android.view.GestureDetector.*;
 
 
@@ -46,8 +49,6 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
     public Window(Context context) {
         super(context);
-
-
         this.setFocusable(true);
         this.setFocusableInTouchMode(true);
 
@@ -80,17 +81,32 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         super(context, attrs, defStyle);
     }
 
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
 
+    public void setDatabase(FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    public DatabaseReference getmRef() {
+        return mRef;
+    }
+
+    public void setmRef(DatabaseReference mRef) {
+        this.mRef = mRef;
+    }
 
     //C'EST ICI QU'ON DESSINE
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);
         for(int i=0; i<theuniverse.getMOIList().size();i++){
+            if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
             mmoi.getFather().setGoval(new Oval(i*1000,100,100,Color.BLUE, getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
-        }
+        }}
     }
 
     public void onDraw(Canvas canvas) {
@@ -114,7 +130,25 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
                 return  answer;
             }
         }
-        if(Math.pow(Math.pow(pt.x-(root.getGoval().getX()+mPosX),2)+Math.pow(pt.y-(root.getGoval().getY()+mPosY),2),0.5)<root.getGoval().getRay()){
+        if(Math.pow(Math.pow(pt.x/mScaleFactor-(root.getGoval().getX()+mPosX),2)+Math.pow(pt.y/mScaleFactor-(root.getGoval().getY()+mPosY),2),0.5)<root.getGoval().getRay()){
+            return root;
+        }
+        else{
+            return null;
+        }
+    }
+    /*
+    to check if the POINT is on the oval
+     */
+    public Message isOn(Point pt, Message root){
+        Message answer;
+        for(int i = 0; i<root.getChildren().size();i++){
+            answer = clickedOn(pt,root.getChildren().get(i));
+            if(answer!=null){
+                return  answer;
+            }
+        }
+        if(Math.pow(Math.pow(pt.x/-(root.getGoval().getX()),2)+Math.pow(pt.y-(root.getGoval().getY()),2),0.5)<root.getGoval().getRay()){
             return root;
         }
         else{
@@ -198,6 +232,11 @@ mAutoCenterAnimator.start();*/
             moi.setFather(currenttyped);
             theuniverse.getMOIList().add(moi);
         }
+        //currenttyped.setCreatedate();
+        currenttyped.setIduser(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        currenttyped.setType(0);
+        currenttyped.setPoids(0);
+        currenttyped.setLikenumb(0);
     }
     
     @Override
@@ -207,34 +246,34 @@ mAutoCenterAnimator.start();*/
         return super.onTouchEvent(event);
     }
 
-    public void  placeMessage(Message fathertoplace){
+   public void  placeMessage(Message fathertoplace){
         String id =fathertoplace.getIdmessage();
         ArrayList listMOI = theuniverse.getMOIList();
         ListIterator iterator = listMOI.listIterator();
         //On parcours tout les MOI
         while(iterator.hasNext()){
             MOI moi = (MOI) iterator.next();
-            Message father = moi.getFather();
+
             //si le message n'a pas le meme id que le father :
-            if(!father.getIdmessage().equals(id)){
+            if(!moi.getFather().getIdmessage().equals(id)){
                 //father devient le nouveau message a placer qui contient fathertoplace si il est retourné
-               father = findMessageAndPlace(father,fathertoplace);
-                if(father!=null) {
+                moi.setFather(findMessageAndPlace(moi.getFather(),fathertoplace));
+               // if(father!=null) {
                     // si il a été retourné c'est qu'il a été modifié donc on le set dans le moi
-                    moi.setFather(father);
+                   // moi.setFather(father);
                 }
-            }else {
+           // }else {
                 // alors c'est le FATHER le bon direct
                 moi.setFather(fathertoplace);
             }
             // on set le MOI modifié
             iterator.previous();
-            iterator.set(moi);
+          //  iterator.set(moi);
             iterator.next();
         }
         // on set le listMOI modifié
-        theuniverse.setMOIList(listMOI);
-    }
+       // theuniverse.setMOIList(listMOI);
+    //}
 
     public Message findMessageAndPlace(Message init, Message fathertoplace){
         // si il a des enfants
@@ -267,6 +306,7 @@ mAutoCenterAnimator.start();*/
             // dans tout les autres cas on retourne null
         return null;
     }
+
     @Override
     public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
@@ -283,7 +323,7 @@ mAutoCenterAnimator.start();*/
                 currenttyped=null;
                 ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
                 currentmessage="";
-
+                save();
                 break;
 
             default:
@@ -296,7 +336,19 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
+    /*
 
+    Fonction qui sauve le Message ou le MOI if set to true
+    père du Message nouveau et MOI de ce message ou que l'on souhaite save
+     */
+
+    public void save(){
+
+        Map<String,Object> hash = new HashMap<>();
+        hash.put("MOIList",theuniverse.MoiListtoMap());
+        mRef.updateChildren(hash);
+
+    }
 
 
 

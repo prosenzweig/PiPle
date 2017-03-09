@@ -22,14 +22,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.piple.res.Contact;
 import com.piple.res.MOI;
+import com.piple.res.Message;
 import com.piple.res.Universe;
 import com.piple.res.User;
 import com.piple.res.Window;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -62,13 +65,13 @@ public class UniverseActivity
     public static final String ANONYMOUS = "anonymous";
 
     private DatabaseReference mFirebaseDatabaseReference;
-    private DatabaseReference mRefMessages;
+
     private DatabaseReference mRefUniverse;
-    private DatabaseReference mRefUser;
+
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private Window mywindow;
-
+    private Message messageadded;
     //our different views
 
 
@@ -138,17 +141,17 @@ public class UniverseActivity
         Intent intent = getIntent();
         final String universeId = intent.getExtras().getString("currentUniverse");
         Toast.makeText(this, universeId, Toast.LENGTH_SHORT).show();
-
+        mywindow.setmRef(mRefUniverse.child(universeId));
         //ICI on initialise juste l'univers dans lequel on est avec tout ses messages
         mRefUniverse.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 //on chope l'univers sur lequel on est et on le met en mode objet
-                if(dataSnapshot.getKey().equals(universeId)){
+                if (dataSnapshot.getKey().equals(universeId)) {
                     Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     System.out.println("universe gotten");
-                    mywindow.setTheuniverse(mywindow.getTheuniverse().toUniverse(universeMap));
+                    mywindow.getTheuniverse().toUniverse(universeMap);
 
                 }
             }
@@ -156,15 +159,15 @@ public class UniverseActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                if(dataSnapshot.getKey().equals(universeId)){
-
+                if (dataSnapshot.getKey().equals(universeId)) {
                     Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                    System.out.println("universe changed");
-                    mywindow.setTheuniverse(mywindow.getTheuniverse().toUniverse(universeMap));
+                    System.out.println("universe gotten");
+                    mywindow.getTheuniverse().toUniverse(universeMap);
                     mywindow.invalidate();
+                    Log.d("toMOI","ONconverti");
                 }
             }
+
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -182,61 +185,9 @@ public class UniverseActivity
             }
         });
 
-       /* mRefMessages= mRefUniverse.child(universeId);
-        // on ne s'interessera pour l'instant qu'aux nouveaux messages et pas au modif de user et autre
-        //TODO : Faire ces ajouts pour l'ajout de partenaire a la conv et autre.
-        // ici on instancie les nouveaux messages qui arrivent en faisant attention à ne pas prendre ceux de l'instanciation du début...
-        mRefMessages.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            // on l'a deja added donc il ne s'agit maintenant que de get les modifs
-            }
-
-            //SI il y a un changement dans l'arraylist MOI checker :
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // si les deux objets ont réellement changé
-                if(dataSnapshot.getKey().equals("MOIList")) {
-
-                    //on redéfinis l'univers de window comme celui de référence ( il a put être modifié )
-                    currentUniverse.
-                    mywindow.setTheuniverse();
-
-                    }
-                    // on parcours notre liste de MOI pour chaques MOI reçu
-                    for(int i=0; i<MOImap.size();i++)
-                    {
-                        if(!currentUniverse.getMOIList().get(i).equals(MOImap.get(i))){
-
-                            }
-                        }
-
-                    }
-
-
-
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
 
     }
+
 
 
 

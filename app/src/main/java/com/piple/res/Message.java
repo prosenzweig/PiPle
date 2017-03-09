@@ -1,5 +1,7 @@
 package com.piple.res;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,8 +16,8 @@ public class Message {
 
 
     private String mmessage;
-    private ArrayList<Message> children = new ArrayList();
-    private int type, childnumb, likenumb, poids;
+    private ArrayList children = new ArrayList();
+    private int type, childnumb, likenumb, poids; ///type always at 0 for now
     private String iduser, idmessage;
     private boolean important, viewed, silent;
     private Date createdate;
@@ -67,6 +69,7 @@ public class Message {
         result.put("Viewed", viewed);
         result.put("Silent",silent);
         result.put("CreateDate", createdate);
+        if(children!=null){
         ListIterator iterator = children.listIterator();
         while(iterator.hasNext()){
 
@@ -75,22 +78,35 @@ public class Message {
             iterator.previous();
             iterator.set(contacthashed);
             iterator.next();
-        }
+        }}
         result.put("Children", children);
         return result;
     }
-    public Message toMessage(Map<String, Object> messagemap){
+    public void toMessage(Map<String, Object> messagemap){
 
-        ArrayList itschildren = (ArrayList) messagemap.get("Children");
-        ListIterator iterator = itschildren.listIterator();
+        children = (ArrayList) messagemap.get("Children");
+        if(children!=null){
+        ListIterator iterator = children.listIterator();
         while(iterator.hasNext()){
             HashMap<String,Object> hashedchild = (HashMap<String,Object>) iterator.next();
             Message child = new Message();
-            child = child.toMessage(hashedchild);
+            child.toMessage(hashedchild);
             iterator.set(child);
             iterator.next();
-        }
-        return  new Message(messagemap.get("mMessage").toString(),children, (int)messagemap.get("Type"),(int)messagemap.get("ChildNumb"),(int)messagemap.get("LikeNumb"),(int)messagemap.get("Poids"),messagemap.get("IdUser").toString(),messagemap.get("IdMessage").toString(),(boolean)messagemap.get("Important"),(boolean)messagemap.get("Viewed"),(boolean)messagemap.get("Silent"),(Date)messagemap.get("CreateDate"));
+        }}else children = new ArrayList();
+
+       this.mmessage = messagemap.get("mMessage").toString();
+        this.type =(int) (long)messagemap.get("Type");
+        this.childnumb = (int) (long)messagemap.get("ChildNumb");
+        this.likenumb = (int) (long)messagemap.get("LikeNumb");
+        this.poids = (int) (long)messagemap.get("Poids");
+        this.iduser = messagemap.get("IdUser").toString();
+        this.idmessage= null;
+        this.important=(boolean)messagemap.get("Important");
+        this.viewed=(boolean)messagemap.get("Viewed");
+        this.silent=(boolean)messagemap.get("Silent");
+        this.createdate=(Date)messagemap.get("CreateDate");
+
     }
 
 
@@ -184,5 +200,27 @@ public class Message {
         Goval.setText(mmessage);
     }
 
+    public int getChildnumb() {
+        return childnumb;
+    }
 
+    public void setChildnumb(int childnumb) {
+        this.childnumb = childnumb;
+    }
+
+    public int getLikenumb() {
+        return likenumb;
+    }
+
+    public void setLikenumb(int likenumb) {
+        this.likenumb = likenumb;
+    }
+
+    public int getPoids() {
+        return poids;
+    }
+
+    public void setPoids(int poids) {
+        this.poids = poids;
+    }
 }
