@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.text.method.KeyListener;
@@ -37,25 +38,16 @@ public class Oval extends View{
 
     public Oval(float x,float y, float ray, int color, Context cont) {
         super(cont);
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
         this.x=x;
         this.y=y;
         this.ray=ray;
 
-        int[] colors = {0xffffffff, color};
-        float[] stops = {0.8f, 1f};
+        int[] colors = {0xffffffff,color&0xddffffff,color};
+        float[] stops = {0.9f, 0.95f,0.945f};
         mDrawable = new ShapeDrawable(new OvalShape());
         mDrawable.setBounds((int)(x-ray),(int)(y-ray),(int)(x+ray),(int)(y+ray));
         mDrawable.getPaint().setColor(color);
         mDrawable.getPaint().setShader(new RadialGradient(ray,ray,ray, colors, stops, Shader.TileMode.MIRROR ));
-
-
 
     }
     public Oval(Context cont) {
@@ -96,13 +88,23 @@ public class Oval extends View{
                 text = text.substring(0, 144);
                 text = text + "...";
             }
-
+            /*
             int nblignes = text.length() / 20;
             if (nblignes == 0) {
                 nblignes = 1;
             }
+            if(nblignes==1&&text.length()>20){
+                nblignes=2;
+            }*/
             String[] strs = text.split(" ");
             int[] len = new int[strs.length];
+            int nblignes = strs.length/2;
+            if(nblignes==0){
+                nblignes=1;
+            }
+            if(nblignes>7){
+                nblignes=7;
+            }
 
 
             for (i = 0; i < strs.length; i++) {
@@ -117,7 +119,7 @@ public class Oval extends View{
                     do {
                         accu = accu + " " + strs[strcount];
                         strcount++;
-                    } while ((accu.length() < lenligne) && (strcount < strs.length));
+                    } while ((accu.length() < lenligne-5) && (strcount < strs.length));
                 }
                 textlist.add(accu);
             }
@@ -136,7 +138,7 @@ public class Oval extends View{
 
             for (i = 0; i < nblignes; i++) {
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                canvas.drawText(textlist.get(i), x - (bounds.width()) / 2, y - (nblignes / 2 - i) * size, paint);
+                canvas.drawText(textlist.get(i), (float)( x - (bounds.width()) / 1.9), (float)(y - (nblignes / 2 - i - 0.5) * size), paint);
             }
         }
 

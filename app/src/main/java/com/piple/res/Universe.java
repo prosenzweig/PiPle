@@ -77,8 +77,7 @@ public class Universe
         result.put("UniverseUserList", universeUserList);
         // celle de mapping des MOI
         if (MOIList!=null){
-
-               MOIList = MoiListtoMap();
+            MoiListtoMap();
        }
         else MOIList =  new ArrayList<MOI>();
         result.put("MOIList", MOIList);
@@ -86,11 +85,9 @@ public class Universe
         return result;
     }
 
-    public ArrayList<HashMap<String,Object>> MoiListtoMap() {
+    public void MoiListtoMap() {
 
-        ArrayList MOIList = new ArrayList();
-        ListIterator iterator = MOIList.listIterator();
-
+        ListIterator iterator = this.MOIList.listIterator();
         while (iterator.hasNext()) {
 
             MOI mymoi = (MOI) iterator.next();
@@ -99,7 +96,6 @@ public class Universe
             iterator.set(moihashed);
             iterator.next();
         }
-        return MOIList;
     }
     @Exclude
     public void toUniverse(Map<String, Object> univmap){
@@ -137,6 +133,18 @@ public class Universe
         this.name = univmap.get("Name").toString();
         this.universeUserList = contactList;
         this.MOIList = MOIList;
+   }
+
+   public void toMOIList(){
+       ListIterator iterator = MOIList.listIterator();
+       while(iterator.hasNext()){
+           MOI moi = new MOI();
+           moi.toMOI((HashMap<String,Object>)iterator.next());
+           iterator.previous();
+           iterator.set(moi);
+           iterator.next();
+       }
+
    }
 
 
