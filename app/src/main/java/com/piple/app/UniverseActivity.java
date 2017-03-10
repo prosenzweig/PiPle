@@ -95,6 +95,12 @@ public class UniverseActivity
         mywindow.setTheuniverse(new Universe());
         setContentView(mywindow);
 
+        int uiOptions = this.getWindow().getDecorView().getSystemUiVisibility();
+        int newUiOptions = uiOptions;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
         //Set preferences and defaults
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mUsername = ANONYMOUS;
