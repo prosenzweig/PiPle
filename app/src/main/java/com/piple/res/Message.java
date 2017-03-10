@@ -17,7 +17,7 @@ public class Message {
 
     private String mmessage;
     private ArrayList children = new ArrayList();
-    private int type, childnumb, likenumb, poids; ///type always at 0 for now
+    private long type, childnumb, likenumb, poids; ///type always at 0 for now
     private String iduser, idmessage;
     private boolean important, viewed, silent;
     private Date createdate;
@@ -91,21 +91,22 @@ public class Message {
             HashMap<String,Object> hashedchild = (HashMap<String,Object>) iterator.next();
             Message child = new Message();
             child.toMessage(hashedchild);
+            iterator.previous();
             iterator.set(child);
             iterator.next();
         }}else children = new ArrayList();
 
        this.mmessage = messagemap.get("mMessage").toString();
-        this.type =(int) (long)messagemap.get("Type");
-        this.childnumb = (int) (long)messagemap.get("ChildNumb");
-        this.likenumb = (int) (long)messagemap.get("LikeNumb");
-        this.poids = (int) (long)messagemap.get("Poids");
+        this.type =(long)messagemap.get("Type");
+        this.childnumb = (long) messagemap.get("ChildNumb");
+        this.likenumb = (long) messagemap.get("LikeNumb");
+        this.poids = (long) messagemap.get("Poids");
         this.iduser = messagemap.get("IdUser").toString();
         this.idmessage= null;
         this.important=(boolean)messagemap.get("Important");
         this.viewed=(boolean)messagemap.get("Viewed");
         this.silent=(boolean)messagemap.get("Silent");
-        this.createdate=(Date)messagemap.get("CreateDate");
+        //HashMap<String, Object>=(HashMap<String,Object>)messagemap.get("CreateDate");
 
     }
 
@@ -127,7 +128,7 @@ public class Message {
         this.children = children;
     }
 
-    public int getType() {
+    public long getType() {
         return type;
     }
 
@@ -200,7 +201,7 @@ public class Message {
         Goval.setText(mmessage);
     }
 
-    public int getChildnumb() {
+    public long getChildnumb() {
         return childnumb;
     }
 
@@ -208,7 +209,7 @@ public class Message {
         this.childnumb = childnumb;
     }
 
-    public int getLikenumb() {
+    public long getLikenumb() {
         return likenumb;
     }
 
@@ -216,7 +217,7 @@ public class Message {
         this.likenumb = likenumb;
     }
 
-    public int getPoids() {
+    public long getPoids() {
         return poids;
     }
 

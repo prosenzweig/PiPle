@@ -104,7 +104,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(i*1000,100,100,Color.BLUE, getContext()));
+            mmoi.getFather().setGoval(new Oval(200+i*500,100,100,Color.BLUE, getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
     }
@@ -211,20 +211,20 @@ mAutoCenterAnimator.start();*/
         MOI moi = new MOI();
         while((list.hasNext())&&(!found)) {
            moi = (MOI)list.next();
-            if(clickedOn(new Point((int) e.getX(), (int) e.getY()),moi.getFather()) !=null){
+
+            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
+
+            //si le click est sur une bulle
+            if(clicked!=null){
                 found = true;
+                currenttyped = new Message();
+                clicked.getChildren().add(currenttyped);
+                InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
             }}
 
-
-
-
-        if (found == true) {
-            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
-            currenttyped = new Message();
-            clicked.getChildren().add(currenttyped);
-            InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-        } else {
+        //sinon : new MOI
+        if (!found) {
             InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
              moi = new MOI();
@@ -232,7 +232,8 @@ mAutoCenterAnimator.start();*/
             moi.setFather(currenttyped);
             theuniverse.getMOIList().add(moi);
         }
-        //currenttyped.setCreatedate();
+
+        currenttyped.setCreatedate(new Date());
         currenttyped.setIduser(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
         currenttyped.setType(0);
         currenttyped.setPoids(0);
@@ -345,8 +346,10 @@ mAutoCenterAnimator.start();*/
     public void save(){
 
         Map<String,Object> hash = new HashMap<>();
-        hash.put("MOIList",theuniverse.MoiListtoMap());
+        theuniverse.MoiListtoMap();
+        hash.put("MOIList",theuniverse.getMOIList());
         mRef.updateChildren(hash);
+        theuniverse.toMOIList();
 
     }
 
