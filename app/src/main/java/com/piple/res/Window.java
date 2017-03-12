@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,11 +41,10 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     private FirebaseDatabase database;
     private Universe theuniverse;
     private Message currenttyped;
-    private Message root;
     private String currentmessage;
-    private Context windowcontext;
     private GestureDetectorCompat mDetector;
     private DatabaseReference mRef;
+    private final int Centerx = 500;
 
 
     public Window(Context context) {
@@ -63,6 +63,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         database = FirebaseDatabase.getInstance();
 
         mDetector=new GestureDetectorCompat(getContext(),this);
+
     }
 
     public Universe getTheuniverse() {
@@ -104,13 +105,14 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(200+i*500,100,100,Color.BLUE, getContext()));
+            mmoi.getFather().setGoval(new Oval(Centerx+i*750,100,100,Color.BLUE, getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
     }
 
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         canvas.save();
         canvas.restore();
     }
@@ -130,7 +132,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
                 return  answer;
             }
         }
-        if(Math.pow(Math.pow(pt.x/mScaleFactor-(root.getGoval().getX()+mPosX),2)+Math.pow(pt.y/mScaleFactor-(root.getGoval().getY()+mPosY),2),0.5)<root.getGoval().getRay()){
+        if(Math.pow(Math.pow(pt.x/mScaleFactor-(root.getGoval().getX()+mPosX/mScaleFactor),2)+Math.pow(pt.y/mScaleFactor-(root.getGoval().getY()+mPosY/mScaleFactor),2),0.5)<root.getGoval().getRay()){
             return root;
         }
         else{
@@ -187,14 +189,14 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
         //Renvoie le point du centre de la bulle pour que celle-ci soit placé correctement (en fonction du père, du rayon, de l'angle et de la marge
-    public Point beChildof(Oval father, int mRay, double angle, double margin ){
-        Point mpoint = new Point();
-        mpoint.x=(int)(father.getX()+ Math.sin(angle)*(margin+father.getRay()+mRay));
-        mpoint.y=(int)(father.getY() + Math.cos(angle)*(margin+father.getRay()+mRay));
+        public Point beChildof(Oval father, int mRay, double angle, double margin ){
+            Point mpoint = new Point();
+            mpoint.x=(int)(father.getX()+ Math.sin(angle)*(margin+father.getRay()+mRay));
+            mpoint.y=(int)(father.getY() + Math.cos(angle)*(margin+father.getRay()+mRay));
 
-        return mpoint;
+            return mpoint;
 
-    }
+        }
 
 
 
@@ -321,10 +323,13 @@ mAutoCenterAnimator.start();*/
                 break;
             case 10:
                 //TODO change this case and have a true view as on the mockups
+                if(currentmessage!=""){
+                    save();
+                }
+
                 currenttyped=null;
                 ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
                 currentmessage="";
-                save();
                 break;
 
             default:
@@ -352,26 +357,6 @@ mAutoCenterAnimator.start();*/
         theuniverse.toMOIList();
 
     }
-
-
-
-
-    /* ONButton pressed I don't care which one :
-
-    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(this.getWindowToken(), 0);
-
-                to delete keybord
-     */
-
-
-
-
-
-
-
-
-
 
     //TODO : avoir la fonction de passage entre les deux views
     /**
@@ -487,6 +472,18 @@ mAutoCenterAnimator.start();*/
      */
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
+        Message clicked;
+        ListIterator list = theuniverse.getMOIList().listIterator();
+        MOI moi = new MOI();
+        while(list.hasNext() ){
+            moi = (MOI)list.next();
+
+            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
+
+            //si le click est sur une bulle
+            if(clicked!=null){
+                moveto(clicked);
+            }}
         return false;
     }
 
@@ -531,6 +528,17 @@ mAutoCenterAnimator.start();*/
     }
 
 
+    public void moveto(Message target){
+        mScaleFactor = 200/target.getGoval().getRay();
+
+      //  pt.x/mScaleFactor-(root.getGoval().getX()+mPosX/mScaleFactor;
+      //  Centerx/mScaleFactor-(target.getGoval().getX()+mPosX/mScaleFactor);
+        mPosX=mScaleFactor*(Centerx/mScaleFactor-target.getGoval().getX());
+
+        mPosY=mScaleFactor*(300/mScaleFactor-target.getGoval().getY());
+
+        postInvalidate();
+    }
 
 
     //TODO create IHM

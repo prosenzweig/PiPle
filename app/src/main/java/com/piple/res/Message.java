@@ -96,7 +96,7 @@ public class Message {
             iterator.next();
         }}else children = new ArrayList();
 
-       this.mmessage = messagemap.get("mMessage").toString();
+        this.mmessage = messagemap.get("mMessage").toString();
         this.type =(long)messagemap.get("Type");
         this.childnumb = (long) messagemap.get("ChildNumb");
         this.likenumb = (long) messagemap.get("LikeNumb");
