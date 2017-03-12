@@ -104,7 +104,6 @@ public class UniverseActivity
         newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
         newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-
         //Set preferences and defaults
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mUsername = ANONYMOUS;

@@ -150,7 +150,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
                 return  answer;
             }
         }
-        if(Math.pow(Math.pow(pt.x/-(root.getGoval().getX()),2)+Math.pow(pt.y-(root.getGoval().getY()),2),0.5)<root.getGoval().getRay()){
+        if(Math.pow(Math.pow(pt.x-(root.getGoval().getX()),2)+Math.pow(pt.y-(root.getGoval().getY()),2),0.5)<root.getGoval().getRay()){
             return root;
         }
         else{
