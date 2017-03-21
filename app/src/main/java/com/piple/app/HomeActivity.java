@@ -194,16 +194,14 @@ public class HomeActivity
 
                     Contact cont = (Contact) iterator.next();
 
-                    if (cont.getId().equals(yourself.getId())) {
-                        System.out.println(yourself.getId());
-
+                   // if (cont.getId().equals(yourself.getId()))
                         Universes.add(aUniverse);
                         UserhasUniverses=true;
 
 
 
 
-                    }
+                   // }
 
                 }MajLayout();
 
