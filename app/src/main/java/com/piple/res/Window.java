@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.ShapeDrawable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -172,12 +173,26 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             Message msg = root.getChildren().get(i);
             double mangle =  angle * i - Math.PI / 2 + rootangle + angle / 2;
 
-            // DECISION DU RAYON
-            //int mray = (int) Math.abs(50 * (msg.getChildren().size() * 0.25 + 1));
-            int mray =(int)Math.abs(root.getGoval().getRay()*(0.5+0.04*msg.getChildren().size()));
+            int mray = 0;
+            double margin = 0;
+            if(mScaleFactor>2) {
+                // DECISION DU RAYON
+                mray = (int) Math.abs(root.getGoval().getRay() * (0.4 + 0.04 * msg.getChildren().size()));
 
-            //DECISION DE LA MARGE
-            double margin = 15 + msg.getChildren().size() * mray * 0.25;
+                //DECISION DE LA MARGE
+                margin =  mray*0.2+msg.getChildren().size() * mray * 0.005;
+            }
+            else{
+
+                mray = (int) Math.abs(50 * (msg.getChildren().size() * 0.25 + 1));
+                margin = 10 + msg.getChildren().size() * mray * 0.3 + root.getChildren().size()*root.getGoval().getRay()*0.2;
+
+                //dessin du trait
+
+                Point beginline = beChildof(root.getGoval(),0, mangle, 10);
+                Point endline = beChildof(root.getGoval(),mray, mangle, margin-mray-10);
+                canvas.drawLine(beginline.x,beginline.y,endline.x,endline.y,new Paint());
+            }
 
 
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
@@ -535,7 +550,7 @@ mAutoCenterAnimator.start();*/
       //  Centerx/mScaleFactor-(target.getGoval().getX()+mPosX/mScaleFactor);
         mPosX=mScaleFactor*(Centerx/mScaleFactor-target.getGoval().getX());
 
-        mPosY=mScaleFactor*(300/mScaleFactor-target.getGoval().getY());
+        mPosY=mScaleFactor*(500/mScaleFactor-target.getGoval().getY());
 
         postInvalidate();
     }
