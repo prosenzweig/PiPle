@@ -2,15 +2,19 @@ package com.piple.res;
 
 
 
+import android.graphics.Color;
 import android.media.Image;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -27,13 +31,15 @@ public class Universe
 
     private String id;
     private String name;
-    private ArrayList universeUserList;
+    private ArrayList<Contact> universeUserList;
     private ArrayList MOIList;
+    private Map<String ,Integer> colormap;
     //private Image  icon;
 
 
 
     /// CONSTRUCTORS ///
+
     public Universe()
     {
 // Default constructor required for calls to DataSnapshot.getValue(Post.class)
@@ -44,6 +50,7 @@ public class Universe
         this.name = name;
         this.universeUserList = universeUserList;
         this.MOIList = MOIList;
+
     }
 
     public Universe(Contact user, String name, String id) {
@@ -51,11 +58,13 @@ public class Universe
         universeUserList.add(user);
         this.name = name;
         this.id = id;
+
     }
     public Universe(ArrayList Contacts, String name, String id) {
         universeUserList = Contacts;
         this.name = name;
         this.id = id;
+
     }
 
     @Exclude
@@ -105,14 +114,15 @@ public class Universe
 
         //ICI ON MAP DIRECTEMENT LE MOI ET LE CONTACT DANS LA FONCTION ( parce que )
 
-        while(iterator.hasNext()){
-            HashMap<String,Object> hashedcontact = (HashMap<String,Object>) iterator.next();
-            Contact contact=new Contact(hashedcontact.get("Pseudo").toString(), hashedcontact.get("Id").toString());
-            iterator.previous();
-            iterator.set(contact);
-            iterator.next();
+        if(contactList!=null) {
+            while (iterator.hasNext()) {
+                HashMap<String, Object> hashedcontact = (HashMap<String, Object>) iterator.next();
+                Contact contact = new Contact(hashedcontact.get("Pseudo").toString(), hashedcontact.get("Id").toString());
+                iterator.previous();
+                iterator.set(contact);
+                iterator.next();
+            }
         }
-
         ArrayList MOIList = (ArrayList) univmap.get("MOIList");
        if(MOIList!=null){
            Log.d("UNIVERSE","pas nulle");
@@ -133,6 +143,25 @@ public class Universe
         this.name = univmap.get("Name").toString();
         this.universeUserList = contactList;
         this.MOIList = MOIList;
+
+        ArrayList<Integer> colorlist = new ArrayList<>();
+       /* colorlist.add(0xffC8A2B5);
+        colorlist.add(0xffffebcd);
+        colorlist.add(0xffC1DFBB);
+        colorlist.add(0xff5DBCD2);
+        colorlist.add(0xffF2C584);  */
+
+        colorlist.add(Color.CYAN);
+        colorlist.add(Color.GREEN);
+        colorlist.add(Color.BLUE);
+        colorlist.add(Color.RED);
+        colorlist.add(Color.MAGENTA);
+
+        colormap=new HashMap<>();
+        for(int i =0; i<universeUserList.size();i++){
+
+            colormap.put(universeUserList.get(i).getId(),colorlist.get(i%5));
+        }
    }
 
    public void toMOIList(){
@@ -181,4 +210,10 @@ public class Universe
     public void setMOIList(ArrayList MOIList) {
         this.MOIList = MOIList;
     }
+
+    public Map<String, Integer> getColormap() {
+        return colormap;
+    }
+
+
 }

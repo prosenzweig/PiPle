@@ -26,7 +26,7 @@
                 <action android:name="android.intent.acion.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="friendlychat.firebase.google.com"
+                <data android:host="piple.firebase.google.com"
                     android:scheme="http"
                     android:pathPrefix="/message"/>
             </intent-filter>

@@ -116,7 +116,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(Centerx+i*750,100,100,Color.BLUE, getContext()));
+            mmoi.getFather().setGoval(new Oval(Centerx+i*750,100,100,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
         if(target!=null){
@@ -162,7 +162,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         int nbchildren = root.getChildren().size();
         double angle = Math.PI/nbchildren;
 
-        root.getGoval().draw(canvas);
+        root.getGoval().draw(canvas ,root.getMmessage());
 
 
         for(int i=0; i<nbchildren; i++ ) {
@@ -192,7 +192,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
-            msg.setGoval(new Oval(mpt.x,mpt.y, mray, 0xffffff00, getContext()));
+            msg.setGoval(new Oval(mpt.x,mpt.y, mray, theuniverse.getColormap().get(msg.getIduser()), getContext()));
             drawMessages(canvas, msg, mangle);
         }
 
@@ -300,6 +300,7 @@ mAutoCenterAnimator.start();*/
                 currenttyped.setMmessage(currentmessage);
 
         }
+
         postInvalidate();
 
         return false;
