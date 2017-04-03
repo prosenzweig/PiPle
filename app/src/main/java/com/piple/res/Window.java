@@ -10,10 +10,12 @@ import android.graphics.drawable.ShapeDrawable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
@@ -22,9 +24,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.piple.app.R;
-
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +35,7 @@ import java.util.Objects;
 import static android.view.GestureDetector.*;
 
 
-public class Window extends PanZoomView implements GestureDetector.OnGestureListener{
+public class Window extends PanZoomView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
 
 
     private FirebaseDatabase database;
@@ -45,7 +44,9 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     private String currentmessage;
     private GestureDetectorCompat mDetector;
     private DatabaseReference mRef;
-    private final int Centerx = 500;
+    private final int Centerx;
+    private final int Centery;
+    private Message target;
 
 
     public Window(Context context) {
@@ -65,6 +66,15 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
         mDetector=new GestureDetectorCompat(getContext(),this);
 
+
+        WindowManager wm =(WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display dis = wm.getDefaultDisplay();
+        Point pt = new Point();
+        dis.getSize(pt);
+        Centerx=pt.x/2;
+        Centery=pt.y/3;
+
+
     }
 
     public Universe getTheuniverse() {
@@ -77,23 +87,23 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
     public Window (Context context, AttributeSet attrs) {
         super (context, attrs);
+        WindowManager wm =(WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display dis = wm.getDefaultDisplay();
+        Point pt = new Point();
+        dis.getSize(pt);
+        Centerx=pt.x/2;
+        Centery=pt.y/3;
     }
 
     public Window (Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
+        WindowManager wm =(WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display dis = wm.getDefaultDisplay();
+        Point pt = new Point();
+        dis.getSize(pt);
+        Centerx=pt.x/2;
+        Centery=pt.y/3;    }
 
-    public FirebaseDatabase getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(FirebaseDatabase database) {
-        this.database = database;
-    }
-
-    public DatabaseReference getmRef() {
-        return mRef;
-    }
 
     public void setmRef(DatabaseReference mRef) {
         this.mRef = mRef;
@@ -109,6 +119,9 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             mmoi.getFather().setGoval(new Oval(Centerx+i*750,100,100,Color.BLUE, getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
+        if(target!=null){
+            moveto(target);
+        }
     }
 
     public void onDraw(Canvas canvas) {
@@ -140,27 +153,10 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             return null;
         }
     }
-    /*
-    to check if the POINT is on the oval
-     */
-    public Message isOn(Point pt, Message root){
-        Message answer;
-        for(int i = 0; i<root.getChildren().size();i++){
-            answer = clickedOn(pt,root.getChildren().get(i));
-            if(answer!=null){
-                return  answer;
-            }
-        }
-        if(Math.pow(Math.pow(pt.x-(root.getGoval().getX()),2)+Math.pow(pt.y-(root.getGoval().getY()),2),0.5)<root.getGoval().getRay()){
-            return root;
-        }
-        else{
-            return null;
-        }
-    }
-
-
     //FONCTION RECURSIVE D'AFFICHAGE DE L'ARBRE A PARTIR DE LA RACINE (commencer avec un angle de 0)
+
+
+
     public void drawMessages(Canvas canvas,Message root, double rootangle){
 
         int nbchildren = root.getChildren().size();
@@ -256,7 +252,145 @@ mAutoCenterAnimator.start();*/
         currenttyped.setPoids(0);
         currenttyped.setLikenumb(0);
     }
-    
+
+
+    public void moveto(Message target){
+        if(mScaleFactor<=2 && 200/target.getGoval().getRay()>2){
+            this.target=target;
+        }else
+        {
+            this.target=null;
+        }
+        mScaleFactor = 200/target.getGoval().getRay();
+
+        mPosX=mScaleFactor*(Centerx/mScaleFactor-target.getGoval().getX());
+
+        mPosY=mScaleFactor*(Centery/mScaleFactor-target.getGoval().getY());
+
+
+        postInvalidate();
+    }
+
+
+
+    @Override
+    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
+
+        switch (keyEvent.getUnicodeChar()){
+            case 0 :
+                if(currentmessage.length()>0){
+                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
+                }
+                currenttyped.setMmessage(currentmessage);
+
+                break;
+            case 10:
+                //TODO change this case and have a true view as on the mockups
+                if(currentmessage!=""){
+                    save();
+                }
+
+                currenttyped=null;
+                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
+                currentmessage="";
+                break;
+
+            default:
+                currentmessage+=(char)keyEvent.getUnicodeChar();
+                currenttyped.setMmessage(currentmessage);
+
+        }
+        postInvalidate();
+
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Message clicked;
+        ListIterator list = theuniverse.getMOIList().listIterator();
+        MOI moi = new MOI();
+        Boolean found = false;
+        while(list.hasNext() ){
+            moi = (MOI)list.next();
+
+            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
+
+            //si le click est sur une bulle
+            if(clicked!=null){
+                found = true;
+                moveto(clicked);
+            }}
+        if(!found){
+        }
+        return false;
+    }
+
+    /*
+
+    Fonction qui sauve le Message ou le MOI if set to true
+    père du Message nouveau et MOI de ce message ou que l'on souhaite save
+     */
+
+    public void save(){
+
+        Map<String,Object> hash = new HashMap<>();
+        theuniverse.MoiListtoMap();
+        hash.put("MOIList",theuniverse.getMOIList());
+        mRef.updateChildren(hash);
+        theuniverse.toMOIList();
+
+    }
+
+
+
+
+   /*
+
+
+
+   ************************ /!\ SUITE PAS IMPORTANT /!\***********************************************************
+    *
+     *
+     *
+     * */
+
+
+
+    /*
+    to check if the POINT is on the oval
+     */
+    public Message isOn(Point pt, Message root){
+        Message answer;
+        for(int i = 0; i<root.getChildren().size();i++){
+            answer = clickedOn(pt,root.getChildren().get(i));
+            if(answer!=null){
+                return  answer;
+            }
+        }
+        if(Math.pow(Math.pow(pt.x-(root.getGoval().getX()),2)+Math.pow(pt.y-(root.getGoval().getY()),2),0.5)<root.getGoval().getRay()){
+            return root;
+        }
+        else{
+            return null;
+        }
+    }
+
+
+
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(FirebaseDatabase database) {
+        this.database = database;
+    }
+
+    public DatabaseReference getmRef() {
+        return mRef;
+    }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
         this.mDetector.onTouchEvent(event);
@@ -325,53 +459,7 @@ mAutoCenterAnimator.start();*/
         return null;
     }
 
-    @Override
-    public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
-        switch (keyEvent.getUnicodeChar()){
-            case 0 :
-                if(currentmessage.length()>0){
-                    currentmessage=currentmessage.subSequence(0,currentmessage.length()-1).toString();
-                }
-                currenttyped.setMmessage(currentmessage);
-
-                break;
-            case 10:
-                //TODO change this case and have a true view as on the mockups
-                if(currentmessage!=""){
-                    save();
-                }
-
-                currenttyped=null;
-                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getWindowToken(), 0);
-                currentmessage="";
-                break;
-
-            default:
-                currentmessage+=(char)keyEvent.getUnicodeChar();
-                currenttyped.setMmessage(currentmessage);
-
-        }
-        postInvalidate();
-
-        return false;
-    }
-
-    /*
-
-    Fonction qui sauve le Message ou le MOI if set to true
-    père du Message nouveau et MOI de ce message ou que l'on souhaite save
-     */
-
-    public void save(){
-
-        Map<String,Object> hash = new HashMap<>();
-        theuniverse.MoiListtoMap();
-        hash.put("MOIList",theuniverse.getMOIList());
-        mRef.updateChildren(hash);
-        theuniverse.toMOIList();
-
-    }
 
     //TODO : avoir la fonction de passage entre les deux views
     /**
@@ -487,18 +575,7 @@ mAutoCenterAnimator.start();*/
      */
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        Message clicked;
-        ListIterator list = theuniverse.getMOIList().listIterator();
-        MOI moi = new MOI();
-        while(list.hasNext() ){
-            moi = (MOI)list.next();
 
-            clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
-
-            //si le click est sur une bulle
-            if(clicked!=null){
-                moveto(clicked);
-            }}
         return false;
     }
 
@@ -542,17 +619,16 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        return false;
+    }
 
-    public void moveto(Message target){
-        mScaleFactor = 200/target.getGoval().getRay();
 
-      //  pt.x/mScaleFactor-(root.getGoval().getX()+mPosX/mScaleFactor;
-      //  Centerx/mScaleFactor-(target.getGoval().getX()+mPosX/mScaleFactor);
-        mPosX=mScaleFactor*(Centerx/mScaleFactor-target.getGoval().getX());
 
-        mPosY=mScaleFactor*(500/mScaleFactor-target.getGoval().getY());
-
-        postInvalidate();
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        return false;
     }
 
 
