@@ -158,12 +158,6 @@ public class Universe
         colorlist.add(0xff5DBCD2);
         colorlist.add(0xffF2C584);
 
-        /*colorlist.add(Color.CYAN);
-        colorlist.add(Color.GREEN);
-        colorlist.add(Color.BLUE);
-        colorlist.add(Color.RED);
-        colorlist.add(Color.MAGENTA);*/
-
         colormap=new HashMap<>();
         for(int i =0; i<universeUserList.size();i++){
 
@@ -202,7 +196,7 @@ public class Universe
         this.name = name;
     }
 
-    public ArrayList getuniverseUserList() {
+    public ArrayList<Contact> getuniverseUserList() {
         return universeUserList;
     }
 

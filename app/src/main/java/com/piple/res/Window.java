@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.ShapeDrawable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
@@ -153,54 +154,85 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             return null;
         }
     }
+
+
     //FONCTION RECURSIVE D'AFFICHAGE DE L'ARBRE A PARTIR DE LA RACINE (commencer avec un angle de 0)
-
-
-
     public void drawMessages(Canvas canvas,Message root, double rootangle){
 
         int nbchildren = root.getChildren().size();
+
+        //angle de séparation entre les message
         double angle = Math.PI/nbchildren;
 
-        root.getGoval().draw(canvas ,root.getMmessage());
+        //Dessin de l'oval ( root )
+        root.getGoval().draw(canvas ,root);
 
 
+        //Dessin du pseudo
+        String pseudo="";
+        for(int i=0; i<theuniverse.getuniverseUserList().size();i++){
+            if(theuniverse.getuniverseUserList().get(i).getId().equals(root.getIduser())){
+                pseudo=theuniverse.getuniverseUserList().get(i).getPseudo();
+            }
+        }
+        Paint paint = new Paint();
+        paint.setColor(Color.GRAY);
+        float size =root.getGoval().getRay()/5;
+        paint.setTextSize(size);
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(pseudo,root.getGoval().getX(),root.getGoval().getY()-root.getGoval().getRay()-size/2,paint);
+
+
+
+
+        //On parcours tous les enfants de root
         for(int i=0; i<nbchildren; i++ ) {
             Message msg = root.getChildren().get(i);
             double mangle =  angle * i - Math.PI / 2 + rootangle + angle / 2;
 
-            int mray = 0;
-            double margin = 0;
+            float mray;
+            double margin;
+
+            //Si on se trouve dans la vue raprochée
             if(mScaleFactor>2) {
+
                 // DECISION DU RAYON
-                mray = (int) Math.abs(root.getGoval().getRay() * (0.4 + 0.04 * msg.getChildren().size()));
+                mray = (float)(root.getGoval().getRay() * (0.7 + 0.06 * (2*msg.getChildren().size()-nbchildren)));
 
                 //DECISION DE LA MARGE
-                margin =  mray*0.2+msg.getChildren().size() * mray * 0.005;
-            }
+                margin =  mray*(0.2+msg.getChildren().size() *0.1);
+
+            }//Si on se trouve dans la vue éloignée
             else{
 
-                mray = (int) Math.abs(50 * (msg.getChildren().size() * 0.25 + 1));
-                margin = 10 + msg.getChildren().size() * mray * 0.3 + root.getChildren().size()*root.getGoval().getRay()*0.2;
-
-                //dessin du trait
-
-                Point beginline = beChildof(root.getGoval(),0, mangle, 10);
-                Point endline = beChildof(root.getGoval(),mray, mangle, margin-mray-10);
-                canvas.drawLine(beginline.x,beginline.y,endline.x,endline.y,new Paint());
+                mray = (float)(50 * (msg.getChildren().size() * 0.25 + 1));
+                margin = 10 + msg.getChildren().size() * mray * 0.15 + nbchildren*root.getGoval().getRay()*0.2;
             }
 
 
+            //dessin du trait
+            if(margin>50) {
+                Point beginline = beChildof(root.getGoval(), 0, mangle, 20);
+                Point endline = beChildof(root.getGoval(), mray, mangle, margin - mray - 40);
+                canvas.drawLine(beginline.x, beginline.y, endline.x, endline.y, new Paint());
+            }
+
+
+
+            //Création de l'oval enfant
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
             msg.setGoval(new Oval(mpt.x,mpt.y, mray, theuniverse.getColormap().get(msg.getIduser()), getContext()));
+
+            //Appel récurcif avec l'enfant créé
             drawMessages(canvas, msg, mangle);
         }
 
-        }
+    }
+
 
 
         //Renvoie le point du centre de la bulle pour que celle-ci soit placé correctement (en fonction du père, du rayon, de l'angle et de la marge
-        public Point beChildof(Oval father, int mRay, double angle, double margin ){
+        public Point beChildof(Oval father, float mRay, double angle, double margin ){
             Point mpoint = new Point();
             mpoint.x=(int)(father.getX()+ Math.sin(angle)*(margin+father.getRay()+mRay));
             mpoint.y=(int)(father.getY() + Math.cos(angle)*(margin+father.getRay()+mRay));
