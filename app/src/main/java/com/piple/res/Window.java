@@ -1,41 +1,34 @@
 package com.piple.res;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.ShapeDrawable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.lang.Math;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Objects;
 
-import static android.view.GestureDetector.*;
-
-
+/**
+ * Class Window : displays the tree of messages, manages the interaction with the user.
+ *      extends PanZoomView that enables panning (horizontally and vertically) and zooming with 2 fingers
+ *      implements OnGestureListener to enable longPress
+ *      implements OnDoubleTapListener
+ */
 public class Window extends PanZoomView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
 
 
@@ -110,14 +103,18 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         this.mRef = mRef;
     }
 
-    //C'EST ICI QU'ON DESSINE
+    /**
+     * Goes through the MOIlist, and for each of the MOIs, instanciates the father message, and calls drawMessages to draw the MOI
+     * @param canvas Canvas
+     * @author Paul Best
+     */
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(Centerx+i*750,100,100,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
+            mmoi.getFather().setGoval(new Oval(Centerx+i*1000,100,300,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
         if(target!=null){
@@ -132,13 +129,13 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         canvas.restore();
     }
 
-/*
-    Function to check if the point is inside the message's oval.
-
+    /**
+     * checks if pt is on root and calls itself recursivly to check root's children
+     * @param pt the point we want to check the location of
+     * @param root the message we want to check if the point is on
+     * @return root if pt is on it, null otherwise
+     * @author Paul Best
      */
-
-    //TODO: change with oval because two kinds of oval function
-
     public Message clickedOn(Point pt, Message root){
         Message answer;
         for(int i = 0; i<root.getChildren().size();i++){
@@ -156,7 +153,14 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     }
 
 
-    //FONCTION RECURSIVE D'AFFICHAGE DE L'ARBRE A PARTIR DE LA RACINE (commencer avec un angle de 0)
+    /**
+     * Recursive fonction that draws the whole tree descending from root
+     * draws root on the canvas, then decides of the ray and margin of root's children, instanciates the children, then calls itself recursivly for each children
+      * @param canvas
+     * @param root the root of the tree to be displayed
+     * @param rootangle the direction of the tree to be displayed in rad (0 mins vertically from top to bottom
+     * @author Paul Best
+     */
     public void drawMessages(Canvas canvas,Message root, double rootangle){
 
         int nbchildren = root.getChildren().size();
@@ -167,23 +171,8 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         //Dessin de l'oval ( root )
         root.getGoval().draw(canvas ,root);
 
-
         //Dessin du pseudo
-        String pseudo="";
-        for(int i=0; i<theuniverse.getuniverseUserList().size();i++){
-            if(theuniverse.getuniverseUserList().get(i).getId().equals(root.getIduser())){
-                pseudo=theuniverse.getuniverseUserList().get(i).getPseudo();
-            }
-        }
-        Paint paint = new Paint();
-        paint.setColor(Color.GRAY);
-        float size =root.getGoval().getRay()/5;
-        paint.setTextSize(size);
-        paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(pseudo,root.getGoval().getX(),root.getGoval().getY()-root.getGoval().getRay()-size/2,paint);
-
-
-
+        drawPseudo(root, canvas);
 
         //On parcours tous les enfants de root
         for(int i=0; i<nbchildren; i++ ) {
@@ -229,10 +218,39 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
     }
 
+    /**
+     * Display the pseudo of the user whose id corresponds to the message author's id
+     * @param root the message whose pseudo must be displayed
+     * @param canvas
+     *
+     */
+        public void drawPseudo(Message root, Canvas canvas){
+            String pseudo="";
+            for(int i=0; i<theuniverse.getuniverseUserList().size();i++){
+                if(theuniverse.getuniverseUserList().get(i).getId().equals(root.getIduser())){
+                    pseudo=theuniverse.getuniverseUserList().get(i).getPseudo();
+                }
+            }
+            Paint paint = new Paint();
+            paint.setColor(Color.GRAY);
+            float size =root.getGoval().getRay()/5;
+            paint.setTextSize(size);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(pseudo,root.getGoval().getX(),root.getGoval().getY()-root.getGoval().getRay()-size/2,paint);
+
+        }
 
 
-        //Renvoie le point du centre de la bulle pour que celle-ci soit placé correctement (en fonction du père, du rayon, de l'angle et de la marge
-        public Point beChildof(Oval father, float mRay, double angle, double margin ){
+    /**
+     * Computes the center of a bubble knowing its father, ray, angle, and margin
+      * @param father   the father bubble
+     * @param mRay  the ray of the child bubble
+     * @param angle the angle between the child and the father ( 0 means vertically from top to bottom )
+     * @param margin the margin in pixels between the father's circle and the child's circle
+     * @return the Point of the center for the child bubble
+     * @author Paul Best
+     */
+    public Point beChildof(Oval father, float mRay, double angle, double margin ){
             Point mpoint = new Point();
             mpoint.x=(int)(father.getX()+ Math.sin(angle)*(margin+father.getRay()+mRay));
             mpoint.y=(int)(father.getY() + Math.cos(angle)*(margin+father.getRay()+mRay));
@@ -242,11 +260,14 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         }
 
 
-
-    /*mAutoCenterAnimator = ObjectAnimator.ofInt(PieChart.this, "PieRotation", 0);
-mAutoCenterAnimator.setIntValues(targetAngle);
-mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);
-mAutoCenterAnimator.start();*/
+    /**
+     * Manages the longPress event.
+     * Checks if the click is on a bubble
+     * if so, create a new child to it and open the keyboard
+     * if not, create a new MOI and its father bubble
+     * @param e
+     * @author Paul Best
+     */
     @Override
     public void onLongPress(MotionEvent e) {
 
@@ -266,7 +287,8 @@ mAutoCenterAnimator.start();*/
                 clicked.getChildren().add(currenttyped);
                 InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 im.showSoftInput(this, InputMethodManager.SHOW_FORCED);
-            }}
+            }
+        }
 
         //sinon : new MOI
         if (!found) {
@@ -286,6 +308,11 @@ mAutoCenterAnimator.start();*/
     }
 
 
+    /**
+     * Pans the canvas to center the bubble target and zooms on the target
+     * @param target message to be centered
+     * @author Paul Best
+     */
     public void moveto(Message target){
         if(mScaleFactor<=2 && 200/target.getGoval().getRay()>2){
             this.target=target;
@@ -304,7 +331,16 @@ mAutoCenterAnimator.start();*/
     }
 
 
-
+    /**
+     * Manages the interaction with the keyboard.
+     * adds the letter pressed to the message currentyped
+     * takes one letter out if the key delete is pressed
+     * saves the message if the key enter is pressed
+     * @param keycode
+     * @param keyEvent
+     * @author Paul Best
+     * @return
+     */
     @Override
     public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
@@ -317,7 +353,6 @@ mAutoCenterAnimator.start();*/
 
                 break;
             case 10:
-                //TODO change this case and have a true view as on the mockups
                 if(currentmessage!=""){
                     save();
                 }
@@ -338,6 +373,12 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
+    /**
+     * Manages the doubletap event by check if it is on a bubble (using clickedon), and if so center it (using moveto)
+     * @param e
+     * @return
+     * @author Paul Best
+     */
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         Message clicked;
@@ -359,12 +400,10 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
-    /*
-
-    Fonction qui sauve le Message ou le MOI if set to true
-    père du Message nouveau et MOI de ce message ou que l'on souhaite save
+    /**
+     * Fonction qui sauve le Message ou le MOI if set to true
+     * père du Message nouveau et MOI de ce message ou que l'on souhaite save
      */
-
     public void save(){
 
         Map<String,Object> hash = new HashMap<>();
@@ -388,110 +427,12 @@ mAutoCenterAnimator.start();*/
      *
      * */
 
-
-
-    /*
-    to check if the POINT is on the oval
-     */
-    public Message isOn(Point pt, Message root){
-        Message answer;
-        for(int i = 0; i<root.getChildren().size();i++){
-            answer = clickedOn(pt,root.getChildren().get(i));
-            if(answer!=null){
-                return  answer;
-            }
-        }
-        if(Math.pow(Math.pow(pt.x-(root.getGoval().getX()),2)+Math.pow(pt.y-(root.getGoval().getY()),2),0.5)<root.getGoval().getRay()){
-            return root;
-        }
-        else{
-            return null;
-        }
-    }
-
-
-
-    public FirebaseDatabase getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(FirebaseDatabase database) {
-        this.database = database;
-    }
-
-    public DatabaseReference getmRef() {
-        return mRef;
-    }
-
-
     @Override
     public boolean onTouchEvent(MotionEvent event){
         this.mDetector.onTouchEvent(event);
         // Be sure to call the superclass implementation
         return super.onTouchEvent(event);
     }
-
-   public void  placeMessage(Message fathertoplace){
-        String id =fathertoplace.getIdmessage();
-        ArrayList listMOI = theuniverse.getMOIList();
-        ListIterator iterator = listMOI.listIterator();
-        //On parcours tout les MOI
-        while(iterator.hasNext()){
-            MOI moi = (MOI) iterator.next();
-
-            //si le message n'a pas le meme id que le father :
-            if(!moi.getFather().getIdmessage().equals(id)){
-                //father devient le nouveau message a placer qui contient fathertoplace si il est retourné
-                moi.setFather(findMessageAndPlace(moi.getFather(),fathertoplace));
-               // if(father!=null) {
-                    // si il a été retourné c'est qu'il a été modifié donc on le set dans le moi
-                   // moi.setFather(father);
-                }
-           // }else {
-                // alors c'est le FATHER le bon direct
-                moi.setFather(fathertoplace);
-            }
-            // on set le MOI modifié
-            iterator.previous();
-          //  iterator.set(moi);
-            iterator.next();
-        }
-        // on set le listMOI modifié
-       // theuniverse.setMOIList(listMOI);
-    //}
-
-    public Message findMessageAndPlace(Message init, Message fathertoplace){
-        // si il a des enfants
-        if(init.getChildren()!=null) {
-            Message m;
-            // on les parcours
-            for(int i=0; i<init.getChildren().size(); i++){
-                // si un des enfant correspond au father a mettre a jour on le set et on retourne la valeure
-                if(init.getChildren().get(i).getIdmessage().equals(fathertoplace.getIdmessage())) {
-                    ArrayList list = init.getChildren();
-                    list.add(fathertoplace);
-                    init.setChildren(list);
-                    return init;
-                }else {
-                    //si ce n'est pas le cas on check la meme chose mais avec ses enfants de l'enfant
-
-                    // m est retourné si il a été trouvé le bon father
-                    m = findMessageAndPlace(init.getChildren().get(i), fathertoplace);
-                    if(m!=null) {
-                        // si il a été retourné alors on met a jour l'enfant qui a été modifié et retourné et on retourne le père de cette liste
-                        ArrayList list = init.getChildren();
-                        list.set(i,m);
-                        init.setChildren(list);
-                        return init;
-                    }
-                }
-                }
-
-            }
-            // dans tout les autres cas on retourne null
-        return null;
-    }
-
 
 
     //TODO : avoir la fonction de passage entre les deux views
@@ -527,12 +468,7 @@ mAutoCenterAnimator.start();*/
     }
 
 
-    public void OnZoomAction(){
-        //TODO : si on zoom suffisament alors on arrive en gearofreply view sinon si on dézoom on repasse en roadview et si on continue MOIview
-           /* if(mScaleFactor>0.5f && mScaleFactor<8.9f){
-                myRoadview.set(fathermessage);
-            }*/
-    }
+
     /**
      * Return true if pinch zooming is supported.
      *
@@ -542,36 +478,6 @@ mAutoCenterAnimator.start();*/
         return true;
     }
 
-
-
-    /*
-
-
-    ROADVIEW
-
-     */
-    public boolean set(Message father){
-        CreateOvalandsetRay(father);
-        //TODO iteration pour checker la distance normale que devrait avoir chaques enfant par rapport à son père si on ne l'a pas déjà
-       /* ListIterator iterator = children.listIterator();
-        while(iterator.hasNext()){
-
-            iterator.getChildren().get
-
-        }*/
-
-        //TODO fonction pour calculer le poid si on ne l'a pas déjà
-
-        //TODO Iteration pour checker si il y a superposition,
-        //TODO qui change cela en repoussant les l
-
-
-        return true;
-    }
-    public void CreateOvalandsetRay(Message message)
-    {
-        //TODO: iteration pour calculer le rayon de toutes les bubbles et les instancier en les donnant à leur message et le faire que pour les 4 plus grosses
-    }
 
     /**
      * Notified when a tap occurs with the down {@link MotionEvent}
@@ -632,8 +538,6 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
-
-
     /**
      * Notified of a fling event when it occurs with the initial on down {@link MotionEvent}
      * and the matching up {@link MotionEvent}. The calculated velocity is supplied along
@@ -657,15 +561,11 @@ mAutoCenterAnimator.start();*/
         return false;
     }
 
-
-
     @Override
     public boolean onDoubleTapEvent(MotionEvent motionEvent) {
         return false;
     }
 
-
-    //TODO create IHM
 }
 
 
