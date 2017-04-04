@@ -35,7 +35,7 @@
                 android:exported="false">
                 <intent-filter>
                     <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                    <action android:name="com.google.firebase.auth"></action>
+                    <action android:name="com.google.firebase.auth" />
                 </intent-filter>
             </service>
             <service
@@ -61,7 +61,7 @@
                 android:exported="false">
                 <intent-filter>
                     <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                    <action android:name="com.google.firebase.auth"></action>
+                    <action android:name="com.google.firebase.auth" />
                 </intent-filter>
             </service>
             <service
