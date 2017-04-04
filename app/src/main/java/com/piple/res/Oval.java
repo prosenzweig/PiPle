@@ -11,6 +11,7 @@ import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +26,6 @@ public class Oval extends View{
     private boolean message, msgholder, faceholder; // la bbubble peut être plusieurs choses en effet;
     private int importance; // remplace size ici
     //FOR THE GearofReply VIEW (paul's)
-    private String text;
 
 
     private float x,y,ray;
@@ -66,7 +66,7 @@ public class Oval extends View{
 
      */
 
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas, String text){
 
 
         super.draw(canvas);
@@ -76,7 +76,7 @@ public class Oval extends View{
         if(text!=null) {
             int i;
             Paint paint = new Paint();
-            int size = 50;
+            int size = 5;
             ArrayList<String> textlist = new ArrayList();
             paint.setColor(Color.BLACK);
             paint.setTextSize(size);
@@ -119,26 +119,31 @@ public class Oval extends View{
                     do {
                         accu = accu + " " + strs[strcount];
                         strcount++;
-                    } while ((accu.length() < lenligne-5) && (strcount < strs.length));
+                    } while ((accu.length() < lenligne) && (strcount < strs.length));
                 }
                 textlist.add(accu);
             }
 
+
+
             do {
-                size--;
+                size++;
                 paint.setTextSize(size);
                 depasse = false;
                 for (i = 0; i < nblignes; i++) {
                     paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                    if (bounds.width() > ray * 1.6) {
+                    if (bounds.width()/2 > (ray*Math.cos(Math.asin((nblignes / 2 - i - 0.5) * size/ray)))) {
                         depasse = true;
                     }
                 }
-            } while (depasse);
+            } while (!depasse);
+
+            size-=3;
 
             for (i = 0; i < nblignes; i++) {
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                canvas.drawText(textlist.get(i), (float)( x - (bounds.width()) / 1.9), (float)(y - (nblignes / 2 - i - 0.5) * size), paint);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(textlist.get(i), x, (float)(y - (nblignes / 2 - i - 0.5) * size), paint);
             }
         }
 
@@ -223,14 +228,6 @@ public class Oval extends View{
 
     public void setmDrawable(ShapeDrawable mDrawable) {
         this.mDrawable = mDrawable;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     @Override
