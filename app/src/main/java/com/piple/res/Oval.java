@@ -66,14 +66,14 @@ public class Oval extends View{
 
      */
 
-    public void draw(Canvas canvas, String text){
+    public void draw(Canvas canvas, Message msg){
 
 
         super.draw(canvas);
         mDrawable.draw(canvas);
 
 
-        if(text!=null) {
+        if(msg.getMmessage()!=null) {
             int i;
             Paint paint = new Paint();
             int size = 5;
@@ -84,6 +84,7 @@ public class Oval extends View{
             boolean depasse;
 
 
+            String text=msg.getMmessage();
             if (text.length() > 144) {
                 text = text.substring(0, 144);
                 text = text + "...";
@@ -132,13 +133,13 @@ public class Oval extends View{
                 depasse = false;
                 for (i = 0; i < nblignes; i++) {
                     paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                    if (bounds.width()/2 > (ray*Math.cos(Math.asin((nblignes / 2 - i - 0.5) * size/ray)))) {
+                    if (bounds.width()/1.7 > (ray*Math.cos(Math.asin((nblignes / 2 - i - 0.5) * size/ray)))) {
                         depasse = true;
                     }
                 }
             } while (!depasse);
 
-            size-=3;
+            size-=5;
 
             for (i = 0; i < nblignes; i++) {
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
@@ -146,6 +147,7 @@ public class Oval extends View{
                 canvas.drawText(textlist.get(i), x, (float)(y - (nblignes / 2 - i - 0.5) * size), paint);
             }
         }
+
 
     }
 
