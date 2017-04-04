@@ -26,7 +26,7 @@
                 <action android:name="android.intent.acion.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="friendlychat.firebase.google.com"
+                <data android:host="piple.firebase.google.com"
                     android:scheme="http"
                     android:pathPrefix="/message"/>
             </intent-filter>
@@ -35,7 +35,7 @@
                 android:exported="false">
                 <intent-filter>
                     <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                    <action android:name="com.google.firebase.auth"></action>
+                    <action android:name="com.google.firebase.auth" />
                 </intent-filter>
             </service>
             <service
@@ -61,7 +61,7 @@
                 android:exported="false">
                 <intent-filter>
                     <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                    <action android:name="com.google.firebase.auth"></action>
+                    <action android:name="com.google.firebase.auth" />
                 </intent-filter>
             </service>
             <service
