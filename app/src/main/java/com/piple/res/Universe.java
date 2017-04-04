@@ -66,6 +66,13 @@ public class Universe
         this.id = id;
 
     }
+    public void checkid(String id, String pseudo){
+        Contact cont = new Contact(pseudo, id);
+        if(!universeUserList.contains(cont)){
+            universeUserList.add(cont);
+        }
+
+    }
 
     @Exclude
     // on map l'univers
@@ -145,17 +152,17 @@ public class Universe
         this.MOIList = MOIList;
 
         ArrayList<Integer> colorlist = new ArrayList<>();
-       /* colorlist.add(0xffC8A2B5);
+        colorlist.add(0xffC8A2B5);
         colorlist.add(0xffffebcd);
         colorlist.add(0xffC1DFBB);
         colorlist.add(0xff5DBCD2);
-        colorlist.add(0xffF2C584);  */
+        colorlist.add(0xffF2C584);
 
-        colorlist.add(Color.CYAN);
+        /*colorlist.add(Color.CYAN);
         colorlist.add(Color.GREEN);
         colorlist.add(Color.BLUE);
         colorlist.add(Color.RED);
-        colorlist.add(Color.MAGENTA);
+        colorlist.add(Color.MAGENTA);*/
 
         colormap=new HashMap<>();
         for(int i =0; i<universeUserList.size();i++){

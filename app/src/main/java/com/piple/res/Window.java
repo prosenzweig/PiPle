@@ -310,11 +310,11 @@ mAutoCenterAnimator.start();*/
     public boolean onDoubleTap(MotionEvent e) {
         Message clicked;
         ListIterator list = theuniverse.getMOIList().listIterator();
-        MOI moi = new MOI();
+
         Boolean found = false;
         while(list.hasNext() ){
-            moi = (MOI)list.next();
 
+             MOI moi = (MOI)list.next();
             clicked=clickedOn(new Point((int) e.getX(), (int) e.getY()), moi.getFather());
 
             //si le click est sur une bulle
