@@ -191,7 +191,7 @@ public class HomeActivity
                 Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                 Universe aUniverse=new Universe();
                 aUniverse.toUniverse(universeMap);
-                ArrayList UserList = aUniverse.getuniverseUserList();
+               /* ArrayList UserList = aUniverse.getuniverseUserList();
                 ListIterator iterator = UserList.listIterator();
                 // on parcours les contacts pour savoir si l'univers appartient à l'utilisateur
                 //si oui on le lui présente
@@ -199,7 +199,7 @@ public class HomeActivity
                 while (iterator.hasNext()) {
 
                     Contact cont = (Contact) iterator.next();
-
+                    */
                    // if (cont.getId().equals(yourself.getId()))
                         Universes.add(aUniverse);
                         UserhasUniverses=true;
@@ -209,7 +209,8 @@ public class HomeActivity
 
                    // }
 
-                }MajLayout();
+               // }
+                MajLayout();
 
             }
 
