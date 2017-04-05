@@ -12,11 +12,31 @@ import java.util.Map;
  * Created by Paul on 15/02/2017.
  */
 
+/**
+ *
+ * Class Message
+ *      that contains the message and bubble info
+ *        @see Oval
+ *
+ *
+ *        @author jeremie
+ *
+ */
 public class Message {
 
-
+    /**
+     *
+     * the message string
+     */
     private String mmessage;
     private ArrayList children = new ArrayList();
+    /***
+     * information form the message
+     *
+     *  poid is the size of the message and is compute in
+     *  @see Window
+     *
+     */
     private long type, childnumb, likenumb, poids; ///type always at 0 for now
     private String iduser, idmessage;
     private boolean important, viewed, silent;
@@ -56,6 +76,12 @@ public class Message {
 
     //TODO: create functions just to map one message.
 
+    /***
+     *
+     * convert the object into a map and al its children
+     *
+     * @return the map
+     */
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("mMessage", mmessage);
@@ -82,6 +108,13 @@ public class Message {
         result.put("Children", children);
         return result;
     }
+
+
+    /**
+     * convert the map into its message object form and all its children
+     * @param messagemap
+     */
+
     public void toMessage(Map<String, Object> messagemap){
 
         children = (ArrayList) messagemap.get("Children");

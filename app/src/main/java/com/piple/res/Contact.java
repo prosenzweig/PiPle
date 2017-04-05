@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * Class Contact
- *
+ *@author jeremie
  * Stores the information of a contact.
  */
 public class Contact

@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Class PanZoomView
  *      extends View
- *
+ *@author jeremie & reshad
  * Class creating a gigantic window in which the user has the ability to zoom in, out by pinching and double tapping
  * it resizes the image and also allow the user to scroll in the X and Y axis.
  */
