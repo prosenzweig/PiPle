@@ -175,10 +175,8 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     public void drawMessages(Canvas canvas,Message root, double rootangle){
 
         int nbchildren = root.getChildren().size();
-
         //angle de séparation entre les message
         double angle = Math.PI/nbchildren;
-
         //Dessin de l'oval ( root )
         root.getGoval().draw(canvas ,root);
 

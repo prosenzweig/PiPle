@@ -22,8 +22,9 @@ import java.util.Map;
 /**
  * Class PanZoomView
  *      extends View
- *
- * Class already coded that creates an almost infinite window in which we can scroll, zoom in&out, ...
+ *@author jeremie & reshad
+ * Class creating a gigantic window in which the user has the ability to zoom in, out by pinching and double tapping
+ * it resizes the image and also allow the user to scroll in the X and Y axis.
  */
 public class PanZoomView
         extends
@@ -33,22 +34,52 @@ public class PanZoomView
 
 
     /// RESOURCES ///
-
+    /**
+     * on the X and Y axis
+     */
     static protected Map<String, Integer> totalscreensize = new HashMap<String, Integer>();
 
+    /**
+     *
+     * Information on the availability of certain Actions by the User
+     *  The next three are set by calling supportsPan, supportsZoom, ...
+     */
     static protected final boolean ScaleAtFocusPoint = false;
-    static protected final int DefaultDrawableId = 0x7f020053;
-    protected int scalingweight=2;
+    protected boolean mSupportsPan = true;
+    protected boolean mSupportsZoom = true;
+    protected boolean mSupportsScaleAtFocus = true;
+    protected boolean zooming=false; //to have a smoother zoom
+
+    /**
+     * the iamge that is going to be drawn
+     */
     protected Drawable mSampleImage;
     protected Context mContext;
+    /**
+     *
+     * position of the screen
+     */
     protected float mPosX;
     protected float mPosY;
-    protected float mPosX0 = 0;     // initial displacement values
-    protected float mPosY0 = 0;;
-    protected float mFocusX;    // these two focus variables are not needed
+
+    /**
+     *
+     * initial displacement values
+     */
+    protected float mPosX0 = 0;
+    protected float mPosY0 = 0;
+
+    /**
+     *
+     * where is the pinch focused
+     */
+    protected float mFocusX;
     protected float mFocusY;
 
-    protected boolean zooming=false; //to have a smoother zoom
+    /**
+     *
+     * the last place the user(s finger was on
+     */
     protected float mLastTouchX;
     protected float mLastTouchY;
 
@@ -58,14 +89,17 @@ public class PanZoomView
     protected int mActivePointerId = INVALID_POINTER_ID;
 
     protected ScaleGestureDetector mScaleDetector;
+    /**
+     *
+     * defininf how much we have zoomed
+     */
     protected float mScaleFactor = 1.f;
 
-    // The next three are set by calling supportsPan, supportsZoom, ...
-    protected boolean mSupportsPan = true;
-    protected boolean mSupportsZoom = true;
-    protected boolean mSupportsScaleAtFocus = true;
-
-
+    /**
+     *
+     * the id on where we are going to draw ( redefined in the system )
+     */
+    static protected final int DefaultDrawableId = 0x7f020053;
 
     /// CONSTRUCTORS ///
 
@@ -114,6 +148,18 @@ public class PanZoomView
 
     /**
      * Decode a resource into a bitmap of the specified size.
+     *
+     * @param res
+     *      the ressource used
+     * @param reqHeight
+     *        height of the Bm
+     * @param reqWidth
+     *         width of the Bm
+     * @param resId
+     *      id of the ressource
+     *
+     *
+     * @return the bitmap
      */
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight)
     {
@@ -150,6 +196,10 @@ public class PanZoomView
 
     /**
      * onDraw
+     * will call translate and scale functions to the canvas
+     * according to the information gotten
+     * by calculating it ith pos, lastouch, ...
+     *
      */
     @Override public void onDraw(Canvas canvas)
     {
@@ -204,6 +254,7 @@ public class PanZoomView
 
     /**
      * Handle touch and multitouch events so panning and zooming can be supported.
+     *
      *
      */
     @Override public boolean onTouchEvent(MotionEvent ev)
@@ -362,6 +413,8 @@ public class PanZoomView
     /**
      * ScaleListener
      *
+     * Class to see if there is a scale movement performed by the user it overwrites the functions of the initaial class
+     * to convert positions and get the scaling and compute minimum and maximum of scalling.
      */
     protected class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
     {
