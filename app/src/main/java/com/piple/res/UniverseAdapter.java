@@ -17,11 +17,38 @@ import com.piple.app.R;
 
 import java.util.List;
 
+/**
+ * @author internet and jeremie
+        * Class UniverseAdapter
+        *      extends ArrayAdapter
+        *
+        *
+        * Is used to instanciate different universe button inside the HomeActivity's listview
+        */
+
 public class UniverseAdapter extends ArrayAdapter<Universe> {
 
+    /**
+     *
+     * @param context the context of the current viex
+     * @param Universes the list of univers object to draw
+     */
     public UniverseAdapter(Context context, List<Universe> Universes) {
         super(context, 0, Universes);
     }
+
+    /**
+     *
+     *function that override the arrayadapter's one to create a view holder of the universe button and image instead
+     *
+     * @param position
+     *      the position of this view
+     * @param convertView
+     *      the initial view to be converted
+     * @param parent
+     *      the parent view
+     * @return View that had been converted and containing the universe button and image ( if found)
+     */
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -50,6 +77,12 @@ public class UniverseAdapter extends ArrayAdapter<Universe> {
 
         return convertView;
     }
+
+    /**
+     * Class UniverseViewHolder
+     *      Contains the information of the holder of one universe being instanciated by universe adpater
+     *      @see UniverseAdapter
+     */
 
     private class UniverseViewHolder{
         public TextView Universename;

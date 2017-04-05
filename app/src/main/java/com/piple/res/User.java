@@ -16,9 +16,10 @@ import java.util.Map;
 
 
 /**
+ * @author jeremie
  * Class User
  *
- * Contains a user and his information.
+ * Contains a user and his informations.
  */
 @IgnoreExtraProperties
 public class User
@@ -30,20 +31,27 @@ public class User
 
     private String id;
     private String pseudo;
+    /**
+     * an arraylist of contacts that the user has  ( not used in this version )
+     */
     private ArrayList ContactList;
     private Image profilpicture;
 
 
 
     /// CONSTRUCTORS ///
-    public User(){  //toujours avoir un constructeur vide // Default constructor required for calls to DataSnapshot.getValue(Post.class)
 
-    }
 
     public User(String id, String pseudo) {
         this.id = id;
         this.pseudo = pseudo;
     }
+
+    /**
+     * transform this Object into a map
+     *
+     * @return the user map
+     */
 
     @Exclude
     public Map<String, Object> toMap() {

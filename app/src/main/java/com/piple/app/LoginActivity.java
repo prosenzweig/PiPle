@@ -34,6 +34,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
  *      implements GoogleApiClient.OnConnectionFailedListener
  *
  * Allows user to sign in if already existing account, sign up if not.
+ * Using either mail and password or google's account (more secured)
+ *
  */
 public class LoginActivity
         extends
@@ -46,16 +48,43 @@ public class LoginActivity
 
 
     /// RESOURCES ///
-    
+    /**
+     * use to facilitate connections
+     *
+     * @see google firebase
+     */
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
+    /**
+     * button to clickon for a google signin
+     *
+     */
     private SignInButton mSignInButton;
-    
+    /**
+     *
+     * firebase info
+     */
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    /**
+     *
+     * User's API to connect to his google account and receive credentials
+     *
+     */
     private GoogleApiClient mGoogleApiClient;
+
+    /**
+     *
+     * textview to receive email
+     *
+     */
     private TextView mailTextView;
+    /**
+     *
+     * textview to receive password
+     *
+     */
     private TextView passTextView;
 
 
@@ -67,6 +96,7 @@ public class LoginActivity
      *      overrides method from AppCompatActivity
      *
      * Implements the behavior of the activity when it is created.
+     * instanciate all the button, options, credentials and database
      *
      * @param savedInstanceState saved state from the program
      */
@@ -227,6 +257,10 @@ public class LoginActivity
      *      overrides method from AppCompatActivity
      *
      * Implements the behavior of the activity when it gets a result.
+     * and send to
+     * @see FirebaseAuth
+     *
+     * or send an error message
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -298,7 +332,7 @@ public class LoginActivity
      *
      * Implements the behavior of the activity when the connection to Google APIs failed.
      *
-     * @param connectionResult ???
+     * @param connectionResult the result of your connectionned returned by the API
      */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

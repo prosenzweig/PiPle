@@ -44,6 +44,9 @@ import java.util.Map;
  *      implements GoogleApiClient.OnConnectionFailedListener
  *
  * Creates the activity displaying one universe.
+ * and send the database information to window
+ *
+ * @see Window
  */
 public class UniverseActivity
         extends
@@ -58,25 +61,30 @@ public class UniverseActivity
 
 
 
-
+    /**
+     * TAG to the DB
+     */
     private static final String TAG = "UniverseActivity";
-    private SharedPreferences mSharedPreferences;
-    private GoogleApiClient mGoogleApiClient;
-    private String mUsername;
-    public static final String ANONYMOUS = "anonymous";
 
-    private DatabaseReference mFirebaseDatabaseReference;
-
+    /**
+     * the reference of the universe in the DB
+     *
+     */
     private DatabaseReference mRefUniverse;
-
+    /**
+     * Firebase informations
+     */
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    /**
+     * The window everything will be displayed on ( the view )
+     *
+     */
     private Window mywindow;
-    private Message messageadded;
     //our different views
 
 
-    private User yourself;
+
 
 
 
@@ -86,6 +94,9 @@ public class UniverseActivity
     /**
      * Method onCreate
      * Implements the behavior of the activity when it is created.
+     *Here it set the window with its basic parameters
+     * and the DB connection and credentials
+     *
      *
      * @param savedInstanceState saved state from the program
      */
@@ -105,14 +116,11 @@ public class UniverseActivity
         newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
         //Set preferences and defaults
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mUsername = ANONYMOUS;
 
         // Initialize Firebase authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mRefUniverse = FirebaseDatabase.getInstance().getReference("Universe");
         //Check if user is identified
         if (mFirebaseUser == null) {
@@ -122,11 +130,10 @@ public class UniverseActivity
             return;
         }
         //If yes, get his email and welcome him
-        mUsername = mFirebaseUser.getEmail();
-        yourself = new User(mFirebaseUser.getUid(), mFirebaseUser.getEmail());
+       User  yourself = new User(mFirebaseUser.getUid(), mFirebaseUser.getEmail());
 
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
                                 .enableAutoManage(this, this /* OnConnectionFailedListener */)
                                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                                 .build();
@@ -140,6 +147,7 @@ public class UniverseActivity
      *      overrides method from AppCompatActivity
      *
      * Implements the behavior of the activity when it is started.
+     * and receive the DB information and update the universe and the window
      */
     @Override
     public void onStart() {
@@ -206,7 +214,7 @@ public class UniverseActivity
      *
      * Implements the behavior of the activity when the connection to Google APIs failed.
      *
-     * @param connectionResult ???
+     * @param connectionResult connection resuls from the API
      */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

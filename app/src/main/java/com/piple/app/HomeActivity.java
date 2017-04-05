@@ -100,6 +100,9 @@ public class HomeActivity
      *      overrides method from AppCompatActivity
      *
      * Implements the behavior of the activity when it is created.
+     * create the listview for the different universes and the firebase
+     * authentification
+     *
      *
      * @param savedInstanceState saved state from the program
      */
@@ -166,6 +169,9 @@ public class HomeActivity
      *      overrides method from AppCompatActivity
      *
      * Implements the behavior of the activity when it is started.
+     * Also receive the DB and displays each DB belonging to the user
+     *
+     *
      */
     @Override
     public void onStart() {
@@ -230,6 +236,14 @@ public class HomeActivity
 
     }
         // on met à jour le layout avec la son des univers présents
+
+    /**
+     *
+     * Refresh the Layout by creating button for each user's universes and display then into the listview
+     * if the user click on it send the user with the universe information to the univers view
+     *
+     *
+     */
     public void MajLayout(){
         if (UserhasUniverses) {
             //cette fontion créer des boutons univers dans la listview.
@@ -272,8 +286,9 @@ public class HomeActivity
      *      overrides method from GoogleApiClient.OnConnectionFailedListener
      *
      * Implements the behavior of the activity when the connection to Google APIs failed.
+     * and display an error message
      *
-     * @param connectionResult ???
+     * @param connectionResult the results of the connection
      */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
@@ -283,6 +298,17 @@ public class HomeActivity
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     *
+     * Create a listview with the universes by sending them to the adpater function
+     *
+     * @param Universes
+     *      List of user's universes
+     *
+     * @return true always
+     *
+     * @see UniverseAdapter
+     */
 
     public boolean createNewButton(List Universes){
 
@@ -300,6 +326,8 @@ public class HomeActivity
      *      overrides method from View.OnClickListener
      *
      * Implements the behavior of the activity when the user clicks on it.
+     * Here it creates a new universe when the user click on it and instanciate it also in the database with
+     * the string the user is typing inside a textbox.
      *
      * @param v view touched
      */
