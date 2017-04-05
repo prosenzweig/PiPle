@@ -33,13 +33,27 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
     private FirebaseDatabase database;
+    /**
+     * Represents the current universe
+     */
     private Universe theuniverse;
+    /**
+     * the message that is being written by the user (!= null only when typing)
+     */
     private Message currenttyped;
+    /**
+     * The string of the message being typed
+     */
     private String currentmessage;
     private GestureDetectorCompat mDetector;
     private DatabaseReference mRef;
-    private final int Centerx;
-    private final int Centery;
+    /**
+     * Center of the screen
+     */
+    private final Point Center;
+    /**
+     * Bubble to center the screen on (see moveto(Message target)
+     */
     private Message target;
 
 
@@ -65,10 +79,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Display dis = wm.getDefaultDisplay();
         Point pt = new Point();
         dis.getSize(pt);
-        Centerx=pt.x/2;
-        Centery=pt.y/3;
-
-
+        Center = new Point(pt.x/2,pt.y/3);
     }
 
     public Universe getTheuniverse() {
@@ -85,8 +96,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Display dis = wm.getDefaultDisplay();
         Point pt = new Point();
         dis.getSize(pt);
-        Centerx=pt.x/2;
-        Centery=pt.y/3;
+        Center = new Point(pt.x/2,pt.y/3);
     }
 
     public Window (Context context, AttributeSet attrs, int defStyle) {
@@ -95,8 +105,8 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Display dis = wm.getDefaultDisplay();
         Point pt = new Point();
         dis.getSize(pt);
-        Centerx=pt.x/2;
-        Centery=pt.y/3;    }
+        Center = new Point(pt.x/2,pt.y/3);
+    }
 
 
     public void setmRef(DatabaseReference mRef) {
@@ -114,7 +124,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(Centerx+i*1000,100,300,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
+            mmoi.getFather().setGoval(new Oval(Center.x+i*5000,100,300,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
         if(target!=null){
@@ -151,6 +161,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             return null;
         }
     }
+
 
 
     /**
@@ -322,9 +333,9 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         }
         mScaleFactor = 200/target.getGoval().getRay();
 
-        mPosX=mScaleFactor*(Centerx/mScaleFactor-target.getGoval().getX());
+        mPosX=mScaleFactor*(Center.x/mScaleFactor-target.getGoval().getX());
 
-        mPosY=mScaleFactor*(Centery/mScaleFactor-target.getGoval().getY());
+        mPosY=mScaleFactor*(Center.y/mScaleFactor-target.getGoval().getY());
 
 
         postInvalidate();
