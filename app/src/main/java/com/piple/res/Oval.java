@@ -20,21 +20,21 @@ import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 
+/**
+ * Class Oval : represents the shape of the circle for one Bubble (oval is contained in Message)
+ *      extends View : to be able to draw on a canvas
+ */
 public class Oval extends View{
 
+    /**
+     * the circle shape
+     */
     private ShapeDrawable mDrawable;
-    private boolean message, msgholder, faceholder; // la bbubble peut être plusieurs choses en effet;
-    private int importance; // remplace size ici
-    //FOR THE GearofReply VIEW (paul's)
 
-
+    /**
+     * the circle's coordinates and ray
+     */
     private float x,y,ray;
-    private Contact contact;
-    //FOR THE LinkVIEW (jerem's )
-
-    private int rray;
-    private int rdistance;
-    private Button mbut;
 
     public Oval(float x,float y, float ray, int color, Context cont) {
         super(cont);
@@ -54,18 +54,12 @@ public class Oval extends View{
     super(cont);
     }
 
-    /*
-    EXEMPLE AUTRE
-
-
-
-
-
-
-
-
+    /**
+     * Draws the message ( it's mdrawable circle and then it's text)
+     * to display the text, this method seprates it in several lines, and modulates the size to make it fit in the circle
+     * @param canvas the canvas to draw on
+     * @param msg the message to draw
      */
-
     public void draw(Canvas canvas, Message msg){
 
 
@@ -89,14 +83,6 @@ public class Oval extends View{
                 text = text.substring(0, 144);
                 text = text + "...";
             }
-            /*
-            int nblignes = text.length() / 20;
-            if (nblignes == 0) {
-                nblignes = 1;
-            }
-            if(nblignes==1&&text.length()>20){
-                nblignes=2;
-            }*/
             String[] strs = text.split(" ");
             int[] len = new int[strs.length];
             int nblignes = strs.length/2;
@@ -151,84 +137,7 @@ public class Oval extends View{
 
     }
 
-
-
-
-    public void setcolor(int color){
-        this.mDrawable.getPaint().setColor(color);
-    }
-
-    public ShapeDrawable getmDrawable(){
-        return mDrawable;
-    }
-
-
-
     public void setDrawable(ShapeDrawable mDrawable) {
-        this.mDrawable = mDrawable;
-    }
-
-
-
-    public boolean isMessage() {
-        return message;
-    }
-
-    public void setMessage(boolean message) {
-        this.message = message;
-    }
-
-    public boolean isMsgholder() {
-        return msgholder;
-    }
-
-    public void setMsgholder(boolean msgholder) {
-        this.msgholder = msgholder;
-    }
-
-    public boolean isFaceholder() {
-        return faceholder;
-    }
-
-    public void setFaceholder(boolean faceholder) {
-        this.faceholder = faceholder;
-    }
-
-    public int getImportance() {
-        return importance;
-    }
-
-    public void setImportance(int importance) {
-        this.importance = importance;
-    }
-
-
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
-    public int getRray() {
-        return rray;
-    }
-
-    public void setRray(int rray) {
-        this.rray = rray;
-    }
-
-    public int getRdistance() {
-        return rdistance;
-    }
-
-    public void setRdistance(int rdistance) {
-        this.rdistance = rdistance;
-    }
-
-    public void setmDrawable(ShapeDrawable mDrawable) {
         this.mDrawable = mDrawable;
     }
 
@@ -237,33 +146,13 @@ public class Oval extends View{
         return x;
     }
 
-    public void setX(Float x) {
-        this.x = x;
-    }
-
     @Override
     public float getY() {
         return y;
     }
 
-    public void setY(Float y) {
-        this.y = y;
-    }
-
     public Float getRay() {
         return ray;
-    }
-
-    public void setRay(Float ray) {
-        this.ray = ray;
-    }
-
-    public Button getMbut() {
-        return mbut;
-    }
-
-    public void setMbut(Button mbut) {
-        this.mbut = mbut;
     }
 
 }
