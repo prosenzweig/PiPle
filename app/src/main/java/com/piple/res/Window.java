@@ -410,8 +410,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     }
 
     /**
-     * Fonction qui sauve le Message ou le MOI if set to true
-     * père du Message nouveau et MOI de ce message ou que l'on souhaite save
+     *  Fonction qui va sauvée l'univers a la base de donnée quand elle est appelée
      */
     public void save(){
 
