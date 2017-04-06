@@ -77,14 +77,18 @@ public class Oval extends View{
             Rect bounds = new Rect();
             boolean depasse;
 
-
+            //limit the text to 144 char
             String text=msg.getMmessage();
             if (text.length() > 144) {
                 text = text.substring(0, 144);
                 text = text + "...";
             }
+
+            //split the text in a array of words
             String[] strs = text.split(" ");
             int[] len = new int[strs.length];
+
+            //compute the nb of lines
             int nblignes = strs.length/2;
             if(nblignes==0){
                 nblignes=1;
@@ -94,12 +98,17 @@ public class Oval extends View{
             }
 
 
+            //fill in an array of the words' length
             for (i = 0; i < strs.length; i++) {
                 len[i] = strs[i].length();
             }
+
+            //compute length of each line
             int lenligne = text.length() / nblignes;
             int strcount = 0;
             String accu;
+
+            //for each line, add words until you reach lenligne
             for (i = 0; i < nblignes; i++) {
                 accu = "";
                 if (strcount < strs.length) {
@@ -112,7 +121,7 @@ public class Oval extends View{
             }
 
 
-
+            //tries to draw the lines of the texts, and checks if it would fit the circle. if not, reduce the size of the text and start again
             do {
                 size++;
                 paint.setTextSize(size);
@@ -127,6 +136,7 @@ public class Oval extends View{
 
             size-=5;
 
+            //draw each line
             for (i = 0; i < nblignes; i++) {
                 paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
                 paint.setTextAlign(Paint.Align.CENTER);
@@ -155,75 +165,5 @@ public class Oval extends View{
         return ray;
     }
 
-    public void setRay(Float ray) {
-        this.ray = ray;
-    }
-
-    public Button getMbut() {
-        return mbut;
-    }
-
-    public void setMbut(Button mbut) {
-        this.mbut = mbut;
-    }
 
 }
-        /*if(text!=null) {
-            int i;
-            Paint paint = new Paint();
-            int size = 50;
-            ArrayList<String> textlist = new ArrayList();
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(size);
-            Rect bounds = new Rect();
-            boolean depasse;
-
-
-            if (text.length() > 144) {
-                text = text.substring(0, 144);
-                text = text + "...";
-            }
-
-            int nblignes = text.length() / 20;
-            if (nblignes == 0) {
-                nblignes = 1;
-            }
-            String[] strs = text.split(" ");
-            int[] len = new int[strs.length];
-
-
-            for (i = 0; i < strs.length; i++) {
-                len[i] = strs[i].length();
-            }
-            int lenligne = text.length() / nblignes;
-            int strcount = 0;
-            String accu;
-            for (i = 0; i < nblignes; i++) {
-                accu = "";
-                if (strcount < strs.length) {
-                    do {
-                        accu = accu + " " + strs[strcount];
-                        strcount++;
-                    } while ((accu.length() < lenligne) && (strcount < strs.length));
-                }
-                textlist.add(accu);
-            }
-
-            do {
-                size--;
-                paint.setTextSize(size);
-                depasse = false;
-                for (i = 0; i < nblignes; i++) {
-                    paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                    if (bounds.width() > ray * 1.6) {
-                        depasse = true;
-                    }
-                }
-            } while (depasse);
-
-            for (i = 0; i < nblignes; i++) {
-                paint.getTextBounds(textlist.get(i), 0, textlist.get(i).length(), bounds);
-                canvas.drawText(textlist.get(i), x - (bounds.width()) / 2, y - (nblignes / 2 - i) * size, paint);
-            }
-        }
-*/

@@ -32,7 +32,6 @@ import java.util.Map;
 public class Window extends PanZoomView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
 
 
-    private FirebaseDatabase database;
     /**
      * Represents the current universe
      */
@@ -139,7 +138,8 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(Center.x+i*5000,100,300,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
+
+            mmoi.getFather().setOval(new Oval(Center.x+i*2000,100,300,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
         if(target!=null){
@@ -234,7 +234,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
             //Création de l'oval enfant
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
-            msg.setGoval(new Oval(mpt.x,mpt.y, mray, theuniverse.getColormap().get(msg.getIduser()), getContext()));
+            msg.setOval(new Oval(mpt.x,mpt.y, mray, theuniverse.getColormap().get(msg.getIduser()), getContext()));
 
             //Appel récurcif avec l'enfant créé
             drawMessages(canvas, msg, mangle);
@@ -324,11 +324,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             theuniverse.getMOIList().add(moi);
         }
 
-        currenttyped.setCreatedate(new Date());
         currenttyped.setIduser(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
-        currenttyped.setType(0);
-        currenttyped.setPoids(0);
-        currenttyped.setLikenumb(0);
     }
 
 
@@ -338,21 +334,21 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * @author Paul Best
      */
     public void moveto(Message target){
-        if(mScaleFactor<=2 && 200/target.getGoval().getRay()>2){
-            this.target=target;
-        }else
-        {
-            this.target=null;
+
+            if(mScaleFactor<=2 && 200/target.getGoval().getRay()>2){
+                this.target=target;
+            }else
+            {
+                this.target=null;
+            }
+            mScaleFactor = 200/target.getGoval().getRay();
+
+            mPosX=mScaleFactor*(Center.x/mScaleFactor-target.getGoval().getX());
+            mPosY=mScaleFactor*(Center.y/mScaleFactor-target.getGoval().getY());
+
+            postInvalidate();
+
         }
-        mScaleFactor = 200/target.getGoval().getRay();
-
-        mPosX=mScaleFactor*(Center.x/mScaleFactor-target.getGoval().getX());
-
-        mPosY=mScaleFactor*(Center.y/mScaleFactor-target.getGoval().getY());
-
-
-        postInvalidate();
-    }
 
 
     /**
@@ -365,6 +361,17 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * @author Paul Best
      * @return
      */
+
+        /**
+         * Manages the interaction with the keyboard.
+         * adds the letter pressed to the message currentyped
+         * takes one letter out if the key delete is pressed
+         * saves the message if the key enter is pressed
+         * @param keycode
+         * @param keyEvent
+         * @author Paul Best
+         * @return
+         */
     @Override
     public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
