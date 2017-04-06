@@ -70,8 +70,23 @@ public class Universe
         Contact cont = new Contact(pseudo, id);
         if(!universeUserList.contains(cont)){
             universeUserList.add(cont);
+            addColormap();
         }
 
+    }
+    public void addColormap(){
+        ArrayList<Integer> colorlist = new ArrayList<>();
+        colorlist.add(0xffC8A2B5);
+        colorlist.add(0xffffebcd);
+        colorlist.add(0xffC1DFBB);
+        colorlist.add(0xff5DBCD2);
+        colorlist.add(0xffF2C584);
+
+        colormap=new HashMap<>();
+        for(int i =0; i<universeUserList.size();i++){
+
+            colormap.put(universeUserList.get(i).getId(),colorlist.get(i%5));
+        }
     }
 
     @Exclude
@@ -117,11 +132,12 @@ public class Universe
     public void toUniverse(Map<String, Object> univmap){
 
         ArrayList contactList = (ArrayList) univmap.get("UniverseUserList");
+        if(contactList!=null) {
         ListIterator iterator = contactList.listIterator();
 
         //ICI ON MAP DIRECTEMENT LE MOI ET LE CONTACT DANS LA FONCTION ( parce que )
 
-        if(contactList!=null) {
+
             while (iterator.hasNext()) {
                 HashMap<String, Object> hashedcontact = (HashMap<String, Object>) iterator.next();
                 Contact contact = new Contact(hashedcontact.get("Pseudo").toString(), hashedcontact.get("Id").toString());
@@ -129,11 +145,12 @@ public class Universe
                 iterator.set(contact);
                 iterator.next();
             }
-        }
+        }else  contactList = new ArrayList();
+
         ArrayList MOIList = (ArrayList) univmap.get("MOIList");
        if(MOIList!=null){
            Log.d("UNIVERSE","pas nulle");
-            iterator = MOIList.listIterator();
+            ListIterator iterator = MOIList.listIterator();
             while(iterator.hasNext()){
                 Log.d("UNIVERSE","iteré");
                 MOI moi = new MOI();
@@ -151,18 +168,7 @@ public class Universe
         this.universeUserList = contactList;
         this.MOIList = MOIList;
 
-        ArrayList<Integer> colorlist = new ArrayList<>();
-        colorlist.add(0xffC8A2B5);
-        colorlist.add(0xffffebcd);
-        colorlist.add(0xffC1DFBB);
-        colorlist.add(0xff5DBCD2);
-        colorlist.add(0xffF2C584);
-
-        colormap=new HashMap<>();
-        for(int i =0; i<universeUserList.size();i++){
-
-            colormap.put(universeUserList.get(i).getId(),colorlist.get(i%5));
-        }
+        addColormap();
    }
 
    public void toMOIList(){

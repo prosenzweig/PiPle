@@ -32,7 +32,6 @@ import java.util.Map;
 public class Window extends PanZoomView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
 
 
-    private FirebaseDatabase database;
     /**
      * Represents the current universe
      */
@@ -51,6 +50,81 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * Center of the screen
      */
     private final Point Center;
+
+    /**
+     * where is the center to the screen
+     */
+    private int centerX=2, centerY=3;
+    /**
+     * coefficient of pseudo size
+     *
+     */
+    private int pseudosize = 5;
+    /**
+     * coefficient of ray size ( close view )
+     *
+     */
+    private double weightRay = 0.06;
+    /**
+     * first  ray size ( close view )
+     *
+     */
+    private double  startRay = 0.7;
+    /**
+     * coefficient of margin size ( close view )
+     *
+     */
+    private double weightMar = 0.1;
+    /**
+     * first margin size ( close view )
+     *
+     */
+    private double  startMar = 0.2;
+    /**
+     * limit where you are considered close
+     *
+     */
+    private int closedViewlimit = 2;
+    /**
+     * coefficient of ray size ( distant view )
+     *
+     */
+    private int weightraylong = 50;
+    /**
+     * steps of ray size ( distant view )
+     *
+     */
+    private double stepraylong = 0.25;
+    /**
+     * steps of margin size ( distant view )
+     *
+     */
+    private double stepmarlong= 0.15;
+    /**
+     * first ray size ( distant view )
+     *
+     */
+    private double initraylong = 10;
+    /**
+     * begin margin size if there is one( distant view )
+     *
+     */
+    private int marginbeginDist = 20;
+    /**
+     * begin margin size if there is one( distant view )
+     *
+     */
+    private int marginEndDist = 20;
+    /**
+     * coefficient of zoom to the target.
+     *
+     */
+    private float targetzoom = 200;
+    /**
+     *
+     * when initiating a new moy
+     */
+    private int coeffmoydistance= 7000,initMOIydistance=100,initMOIray=300;
     /**
      * Bubble to center the screen on (see moveto(Message target)
      */
@@ -62,11 +136,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         this.setFocusable(true);
         this.setFocusableInTouchMode(true);
 
-        root = new Message();
-        root.setGoval(new Oval(500,100 ,(float) 80, Color.BLACK, getContext()));
-        root.setMmessage(" ");
-        Message child1 = new Message();
-        root.getChildren().add(child1);
+
 
 
         //used for checking the total size needed for all the bubble to be reachable but not being able to go for miles
@@ -77,8 +147,6 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         totalscreensize.put("left",0);
         currentmessage="";
 
-        database = FirebaseDatabase.getInstance();
-
         mDetector=new GestureDetectorCompat(getContext(),this);
 
 
@@ -86,7 +154,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Display dis = wm.getDefaultDisplay();
         Point pt = new Point();
         dis.getSize(pt);
-        Center = new Point(pt.x/2,pt.y/3);
+        Center = new Point(pt.x/centerX,pt.y/centerY);
     }
 
     public Universe getTheuniverse() {
@@ -103,7 +171,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Display dis = wm.getDefaultDisplay();
         Point pt = new Point();
         dis.getSize(pt);
-        Center = new Point(pt.x/2,pt.y/3);
+        Center = new Point(pt.x/2,pt.y/centerY);
     }
 
     public Window (Context context, AttributeSet attrs, int defStyle) {
@@ -112,7 +180,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Display dis = wm.getDefaultDisplay();
         Point pt = new Point();
         dis.getSize(pt);
-        Center = new Point(pt.x/2,pt.y/3);
+        Center = new Point(pt.x/centerX,pt.y/centerY);
     }
 
 
@@ -139,7 +207,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(Center.x+i*5000,100,300,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
+            mmoi.getFather().setGoval(new Oval(Center.x+i*coeffmoydistance,initMOIydistance,initMOIray,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
         if(target!=null){
@@ -207,26 +275,32 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             double margin;
 
             //Si on se trouve dans la vue raprochée
-            if(mScaleFactor>2) {
+
+
+            if(mScaleFactor>closedViewlimit) {
 
                 // DECISION DU RAYON
-                mray = (float)(root.getGoval().getRay() * (0.7 + 0.06 * (2*msg.getChildren().size()-nbchildren)));
+                mray = (float)(root.getGoval().getRay() * (startRay + weightRay * (2*msg.getChildren().size()-nbchildren)));
 
                 //DECISION DE LA MARGE
-                margin =  mray*(0.2+msg.getChildren().size() *0.1);
+                margin =  mray*(startMar+msg.getChildren().size() *weightMar);
 
             }//Si on se trouve dans la vue éloignée
             else{
 
-                mray = (float)(50 * (msg.getChildren().size() * 0.25 + 1));
-                margin = 10 + msg.getChildren().size() * mray * 0.15 + nbchildren*root.getGoval().getRay()*0.2;
+
+
+                mray = (float)(weightraylong * (msg.getChildren().size() * stepraylong + 1));
+                margin = initraylong + msg.getChildren().size() * mray * stepmarlong + nbchildren*root.getGoval().getRay()*0.2;
             }
 
 
             //dessin du trait
+
             if(margin>50) {
-                Point beginline = beChildof(root.getGoval(), 0, mangle, 20);
-                Point endline = beChildof(root.getGoval(), mray, mangle, margin - mray - 40);
+
+                Point beginline = beChildof(root.getGoval(), 0, mangle, marginbeginDist);
+                Point endline = beChildof(root.getGoval(), mray, mangle, margin - mray - marginEndDist);
                 canvas.drawLine(beginline.x, beginline.y, endline.x, endline.y, new Paint());
             }
 
@@ -250,6 +324,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      */
         public void drawPseudo(Message root, Canvas canvas){
             String pseudo="";
+
             for(int i=0; i<theuniverse.getuniverseUserList().size();i++){
                 if(theuniverse.getuniverseUserList().get(i).getId().equals(root.getIduser())){
                     pseudo=theuniverse.getuniverseUserList().get(i).getPseudo();
@@ -257,7 +332,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             }
             Paint paint = new Paint();
             paint.setColor(Color.GRAY);
-            float size =root.getGoval().getRay()/5;
+            float size =root.getGoval().getRay()/pseudosize;
             paint.setTextSize(size);
             paint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(pseudo,root.getGoval().getX(),root.getGoval().getY()-root.getGoval().getRay()-size/2,paint);
@@ -338,13 +413,13 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * @author Paul Best
      */
     public void moveto(Message target){
-        if(mScaleFactor<=2 && 200/target.getGoval().getRay()>2){
+        if(mScaleFactor<=closedViewlimit && targetzoom/target.getGoval().getRay()>closedViewlimit){
             this.target=target;
         }else
         {
             this.target=null;
         }
-        mScaleFactor = 200/target.getGoval().getRay();
+        mScaleFactor = targetzoom/target.getGoval().getRay();
 
         mPosX=mScaleFactor*(Center.x/mScaleFactor-target.getGoval().getX());
 
@@ -440,65 +515,12 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
 
 
-   /*
-
-
-
-   ************************ /!\ SUITE PAS IMPORTANT /!\***********************************************************
-    *
-     *
-     *
-     * */
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
         this.mDetector.onTouchEvent(event);
         // Be sure to call the superclass implementation
         return super.onTouchEvent(event);
-    }
-
-
-    //TODO : avoir la fonction de passage entre les deux views
-    /**
-     * Return the resource id of the sample image. Note that this class always returns 0, indicating
-     * that there is no sample drawable.
-     *
-     * @return int
-     */
-
-    public int sampleDrawableId () {
-        return 0;
-    }
-
-    /**
-     * Return true if panning is supported.
-     *
-     * @return boolean
-     */
-
-    public boolean supportsPan () {
-        return true;
-    }
-
-    /**
-     * Return true if scaling is done around the focus point of the pinch.
-     *
-     * @return boolean
-     */
-
-    public boolean supportsScaleAtFocusPoint () {
-        return true;
-    }
-
-
-
-    /**
-     * Return true if pinch zooming is supported.
-     *
-     * @return boolean
-     */
-    public boolean supportsZoom () {
-        return true;
     }
 
 

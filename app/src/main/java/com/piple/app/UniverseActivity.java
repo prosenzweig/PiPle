@@ -129,15 +129,6 @@ public class UniverseActivity
             finish();
             return;
         }
-        //If yes, get his email and welcome him
-       User  yourself = new User(mFirebaseUser.getUid(), mFirebaseUser.getEmail());
-
-
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                                .enableAutoManage(this, this /* OnConnectionFailedListener */)
-                                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                                .build();
-
 
 
 
@@ -169,7 +160,7 @@ public class UniverseActivity
                     Map<String, Object> universeMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     System.out.println("universe gotten");
                     mywindow.getTheuniverse().toUniverse(universeMap);
-
+                    mywindow.getTheuniverse().checkid(mFirebaseUser.getUid(),getPseudo(mFirebaseUser.getEmail()));
                 }
             }
 
@@ -206,7 +197,12 @@ public class UniverseActivity
     }
 
 
+    public String getPseudo(String mail){
 
+        String[] splited = mail.split("@");
+        String pseudo= splited[0];
+        return pseudo;
+    }
 
     /**
      * Method onConnectionFailed

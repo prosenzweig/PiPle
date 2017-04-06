@@ -28,17 +28,7 @@ public class MOI {
 
     }
 
-    public MOI(String name, Message father, boolean delete, boolean silent) {
-        this.name = name;
-        this.father = father;
-        this.delete = delete;
-        this.silent = silent;
-    }
 
-    public MOI(String name, Message father) {
-        this.name = name;
-        this.father = father;
-    }
 
     /**
      * transform it into a map
