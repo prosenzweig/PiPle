@@ -62,6 +62,13 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         this.setFocusable(true);
         this.setFocusableInTouchMode(true);
 
+        root = new Message();
+        root.setGoval(new Oval(500,100 ,(float) 80, Color.BLACK, getContext()));
+        root.setMmessage(" ");
+        Message child1 = new Message();
+        root.getChildren().add(child1);
+
+
         //used for checking the total size needed for all the bubble to be reachable but not being able to go for miles
         //without any stops
         totalscreensize.put("up",0);
@@ -114,10 +121,18 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     }
 
     /**
-     * Goes through the MOIlist, and for each of the MOIs, instanciates the father message, and calls drawMessages to draw the MOI
+     *
+     * DRAWINGS
+     *
+     *
+     * Do whatever drawing is appropriate for this view.
+     * The canvas object is already set up to be drawn on. That means that all translations and scaling
+     * operations have already been done.
+     *
      * @param canvas Canvas
-     * @author Paul Best
+     * @return void
      */
+
     @Override
     public void drawOnCanvas(Canvas canvas) {
         super.drawOnCanvas(canvas);

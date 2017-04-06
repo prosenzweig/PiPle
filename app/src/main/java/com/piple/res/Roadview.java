@@ -3,13 +3,14 @@ package com.piple.res;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
  * Created by jeremie on 07/03/2017.
 
 
-
+**/
 
 public class Roadview {
 
@@ -28,10 +29,10 @@ public class Roadview {
 
         computeray(message);
         //TODO iteration pour checker la distance normale que devrait avoir chaques enfant par rapport à son père si on ne l'a pas déjà
-       /* ListIterator iterator = children.listIterator();
+        ListIterator iterator = message.getChildren().listIterator();
         while(iterator.hasNext()){
 
-            iterator.getChildren().get
+            //iterator.getChildren().get
 
         }
 
@@ -83,4 +84,3 @@ public class Roadview {
         this.relativpositiontable = relativpositiontable;
     }
 }
-*/
