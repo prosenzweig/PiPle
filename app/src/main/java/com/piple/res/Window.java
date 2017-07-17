@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -207,7 +208,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         for(int i=0; i<theuniverse.getMOIList().size();i++){
             if(theuniverse.getMOIList().get(i).getClass()==MOI.class){
             MOI mmoi = theuniverse.getMOIList().get(i);
-            mmoi.getFather().setGoval(new Oval(Center.x+i*coeffmoydistance,initMOIydistance,initMOIray,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
+            mmoi.getFather().setOval(new Oval(Center.x+i*coeffmoydistance,initMOIydistance,initMOIray,theuniverse.getColormap().get(mmoi.getFather().getIduser()), getContext()));
             drawMessages(canvas,mmoi.getFather(),0);
         }}
         if(target!=null){
@@ -308,7 +309,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
 
             //Création de l'oval enfant
             Point mpt = beChildof(root.getGoval(), mray,mangle, margin );
-            msg.setGoval(new Oval(mpt.x,mpt.y, mray, theuniverse.getColormap().get(msg.getIduser()), getContext()));
+            msg.setOval(new Oval(mpt.x,mpt.y, mray, theuniverse.getColormap().get(msg.getIduser()), getContext()));
 
             //Appel récurcif avec l'enfant créé
             drawMessages(canvas, msg, mangle);
@@ -319,7 +320,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
     /**
      * Display the pseudo of the user whose id corresponds to the message author's id
      * @param root the message whose pseudo must be displayed
-     * @param canvas
+     *
      *
      */
         public void drawPseudo(Message root, Canvas canvas){
@@ -347,7 +348,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * @param angle the angle between the child and the father ( 0 means vertically from top to bottom )
      * @param margin the margin in pixels between the father's circle and the child's circle
      * @return the Point of the center for the child bubble
-     * @author Paul Best
+     *
      */
     public Point beChildof(Oval father, float mRay, double angle, double margin ){
             Point mpoint = new Point();
@@ -364,8 +365,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * Checks if the click is on a bubble
      * if so, create a new child to it and open the keyboard
      * if not, create a new MOI and its father bubble
-     * @param e
-     * @author Paul Best
+     *
      */
     @Override
     public void onLongPress(MotionEvent e) {
@@ -373,7 +373,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
         Message clicked;
         Boolean found = false;
         ListIterator list = theuniverse.getMOIList().listIterator();
-        MOI moi = new MOI();
+        MOI moi ;
         while((list.hasNext())&&(!found)) {
            moi = (MOI)list.next();
 
@@ -399,18 +399,14 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
             theuniverse.getMOIList().add(moi);
         }
 
-        currenttyped.setCreatedate(new Date());
-        currenttyped.setIduser(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
-        currenttyped.setType(0);
-        currenttyped.setPoids(0);
-        currenttyped.setLikenumb(0);
+                currenttyped.setIduser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
     }
 
 
     /**
      * Pans the canvas to center the bubble target and zooms on the target
      * @param target message to be centered
-     * @author Paul Best
      */
     public void moveto(Message target){
         if(mScaleFactor<=closedViewlimit && targetzoom/target.getGoval().getRay()>closedViewlimit){
@@ -440,6 +436,7 @@ public class Window extends PanZoomView implements GestureDetector.OnGestureList
      * @author Paul Best
      * @return
      */
+
     @Override
     public boolean onKeyUp(int keycode, KeyEvent keyEvent) {
 
